@@ -1,0 +1,2637 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#0E3753">
+<title>VUSTIN SOUND — ПРОДЮСЕР</title>
+
+<style>
+.game-splash{text-align:center;max-width:820px;margin:0 auto;padding:8px 0 4px}
+.game-splash h1{font-size:clamp(30px,5vw,54px);line-height:1.04;margin:16px auto;max-width:800px}
+.game-splash .desc{max-width:680px;margin:0 auto 18px;font-size:17px}
+.splash-vinyl{width:138px;height:138px;border-radius:50%;margin:2px auto 18px;background:repeating-radial-gradient(circle,#101820 0 5px,#071018 6px 10px);border:1px solid #36505d;display:grid;place-items:center;box-shadow:0 18px 55px rgba(0,0,0,.35)}
+.splash-vinyl:before{content:"";position:absolute}.splash-vinyl div{width:54px;height:54px;border-radius:50%;background:var(--gold);color:#071018;display:grid;place-items:center;font-weight:900}
+.splash-features{display:flex;justify-content:center;gap:10px;flex-wrap:wrap;margin:20px 0}.splash-features span{border:1px solid var(--line);border-radius:999px;padding:8px 12px;background:#091b25;color:var(--pale);font-size:13px}
+.splash-time{font-size:12px;color:var(--muted);margin-top:12px}
+.onboard{text-align:center;max-width:680px;margin:0 auto}.onboard h2{font-size:clamp(28px,4vw,42px);margin:8px 0 10px}.onboard p{color:var(--muted);font-size:17px}.onboard-icon{font-size:52px}.onboard-tip{margin:18px auto;padding:15px;border:1px solid var(--line);background:#091b25;border-radius:16px;max-width:560px;color:var(--pale)}.onboard-dots{display:flex;gap:7px;justify-content:center;margin:20px}.onboard-dots span{width:8px;height:8px;border-radius:50%;background:#36505d}.onboard-dots span.on{background:var(--gold);width:24px;border-radius:6px}
+.choice-intro{padding:12px 14px;margin-bottom:14px;border:1px solid var(--line);border-radius:14px;background:#091b25;color:var(--muted)}.choice-intro b{color:var(--pale)}
+.demo-btn{width:100%;margin:13px 0 10px;border:1px solid #b88a3d;background:#101d24;color:var(--gold2);border-radius:12px;padding:11px 10px;font-weight:800;cursor:pointer;letter-spacing:.03em}.demo-btn:hover,.demo-btn.playing{background:#3a2c16;border-color:var(--gold2);color:#fff}.song-tags{min-height:30px}
+@media(max-width:640px){.game-splash h1{font-size:32px}.splash-vinyl{width:112px;height:112px}.onboard .stats{grid-template-columns:repeat(3,1fr)}.demo-btn{padding:12px 8px}}
+</style>
+
+<style>
+.cinematic-splash{
+ position:relative;isolation:isolate;max-width:none;min-height:610px;
+ margin:-22px -22px -18px;padding:64px 32px 34px;overflow:hidden;
+ border-radius:20px;background:#071018 url('game-splash-v13-12.png?v=13.17') center/cover no-repeat;
+ display:flex;align-items:center;justify-content:center
+}
+.cinematic-splash:before{content:"";position:absolute;inset:0;z-index:-2;background:linear-gradient(90deg,rgba(3,10,15,.38),rgba(3,10,15,.80) 35%,rgba(3,10,15,.82) 66%,rgba(3,10,15,.42))}
+.splash-shade{position:absolute;inset:0;z-index:-1;background:radial-gradient(circle at 50% 46%,rgba(3,10,15,.20),rgba(3,10,15,.62) 72%)}
+.splash-content{width:min(760px,100%);padding:26px 28px 24px;border:1px solid rgba(221,176,91,.30);border-radius:22px;background:rgba(4,15,22,.72);backdrop-filter:blur(8px);box-shadow:0 24px 80px rgba(0,0,0,.48)}
+.cinematic-splash .splash-vinyl{width:86px;height:86px;margin-bottom:12px}
+.cinematic-splash h1{text-shadow:0 3px 24px #000}
+.cinematic-splash .btn{box-shadow:0 0 28px rgba(221,176,91,.20)}
+.onboard{position:relative;overflow:hidden;padding:24px;border:1px solid rgba(221,176,91,.24);border-radius:22px;background:linear-gradient(145deg,rgba(12,35,48,.96),rgba(5,17,25,.98));box-shadow:0 24px 70px rgba(0,0,0,.28)}
+.onboard:before{content:"";position:absolute;width:260px;height:260px;border-radius:50%;right:-120px;top:-130px;background:radial-gradient(circle,rgba(221,176,91,.16),transparent 68%)}
+.onboard-visual{height:116px;margin:0 auto 8px;display:flex;align-items:center;justify-content:center;gap:18px;position:relative}
+.ov-disc{width:92px;height:92px;border-radius:50%;border:1px solid #6b5730;background:repeating-radial-gradient(circle,#111c23 0 5px,#061018 6px 10px);box-shadow:0 0 32px rgba(221,176,91,.18)}
+.ov-disc:after{content:"VS";display:grid;place-items:center;width:34px;height:34px;border-radius:50%;background:var(--gold);color:#071018;font-weight:900;position:absolute;left:calc(50% - 72px);top:41px}
+.ov-meters{display:flex;gap:7px;align-items:end;height:72px}.ov-meters i{display:block;width:13px;border-radius:6px 6px 2px 2px;background:linear-gradient(var(--gold2),#8c6223)}.ov-meters i:nth-child(1){height:42px}.ov-meters i:nth-child(2){height:68px}.ov-meters i:nth-child(3){height:54px}
+.ov-headphones{width:90px;height:90px;border:8px solid var(--gold);border-bottom-color:transparent;border-radius:50%;font-size:38px;display:grid;place-items:center;color:var(--gold2)}.ov-wave{font-size:27px;letter-spacing:4px;color:var(--pale)}
+.ov-chart{font-size:46px;letter-spacing:2px;color:var(--good);text-shadow:0 0 20px rgba(120,201,167,.25)}.ov-coin{width:78px;height:78px;border-radius:50%;display:grid;place-items:center;background:linear-gradient(145deg,var(--gold2),#9c6a22);color:#071018;font-weight:900;box-shadow:0 0 30px rgba(221,176,91,.24)}
+@media(max-width:640px){
+ .cinematic-splash{min-height:560px;margin:-14px -14px -12px;padding:34px 14px 24px;background-position:42% center}
+ .splash-content{padding:22px 15px;background:rgba(4,15,22,.79)}
+ .cinematic-splash .splash-vinyl{width:72px;height:72px}
+ .cinematic-splash .splash-features{gap:6px}.cinematic-splash .splash-features span{font-size:11px;padding:6px 8px}
+ .onboard{padding:18px 14px}.onboard-visual{height:96px}
+}
+</style>
+
+<style>
+.onboarding-art{max-width:760px;padding:0 0 22px}
+.onboarding-art .onboard-photo{
+ width:100%;height:250px;margin:0 0 18px;border-radius:21px 21px 14px 14px;
+ background-position:center;background-size:cover;background-repeat:no-repeat;
+ border-bottom:1px solid rgba(221,176,91,.24);
+ box-shadow:inset 0 -55px 55px rgba(4,16,24,.32)
+}
+.onboarding-one .onboard-photo{background-image:url('onboarding-01.webp?v=13.17')}
+.onboarding-two .onboard-photo{background-image:url('onboarding-02.webp?v=13.17')}
+.onboarding-three .onboard-photo{background-image:url('onboarding-03.webp?v=13.17')}
+.onboarding-art .onboard-visual{height:70px;margin-top:-58px;margin-bottom:8px;filter:drop-shadow(0 6px 12px #041018)}
+.onboarding-art h2,.onboarding-art p,.onboarding-art .stats,.onboarding-art .onboard-tip,.onboarding-art .onboard-dots,.onboarding-art>.btn{margin-left:20px;margin-right:20px}
+@media(max-width:640px){
+ .onboarding-art .onboard-photo{height:190px}
+ .onboarding-art .onboard-visual{height:58px;margin-top:-45px}
+ .onboarding-art h2,.onboarding-art p,.onboarding-art .stats,.onboarding-art .onboard-tip,.onboarding-art .onboard-dots,.onboarding-art>.btn{margin-left:12px;margin-right:12px}
+}
+</style>
+<style>.how-btn{font-size:13px;opacity:.92}@media(max-width:640px){.game-splash .nav{gap:8px}.how-btn{width:100%}}</style><style>
+.demo-note{
+  margin:-5px 0 10px;
+  text-align:center;
+  color:var(--muted);
+  font-size:11px;
+  letter-spacing:.04em;
+  opacity:.72
+}
+</style><style>
+.listen-song-btn{display:flex;align-items:center;justify-content:center;gap:9px}
+.listen-song-btn .listen-icon{font-size:12px;width:22px;height:22px;border-radius:50%;display:inline-grid;place-items:center;background:rgba(221,176,91,.14);border:1px solid rgba(221,176,91,.45)}
+</style><style>
+.game-splash .how-btn{
+ width:100%;margin-top:4px;background:rgba(7,25,35,.90)!important;
+ border:1px solid var(--gold)!important;color:var(--gold2)!important;
+ box-shadow:none!important
+}
+.help-toggle{
+ position:fixed;right:18px;bottom:18px;z-index:9999;
+ border:1px solid rgba(221,176,91,.75);background:#0b202d;color:var(--gold2);
+ border-radius:999px;padding:10px 14px;font-weight:900;cursor:pointer;
+ box-shadow:0 8px 30px rgba(0,0,0,.35)
+}
+.help-toggle span{font-size:11px;letter-spacing:.04em;margin-left:4px}
+@media(max-width:640px){
+ .help-toggle{right:12px;bottom:12px;padding:10px 12px}
+ .help-toggle span{display:none}
+}
+</style></head>
+<body>
+<div id="vustin-producer-native">
+</div>
+<div class='app'><div class='top'><div class='brand'>VUSTIN SOUND · ПРОДЮСЕР</div><div id='wallet' class='money'>10 000 VS₽</div></div><main id='screen' class='panel'></main></div>
+<script>
+let currentPreview=null;
+let primedPreview=null;
+
+function previewSrcForSong(song){
+ if(!song)return null;
+ if(song.preview)return song.preview+(song.preview.includes('?')?'&':'?')+'v=13.10';
+ return null;
+}
+function stopRealPreview(){
+ const audios=[currentPreview,primedPreview].filter(Boolean);
+ audios.forEach(a=>{try{a.pause();a.currentTime=0}catch(e){}});
+ currentPreview=null;primedPreview=null;
+}
+function primeReleasePreview(){
+ if(!soundOn||!state.song)return;
+ const src=previewSrcForSong(state.song);
+ if(!src)return;
+ try{
+  if(primedPreview){try{primedPreview.pause()}catch(e){}}
+  const a=new Audio(src);
+  a.preload='auto';
+  a.volume=0.001;
+  a.currentTime=0;
+  primedPreview=a;
+  const promise=a.play();
+  if(promise&&promise.then){
+   promise.then(()=>{
+    try{a.pause();a.currentTime=0;a.volume=.78}catch(e){}
+   }).catch(()=>{});
+  }
+ }catch(e){}
+}
+function playRealPreview(){
+ if(!soundOn||!state.song)return;
+ const src=previewSrcForSong(state.song);
+ if(!src)return;
+ try{
+  let a=primedPreview;
+  if(!a || !a.src || a.src.indexOf(state.song.preview)===-1){
+   a=new Audio(src);a.preload='auto';
+  }
+  currentPreview=a;primedPreview=null;
+  currentPreview.currentTime=0;
+  currentPreview.volume=.78;
+  const promise=currentPreview.play();
+  if(promise&&promise.catch){
+   promise.catch(()=>{
+    // Fallback: show an explicit user-gesture play control if the browser blocks delayed playback.
+    const host=document.querySelector('.now-playing');
+    if(host)host.innerHTML=`<button type="button" class="btn" style="padding:10px 16px" onclick="playRealPreview()">▶ СЛУШАТЬ ФРАГМЕНТ</button>`;
+   });
+  }
+ }catch(e){}
+}
+
+
+
+let demoPreview=null,demoButton=null;
+function stopSongDemo(){
+ if(demoPreview){try{demoPreview.pause();demoPreview.currentTime=0}catch(e){}demoPreview=null}
+ if(demoButton){demoButton.textContent='▶ ПОСЛУШАТЬ ПЕСНЮ';demoButton.classList.remove('playing');demoButton=null}
+}
+function playSongDemo(ev,id,btn){
+ if(ev){ev.stopPropagation();ev.preventDefault()}
+ const song=songs.find(x=>x.id===id); if(!song||!song.preview)return;
+ if(demoPreview&&demoButton===btn){stopSongDemo();return}
+ stopSongDemo(); stopRealPreview();
+ try{
+  demoButton=btn;btn.textContent='■ ОСТАНОВИТЬ';btn.classList.add('playing');
+  demoPreview=new Audio(song.preview+(song.preview.includes('?')?'&':'?')+'v=13.17');
+  demoPreview.volume=.78;
+  demoPreview.addEventListener('ended',stopSongDemo,{once:true});
+  demoPreview.play().catch(()=>{stopSongDemo();toast('Нажми ещё раз, чтобы включить демо')});
+ }catch(e){stopSongDemo()}
+}
+let soundOn=true,audioCtx=null;
+function ac(){
+ if(!audioCtx)audioCtx=new (window.AudioContext||window.webkitAudioContext)();
+ if(audioCtx.state==='suspended')audioCtx.resume();
+ return audioCtx;
+}
+function tone(freq=440,dur=.08,type='sine',gain=.025,delay=0){
+ if(!soundOn)return;
+ try{
+  let c=ac(),o=c.createOscillator(),g=c.createGain(),t=c.currentTime+delay;
+  o.type=type;o.frequency.setValueAtTime(freq,t);
+  g.gain.setValueAtTime(.0001,t);g.gain.exponentialRampToValueAtTime(gain,t+.012);g.gain.exponentialRampToValueAtTime(.0001,t+dur);
+  o.connect(g);g.connect(c.destination);o.start(t);o.stop(t+dur+.02);
+ }catch(e){}
+}
+function uiClick(){tone(620,.045,'sine',.012)}
+function countdownSound(n){tone(n===1?660:440,.12,'sine',.035);tone(n===1?990:660,.10,'sine',.015,.03)}
+function launchSound(){tone(220,.35,'sawtooth',.022);tone(440,.45,'sine',.025,.08);tone(880,.55,'sine',.018,.15)}
+function successSound(){tone(523,.22,'sine',.02);tone(659,.22,'sine',.018,.12);tone(784,.34,'sine',.018,.24)}
+function toggleSound(){soundOn=!soundOn;document.getElementById('soundToggle').textContent=soundOn?'🔊':'🔇';if(!soundOn)stopRealPreview();if(soundOn)uiClick()}
+document.addEventListener('click',e=>{if(soundOn&&e.target.closest('.btn,.choice,.card')&&!e.target.closest('#soundToggle'))uiClick()},{capture:true});
+
+
+/* v11.0 — hidden song DNA */
+
+
+/* v12.1 — Visual Gameplay */
+function visualScene(type){
+ const map={
+  home:['🏠','Домашняя студия','Тёплый небольшой кабинет'],
+  good:['🎚️','Профессиональная студия','Пульт, мониторы и чистый звук'],
+  top:['🎹','Премиум-студия','Большая студия и максимальный контроль'],
+  clip:['🎬','Клип','Камера, свет и съёмочная площадка'],
+  reels:['📱','Reels / Shorts','Вертикальные видео и быстрый охват'],
+  playlists:['🎧','Плейлисты','Редакционные подборки и рекомендации'],
+  radio:['📻','Радио','Эфир, ведущие и широкая аудитория'],
+  pr:['📰','PR и медиа','Истории, интервью и публикации'],
+  target:['🎯','Таргет','Точная рекламная аудитория'],
+  dilemma:['⚖️','Продюсерская дилемма','Решение, которое изменит релиз'],
+  force:['⚡','Форс-мажор','Рынок внёс свои коррективы']
+ };
+ let a=map[type]||map.force;
+ return `<div class="visual-scene visual-${type}"><div class="visual-icon">${a[0]}</div><div><b>${a[1]}</b><span>${a[2]}</span></div></div>`;
+}
+
+function songCover(song,cls='song-cover'){
+ return song&&song.cover?`<img class="${cls}" src="${song.cover}" alt="" loading="lazy">`:'';
+}
+
+function potential(v){
+ return v>=90?'Очень высокий':v>=80?'Высокий':v>=68?'Хороший':v>=55?'Средний':'Низкий';
+}
+const songs=[
+{id:'pharmacy',name:'Аптека для души',artist:'VUSTIN SOUND',preview:'https://olegvustin.github.io/vustin-sound-game-v2.0/preview-01.mp3',cover:'https://olegvustin.github.io/vustin-sound-game-v2.0/cover-01.webp',desc:'Философская песня с сильной эмоциональной связью.',tags:['смысл','эмоция','каталог'],unlock:()=>true,p:{q:88,e:96,v:58,vis:70,pl:91,radio:74,talk:86,long:97}},
+{id:'alphabet',name:'Алфавит любви',artist:'VUSTIN SOUND',preview:'https://olegvustin.github.io/vustin-sound-game-v2.0/preview-02.mp3',cover:'https://olegvustin.github.io/vustin-sound-game-v2.0/cover-02.webp',desc:'Лёгкая песня с хорошим массовым и радио-потенциалом.',tags:['любовь','ритм','радио'],unlock:()=>true,p:{q:82,e:78,v:91,vis:84,pl:80,radio:86,talk:73,long:68}},
+{id:'lighthouse',name:'Старый маяк',artist:'VUSTIN SOUND',preview:'https://olegvustin.github.io/vustin-sound-game-v2.0/preview-03.mp3',cover:'https://olegvustin.github.io/vustin-sound-game-v2.0/cover-03.webp',desc:'Атмосферная история с выраженным визуальным образом.',tags:['атмосфера','визуал','история'],unlock:()=>true,p:{q:91,e:94,v:51,vis:96,pl:83,radio:67,talk:82,long:95}},
+{id:'solitude100',name:'100 лет одиночества',artist:'VUSTIN SOUND',preview:'https://olegvustin.github.io/vustin-sound-game-v2.0/preview-04.mp3',cover:'https://olegvustin.github.io/vustin-sound-game-v2.0/cover-04.webp',desc:'Глубокая сюжетная песня, способная вызывать обсуждение.',tags:['история','PR','долгая жизнь'],unlock:()=>true,p:{q:89,e:93,v:48,vis:82,pl:88,radio:58,talk:97,long:96}},
+{id:'drawyou',name:'Нарисую тебя',artist:'VUSTIN SOUND',preview:'https://olegvustin.github.io/vustin-sound-game-v2.0/preview-05.mp3',cover:'https://olegvustin.github.io/vustin-sound-game-v2.0/cover-05.webp',desc:'Эмоциональная песня с сильным визуальным потенциалом.',tags:['любовь','визуал','плейлисты'],unlock:()=>true,p:{q:86,e:92,v:72,vis:94,pl:85,radio:81,talk:71,long:90}},
+{id:'sandwich',name:'Бутерброд забот',artist:'VUSTIN SOUND',preview:'https://olegvustin.github.io/vustin-sound-game-v2.0/preview-06.mp3',cover:'https://olegvustin.github.io/vustin-sound-game-v2.0/cover-06.webp',desc:'Лёгкий необычный трек с потенциалом коротких видео.',tags:['юмор','вирусность','Reels'],unlock:()=>true,p:{q:78,e:72,v:97,vis:89,pl:70,radio:84,talk:90,long:55}},
+{id:'cranes',name:'Журавли',artist:'VUSTIN SOUND',preview:'https://olegvustin.github.io/vustin-sound-game-v2.0/preview-07.mp3',cover:'https://olegvustin.github.io/vustin-sound-game-v2.0/cover-07.webp',desc:'Эмоциональная композиция с высоким долгосрочным потенциалом.',tags:['эмоция','визуал','каталог'],unlock:()=>true,p:{q:92,e:98,v:43,vis:91,pl:87,radio:76,talk:84,long:99}},
+{id:'streams',name:'Ручейки',artist:'VUSTIN SOUND',preview:'https://olegvustin.github.io/vustin-sound-game-v2.0/preview-08.mp3',cover:'https://olegvustin.github.io/vustin-sound-game-v2.0/cover-08.webp',desc:'Мелодичная песня с сильным плейлистным потенциалом.',tags:['мелодия','плейлисты','долгая жизнь'],unlock:()=>true,p:{q:84,e:88,v:67,vis:79,pl:96,radio:80,talk:65,long:92}},
+{id:'tired',name:'Я устал',artist:'VUSTIN SOUND',preview:'https://olegvustin.github.io/vustin-sound-game-v2.0/preview-09.mp3',cover:'https://olegvustin.github.io/vustin-sound-game-v2.0/cover-09.webp',desc:'Эмоционально прямой трек с высоким потенциалом обсуждения.',tags:['эмоция','PR','смысл'],unlock:()=>true,p:{q:87,e:95,v:69,vis:72,pl:82,radio:61,talk:98,long:89}},
+{id:'simple',name:'Будь проще',artist:'VUSTIN SOUND',preview:'https://olegvustin.github.io/vustin-sound-game-v2.0/preview-10.mp3',cover:'https://olegvustin.github.io/vustin-sound-game-v2.0/cover-10.webp',desc:'Динамичная песня с хорошим потенциалом радио и коротких видео.',tags:['ритм','радио','Reels'],unlock:()=>true,p:{q:80,e:76,v:94,vis:86,pl:77,radio:91,talk:88,long:63}}
+];
+const studios=[['Домашняя запись',600,5],['Хорошая студия',1800,18],['Топ-студия',3500,30]];
+const arrs=[['Сохранить характер',0,4],['Современная аранжировка',1200,12],['Смелая переработка',2400,20]];
+const covers=[['Простая обложка',300,2],['Авторская обложка',800,8],['Premium-визуал',1500,14]];
+const promos=[['Клип',4500,'vis'],['Short video / Reels',900,'v'],['Плейлисты',1200,'pl'],['Радио',3000,'radio'],['PR / медиа',1800,'talk'],['Таргет',2000,'q']];
+const goals=[
+['hit','🔥 ХИТ','Максимум охвата и шанс на вирусный рост'],
+['fans','❤️ ФАН-БАЗА','Больше постоянных слушателей'],
+['profit','💰 ПРИБЫЛЬ','Максимальная финансовая эффективность'],
+['rep','⭐ РЕПУТАЦИЯ','Укрепить имя лейбла']
+];
+const team=[
+['sound','🎚️ Звукорежиссёр',700,'Усиливает качество записи'],
+['marketing','📊 Маркетолог',800,'Даёт более точные подсказки по каналам'],
+['video','🎬 Клипмейкер',900,'Усиливает эффективность клипа'],
+['smm','📱 SMM-специалист',700,'Усиливает короткие видео'],
+['pr','📰 PR-менеджер',800,'Усиливает PR и работу с блогерами']
+];
+const upgrades=[
+['studioLvl','🎚️ Собственная студия',[0,7500,16500],['Нет','Studio I','Studio II'],
+ 'Снижает стоимость записи и усиливает качество производства.'],
+['marketingLvl','📈 Маркетинговый отдел',[0,6500,14500],['Нет','Marketing I','Marketing II'],
+ 'Снижает стоимость продвижения и улучшает аналитику каналов.'],
+['videoLvl','🎬 Видеоотдел',[0,8500,18000],['Нет','Video I','Video II'],
+ 'Снижает стоимость клипов и усиливает визуальные релизы.'],
+['teamLvl','👥 Постоянная команда',[0,9000,19500],['Нет','Team I','Team II'],
+ 'Даёт скидку на приглашённых специалистов и более точные прогнозы.']
+];
+let career={cash:10000,listeners:0,rep:0,releases:0,history:[],week:1,studioLvl:0,marketingLvl:0,videoLvl:0,teamLvl:0,catalogIncome:0,catalogStreams:0,lastCatalog:null,trend:null,trendWeeks:0};
+let state={song:null,goal:null,team:[],studio:null,arr:null,cover:null,promo:[],event:null,spent:0,contract:null};
+const $=s=>document.querySelector(s), fmt=n=>Math.round(n).toLocaleString('ru-RU');
+
+function discountPrice(base,type){
+ let d=0;
+ if(type==='studio') d=[0,.12,.22][career.studioLvl]||0;
+ if(type==='promo') d=[0,.10,.18][career.marketingLvl]||0;
+ if(type==='video') d=[0,.12,.22][career.videoLvl]||0;
+ if(type==='team') d=[0,.10,.20][career.teamLvl]||0;
+ return Math.round(base*(1-d));
+}
+function upgradeCost(key){
+ let u=upgrades.find(x=>x[0]===key),lvl=career[key];
+ return lvl>=2?null:u[2][lvl+1];
+}
+function wallet(){ $('#wallet').textContent=fmt(career.cash)+' VS₽';}
+function shell(k,t,body){
+let scene='office',place='КАБИНЕТ ПРОДЮСЕРА',icon='◈',step=0;
+if(k.includes('рынок')||k.includes('рынок'.toUpperCase())||t.includes('рынке')){scene='market';place='МУЗЫКАЛЬНЫЙ РЫНОК';icon='⌁';step=1}
+if(t.includes('Запись')||t.includes('Аранжировка')){scene='studio';place='СТУДИЯ ЗВУКОЗАПИСИ';icon='♫';step=2}
+if(t.includes('Обложка')){scene='art';place='АРТ-ОТДЕЛ';icon='✦';step=3}
+if(t.includes('Продвижение')||k.includes('аналитика')||t.includes('команда')||t.includes('Команда')){scene='marketing';place='МАРКЕТИНГОВЫЙ ЦЕНТР';icon='⌁';step=4}
+if(k.includes('Случайное')||k.includes('Релиз')||t.includes('релиза')){scene='premiere';place='ПРЕМЬЕРА';icon='●';step=5}
+document.body.dataset.scene=scene;
+document.body.dataset.mobileScreen=
+ t==='Выбери песню'?'song':
+ t==='Какова цель этого релиза?'?'goal':
+ t==='Выбери до двух специалистов'?'team':
+ t==='Что говорит команда'?'analysis':
+ t==='Запись'?'studio':
+ t==='Аранжировка'?'arr':
+ t==='Обложка'?'cover':
+ t==='Продвижение'?'promo':
+ t==='Что происходит на рынке'?'market':
+ t==='Продюсерское решение'?'dilemma':
+ t.startsWith('VUSTIN RECORDS ·')?'career':
+ t==='Инвестируй в постоянные активы'?'development':
+ t==='История релизов'?'history':
+ t==='Продолжить сезон'?'save':'other';
+let sceneHead=`<div class="scene-head"><div class="scene-place"><i>${icon}</i>${place}</div><div class="scene-route">${[1,2,3,4,5].map(x=>`<span class="${x<=step?'on':''}"></span>`).join('')}</div></div><div class="scene-visual"></div>`;
+let m=(k.match(/Шаг (\d) из 6/)||[])[1],prog=m?Math.round(+m/6*100):(k.includes('Релиз')?100:0);let wave=`<div class='wave'>${Array.from({length:34},(_,i)=>`<i style="height:${8+(i*7)%31}px"></i>`).join('')}</div>`;$('#screen').innerHTML=`${sceneHead}<div class='kicker'>${k}</div><h2 class='section-title'>${t}</h2>${prog?`<div class='progressline'><span style='width:${prog}%'></span></div>`:''}${body}${k.includes('Релиз')?wave:''}`;wallet()}
+function resetRelease(){state={song:null,goal:null,team:[],studio:null,arr:null,cover:null,promo:[],event:null,spent:0,contract:null,industryScore:0,industryRep:0,industryTitle:null,industryDecision:null,currentIndustryEvent:null}}
+function spend(n){if(career.cash<n)return false;career.cash-=n;state.spent+=n;return true}
+function refund(n){career.cash+=n;state.spent=Math.max(0,state.spent-n)}
+
+const ONBOARD_KEY='vustin_producer_onboarding_v1';
+function onboardingSeen(){try{return localStorage.getItem(ONBOARD_KEY)==='1'}catch(e){return false}}
+function markOnboardingSeen(){try{localStorage.setItem(ONBOARD_KEY,'1')}catch(e){}}
+
+function gameSplash(){
+ stopSongDemo();stopRealPreview();
+ let saved=hasSave();
+ shell('МУЗЫКАЛЬНАЯ БИЗНЕС-ИГРА','VUSTIN SOUND · ПРОДЮСЕР',
+ `<div class='game-splash cinematic-splash'>
+   <div class='splash-shade'></div>
+   <div class='splash-content'>
+   <div class='splash-vinyl'><div>VS</div></div>
+   <div class='kicker'>10 ПЕСЕН · 1 СЕЗОН · ТВОЙ МУЗЫКАЛЬНЫЙ ЛЕЙБЛ</div>
+   <h1>Ты получил 10 000 VS₽.<br>Сможешь превратить песни в успешные релизы?</h1>
+   <p class='desc'>Выбирай песни VUSTIN SOUND, принимай продюсерские решения, управляй бюджетом и смотри, как на них реагирует аудитория.</p>
+   <div class='splash-features'><span>🎵 реальные песни</span><span>💰 экономика релиза</span><span>📈 карьера продюсера</span></div>
+   <div class='nav'>
+    ${saved?`<button class='btn' onclick='loadCareer();careerScreen()'>ПРОДОЛЖИТЬ КАРЬЕРУ →</button><button class='btn alt' onclick='beginNewGame()'>НОВАЯ ИГРА</button>`:`<button class='btn' onclick='beginNewGame()'>НАЧАТЬ ИГРУ →</button>`}
+    <button class='btn how-btn' onclick='onboarding(1,true)'>ⓘ КАК ИГРАТЬ?</button>
+   </div>
+   <div class='splash-time'>Музыкальная бизнес-игра · 5–10 минут</div>
+   </div>
+ </div>`)
+}
+function beginNewGame(){
+ if(hasSave()&&!confirm('Начать новую карьеру? Сохранённый прогресс будет удалён.'))return;
+ deleteSave();
+ if(onboardingSeen())start(); else onboarding(1);
+}
+function onboarding(step,manual=false){
+ const dots=[1,2,3].map(i=>`<span class='${i===step?'on':''}'></span>`).join('');
+ if(step===1) shell('КАК ИГРАТЬ · 1 ИЗ 3','Твоя задача',
+ `<div class='onboard onboarding-art onboarding-one'><div class='onboard-photo' aria-hidden='true'></div><div class='onboard-visual'><div class='ov-disc'></div><div class='ov-meters'><i></i><i></i><i></i></div></div><h2>Построй музыкальный лейбл</h2><p>Выпусти 10 песен VUSTIN SOUND и развивай три главных показателя.</p><div class='stats'><div class='stat'><b>VS₽</b>капитал</div><div class='stat'><b>♫</b>слушатели</div><div class='stat'><b>★</b>репутация</div></div><div class='onboard-dots'>${dots}</div><button class='btn' onclick='onboarding(2,${manual})'>ДАЛЕЕ →</button></div>`);
+ if(step===2) shell('КАК ИГРАТЬ · 2 ИЗ 3','Ты — продюсер',
+ `<div class='onboard onboarding-art onboarding-two'><div class='onboard-photo' aria-hidden='true'></div><div class='onboard-visual'><div class='ov-headphones'>♪</div><div class='ov-wave'>▂▅▃▇▅▂▆▃</div></div><h2>Сначала послушай материал</h2><p>В карточке каждой песни есть 12-секундное демо. Сравни песни, выбери релиз, а затем решай, сколько вложить в студию, аранжировку и продвижение.</p><div class='onboard-tip'><b>Дороже ≠ лучше.</b><br>То, что подходит одной песне, может не сработать с другой.</div><div class='onboard-dots'>${dots}</div><button class='btn' onclick='onboarding(3,${manual})'>ДАЛЕЕ →</button></div>`);
+ if(step===3) shell('КАК ИГРАТЬ · 3 ИЗ 3','Деньги и результат',
+ `<div class='onboard onboarding-art onboarding-three'><div class='onboard-photo' aria-hidden='true'></div><div class='onboard-visual'><div class='ov-chart'>▁▂▃▅▆█</div><div class='ov-coin'>VS₽</div></div><h2>Каждый релиз — риск</h2><p>Релиз может принести прибыль или убыток. Изучай характер песни, следи за бюджетом и принимай решения как продюсер.</p><div class='onboard-tip'>После премьеры ты увидишь прослушивания, доход, новых слушателей и результат своих решений.</div><div class='onboard-dots'>${dots}</div><button class='btn' onclick='${manual?"gameSplash()":"markOnboardingSeen();start()"}'>${manual?'← ВЕРНУТЬСЯ В МЕНЮ':'ПОНЯТНО. Я ПРОДЮСЕР →'}</button></div>`);
+}
+function start(){career={cash:10000,listeners:0,rep:0,releases:0,history:[],week:1,studioLvl:0,marketingLvl:0,videoLvl:0,teamLvl:0,catalogIncome:0,catalogStreams:0,lastCatalog:null,trend:null,trendWeeks:0};resetRelease();shell('Карьера начинается','VUSTIN RECORDS',`<div class='hero'><div class='kicker'>СЕЗОН 1 · СОЗДАЙ СВОЙ ЛЕЙБЛ</div><h1>10 000 VS₽.<br>И ни одного хита.</h1><p>Выпускай песни VUSTIN SOUND, собирай аудиторию и развивай лейбл. Деньги между релизами не обнуляются. Старые песни продолжают жить: каталог приносит прослушивания и доход, а сильные клипы, PR и плейлисты работают с задержкой.</p><div class='stats'><div class='stat'><b>10</b>релизов</div><div class='stat'><b>50 000</b>слушателей</div><div class='stat'><b>40</b>репутация</div><div class='stat'><b>1</b>сезон</div></div><button class='btn' onclick='market()'>НАЧАТЬ КАРЬЕРУ →</button></div>`)}
+function market(){let short=career.week%3===1?24:career.week%3===2?8:-6, lyrical=career.week%2?12:-4; shell(`Музыкальный рынок · Неделя ${career.week}`,'Что происходит на рынке',`<div class='market'><div>📱 Короткие видео<br><b class='${short>=0?'up':'down'}'>${short>=0?'↑':'↓'} ${Math.abs(short)}%</b></div><div>❤️ Лирика<br><b class='${lyrical>=0?'up':'down'}'>${lyrical>=0?'↑':'↓'} ${Math.abs(lyrical)}%</b></div><div>📻 Радио<br><b class='down'>↓ 9%</b></div><div>🎧 Плейлисты<br><b>стабильно</b></div></div><div class='stats'><div class='stat'><b>${fmt(career.cash)}</b>VS₽</div><div class='stat'><b>${fmt(career.listeners)}</b>слушателей</div><div class='stat'><b>${career.rep}</b>репутация</div><div class='stat'><b>${career.releases}</b>релизов</div></div><div class='nav'><button class='btn alt' onclick='careerScreen()'>МОЙ ЛЕЙБЛ</button><button class='btn' onclick='chooseSong()'>ВЫБРАТЬ ПЕСНЮ →</button></div>`)}
+function isReleased(songId){
+  let s=songs.find(x=>x.id===songId);
+  return s ? career.history.some(h=>h.song===s.name) : false;
+}
+function lockText(s){if(s.id==='friends')return 'После первого релиза';if(s.id==='artist')return 'Репутация 8';if(s.id==='news')return 'Репутация 12';if(s.id==='game')return 'Репутация 16';if(s.id==='capital')return '5 000 слушателей';if(s.id==='doctor')return 'Репутация 25';if(s.id==='waltz')return '9 релизов или Видеоотдел II после 8';return ''}
+function chooseSong(){
+ stopSongDemo();
+ shell('Шаг 1 из 6','Выбери песню',
+ `<div class='choice-intro'><b>Послушай демо перед выбором.</b> У каждой песни свой характер — стратегия релиза должна ему соответствовать.</div>
+ <div class='grid'>${songs.map(song=>{
+  let u=song.unlock(), released=isReleased(song.id), selected=state.song?.id===song.id;
+  let status=released?'✓ УЖЕ ВЫПУЩЕНА':(u?'ДОСТУПНА':'🔒 '+lockText(song));
+  let style=released?'opacity:.62;border-color:#4b8b91;':(u?'':'opacity:.48;cursor:not-allowed');
+  let click=(u&&!released)?`onclick='state.song=songs.find(x=>x.id==="${song.id}");chooseSong()'`:'';
+  return `<div class='card song-choice-card ${selected?'sel':''}' style='${style}' ${click}>
+    <div class='kicker'>${status}</div>
+    ${songCover(song)}<h3>${song.name}</h3>
+    <div class='desc'>${song.desc}</div>
+    <button type='button' class='demo-btn listen-song-btn' onclick='playSongDemo(event,"${song.id}",this)'><span class='listen-icon'>▶</span><span>ПОСЛУШАТЬ ПЕСНЮ</span></button><div class='demo-note'>фрагмент · 12 сек.</div>
+    <div class='song-tags'>${song.tags.map(t=>`<span class='tag'>${t}</span>`).join('')}</div>
+    ${released?`<span class='tag' style='background:#123b39;color:#9fe0c2;border-color:#2f665d'>РЕЛИЗ СОСТОЯЛСЯ</span>`:''}
+  </div>`
+ }).join('')}</div>
+ <div class='nav'><button class='btn alt' onclick='stopSongDemo();market()'>← Рынок</button><button class='btn' ${state.song?'':'disabled'} onclick='stopSongDemo();goalScreen()'>ДАЛЕЕ →</button></div>`)
+}
+
+
+function goalScreen(){
+shell('Продюсерская стратегия','Какова цель этого релиза?',
+`<p class='desc'>Цель влияет на то, что игра считает особенно успешным результатом. Её нельзя поменять после начала производства.</p>
+<div class='choices'>${goals.map(g=>`<div class='choice ${state.goal===g[0]?'sel':''}' onclick='state.goal="${g[0]}";goalScreen()'><b>${g[1]}</b><div class='small'>${g[2]}</div></div>`).join('')}</div>
+<div class='nav'><button class='btn alt' onclick='chooseSong()'>← Песня</button><button class='btn' ${state.goal?'':'disabled'} onclick='teamScreen()'>ДАЛЕЕ →</button></div>`)}
+function teamScreen(){
+shell('Команда релиза','Выбери до двух специалистов',
+`<p class='desc'>Специалисты оплачиваются на один релиз. Бюджет: <b>${fmt(career.cash)} VS₽</b>. Выбрано: <b>${state.team.length}/2</b>.</p>
+<div class='choices'>${team.map((m,i)=>`<div class='choice ${state.team.includes(i)?'sel':''}' onclick='toggleTeam(${i})'><b>${m[1]}</b><div class='price'>${fmt(discountPrice(m[2],'team'))} VS₽</div><div class='small'>${m[3]}</div></div>`).join('')}</div>
+<div class='nav'><button class='btn alt' onclick='goalScreen()'>← Цель</button><button class='btn' onclick='analysisScreen()'>ДАЛЕЕ →</button></div>`)}
+function toggleTeam(i){let p=state.team.indexOf(i),c=discountPrice(team[i][2],'team');if(p>=0){state.team.splice(p,1);refund(c)}else if(state.team.length<2&&spend(c))state.team.push(i);teamScreen()}
+function potentialLabel(v,precise){
+ if(!precise)return v>=82?'выглядит перспективно':v>=65?'нейтрально':'повышенный риск';
+ return v>=85?'высокий потенциал':v>=70?'хороший потенциал':v>=55?'средний потенциал':'повышенный риск';
+}
+function analysisScreen(){
+ let precise=state.team.includes(1)||career.teamLvl>=1||career.marketingLvl>=2,p=state.song.p;
+ let rows=[['🎬 Клип',p.vis],['📱 Reels',p.v],['🎧 Плейлисты',p.pl],['📻 Радио',p.radio],['📰 PR / медиа',p.talk]];
+ shell('Предрелизная аналитика','Что говорит команда',
+ `<div class='card' style='cursor:default'><div class='kicker'>${precise?'ОТЧЁТ МАРКЕТОЛОГА':'ПРЕДВАРИТЕЛЬНАЯ ОЦЕНКА'}</div><h3>${state.song.name}</h3>
+ <div class='analysis'>${rows.map(r=>`<div class='note'><b>${r[0]}</b><div class='small'>${potentialLabel(r[1],precise)}</div></div>`).join('')}</div>
+ ${precise?'':`<p class='small'>Без маркетолога прогноз намеренно менее точный.</p>`}</div>
+ <div class='nav'><button class='btn alt' onclick='teamScreen()'>← Команда</button><button class='btn' onclick='stageStudio()'>ДАЛЕЕ →</button></div>`)}
+function renderSingle(k,t,opts,key,next,back){shell(k,t,`<p class='desc'>Бюджет: <b>${fmt(career.cash)} VS₽</b> · Потрачено на релиз: <b>${fmt(state.spent)}</b></p><div class='choices'>${opts.map((o,i)=>`<div class='choice ${state[key]?.[0]===o[0]?'sel':''}' onclick='selectOne("${key}",${i},"${t}")'><b>${o[0]}</b><div class='price'>${fmt(o[1])} VS₽</div><div class='small'>Базовый эффект: +${o[2]}</div></div>`).join('')}</div><div class='nav'><button class='btn alt' onclick='${back}()'>← Назад</button><button class='btn' ${state[key]?'':'disabled'} onclick='${next}()'>ДАЛЕЕ →</button></div>`)}
+function selectOne(key,i){let studioOpts=studios.map(o=>[o[0],discountPrice(o[1],'studio'),o[2]+career.studioLvl*3]);let map={studio:studioOpts,arr:arrs,cover:covers},o=map[key][i];if(state[key])refund(state[key][1]);state[key]=null;if(spend(o[1]))state[key]=o;({studio:stageStudio,arr:stageArr,cover:stageCover}[key])()}
+function stageStudio(){
+ let opts=studios.map(o=>[o[0],discountPrice(o[1],'studio'),o[2]+career.studioLvl*3]);
+ renderSingle('Шаг 2 из 6','Запись',opts,'studio','stageArr','analysisScreen')
+}
+function stageArr(){renderSingle('Шаг 3 из 6','Аранжировка',arrs,'arr','stageCover','stageStudio')}
+function stageCover(){renderSingle('Шаг 4 из 6','Обложка',covers,'cover','stagePromo','stageArr')}
+function stagePromo(){shell('Шаг 5 из 6','Продвижение',`<p class='desc'>Бюджет: <b>${fmt(career.cash)} VS₽</b> · Резерв на неожиданности желательно сохранить.</p><div class='choices'>${promos.map((o,i)=>`<div class='choice ${state.promo.includes(i)?'sel':''}' onclick='togglePromo(${i})'><b>${o[0]}</b><div class='price'>${fmt(discountPrice(o[1],i===0?'video':'promo'))} VS₽</div><div class='small'>${hintPromo(i)}</div></div>`).join('')}</div><div class='nav'><button class='btn alt' onclick='stageCover()'>← Назад</button><button class='btn' ${state.promo.length?'':'disabled'} onclick='dilemmaScreen()'>ДАЛЕЕ →</button></div>`)}
+
+function songDNA(s){
+ const p=s.p||s;
+ const axes=[
+  ['Короткие видео',p.v],['Визуал / клип',p.vis],['Плейлисты',p.pl],
+  ['Радио',p.radio],['Обсуждение / PR',p.talk],['Эмоциональная связь',p.e],
+  ['Долгая жизнь',p.long],['Требовательность к качеству',p.q]
+ ].sort((a,b)=>b[1]-a[1]);
+ let top=axes.slice(0,3),weak=axes.slice(-2).reverse();
+ return {top,weak};
+}
+function dnaAdvice(s){
+ let d=songDNA(s);
+ return `<div class="econbox" style="margin-top:12px">
+ <div class="kicker">ПРОДЮСЕРСКАЯ ГИПОТЕЗА</div>
+ <p class="desc">У песни особенно сильны: <b>${d.top.map(x=>x[0]).join(', ')}</b>. 
+ Слабее выглядят: ${d.weak.map(x=>x[0]).join(', ')}.</p>
+ <div class="small">Это не готовый ответ: рынок и события могут изменить результат.</div></div>`;
+}
+function hintPromo(i){let val=state.song.p[promos[i][2]],precise=state.team.includes(1)||career.teamLvl>=1||career.marketingLvl>=2;if(!precise&&career.releases<2)return 'Точных данных пока нет';return (precise?'Маркетолог: ':'Аналитик: ')+potentialLabel(val,precise)}
+function togglePromo(i){let idx=state.promo.indexOf(i),cost=discountPrice(promos[i][1],i===0?'video':'promo');if(idx>=0){state.promo.splice(idx,1);refund(cost)}else if(spend(cost))state.promo.push(i);stagePromo()}
+function contractScreen(){if(career.cash>=1200||career.releases===0)return industryEventScreen();shell('Контракт','Лейблу не хватает оборотных средств',`<div class='event'><div class='kicker'>ПРЕДЛОЖЕНИЕ ПАРТНЁРА</div><h3>3 000 VS₽ прямо сейчас</h3><p>Партнёр финансирует кампанию, но получает <b>25% дохода этого релиза</b>.</p></div><div class='nav'><button class='btn alt' onclick='industryEventScreen()'>БЕЗ КОНТРАКТА</button><button class='btn' onclick='career.cash+=3000;state.contract=.25;industryEventScreen()'>ПРИНЯТЬ +3 000</button></div>`)}
+
+const industryEvents=[
+['Блогер заметил песню','Музыкальный блогер предлагает поставить фрагмент трека в ролик.',
+ [['Заплатить 700 VS₽',-700,7,0,'Шанс заметно увеличить охват.'],['Отказаться',0,0,0,'Сохраняем бюджет.']]],
+['Редактор плейлиста на связи','Редактор тематического плейлиста готов рассмотреть трек вне очереди.',
+ [['Отправить питч · 400 VS₽',-400,5,1,'Дополнительный шанс на плейлист.'],['Не тратить бюджет',0,0,0,'Оставляем первоначальный план.']]],
+['Конкурентный релиз','В ту же неделю выходит заметная песня в похожем настроении.',
+ [['Усилить рекламу · 900 VS₽',-900,4,0,'Пытаемся вернуть часть внимания.'],['Ничего не менять',0,-5,0,'Охват может просесть.']]],
+['Интервью для музыкального медиа','Редакция предлагает короткое интервью о новой песне.',
+ [['Согласиться',0,2,2,'Небольшой охват и рост репутации.'],['Отказаться',0,0,0,'Без дополнительных эффектов.']]],
+['Фрагмент подхватили пользователи','Отрывок песни начинает расходиться в пользовательских видео.',
+ [['Поддержать тренд · 600 VS₽',-600,9,0,'Добавляем контент и усиливаем волну.'],['Наблюдать',0,4,0,'Получаем более слабый органический эффект.']]],
+['Радио предлагает тестовую ротацию','Небольшая станция готова протестировать песню в эфире.',
+ [['Подготовить материал · 800 VS₽',-800,4,1,'Шанс расширить аудиторию.'],['Отказаться',0,0,0,'Сохраняем деньги.']]],
+['Неудачный рекламный креатив','Первые объявления показывают слабую реакцию аудитории.',
+ [['Переделать · 500 VS₽',-500,1,0,'Снижаем потенциальный ущерб.'],['Оставить как есть',0,-6,-1,'Кампания теряет эффективность.']]],
+['Предложение коллаборации','Небольшой артист предлагает совместный контент вокруг релиза.',
+ [['Согласиться · 500 VS₽',-500,5,1,'Получаем новую аудиторию.'],['Выпускать самостоятельно',0,0,0,'Сохраняем полный контроль.']]],
+['Живое выступление','Можно представить песню небольшой живой аудитории.',
+ [['Организовать · 900 VS₽',-900,3,2,'Меньше масштаба, больше доверия.'],['Пропустить',0,0,0,'Без дополнительных расходов.']]],
+['Спор вокруг песни','В комментариях начинается активная дискуссия о смысле трека.',
+ [['Вступить в разговор',0,4,1,'Поддерживаем интерес.'],['Не вмешиваться',0,1,0,'Пусть песня говорит сама.']]],
+['Плейлистный алгоритм дал шанс','Есть признаки повышенной вероятности рекомендаций.',
+ [['Добавить трафик · 500 VS₽',-500,6,0,'Помогаем алгоритму собрать данные.'],['Оставить органику',0,3,0,'Бесплатный, но слабее эффект.']]],
+['Освободилась съёмочная площадка','Можно быстро снять дополнительный live-фрагмент.',
+ [['Снять · 700 VS₽',-700,5,0,'Получаем дополнительный видеоматериал.'],['Не снимать',0,0,0,'Работаем с имеющимся контентом.']]],
+['Музыкальный паблик просит эксклюзив','Тематический паблик готов дать публикацию первым.',
+ [['Дать эксклюзив',0,5,1,'Дополнительное внимание.'],['Сохранить общий запуск',0,1,0,'Стратегия остаётся прежней.']]],
+['Техническая проблема','Один из рекламных материалов опубликован с ошибкой.',
+ [['Исправить · 300 VS₽',-300,0,0,'Быстро устраняем проблему.'],['Оставить',0,-4,-1,'Экономия может стоить охвата.']]],
+['Просят акустическую версию','После тизера появился интерес к камерной версии песни.',
+ [['Записать фрагмент · 600 VS₽',-600,3,1,'Укрепляем связь с аудиторией.'],['Оставить основной вариант',0,0,0,'Фокусируемся на основном релизе.']]],
+['Локальное музыкальное сообщество','Организаторы предлагают включить трек в тематическую подборку.',
+ [['Поддержать · 300 VS₽',-300,3,1,'Небольшой качественный охват.'],['Пропустить',0,0,0,'Без изменений.']]],
+['Неожиданный сильный отзыв','Авторитетный слушатель публикует положительный отзыв.',
+ [['Использовать в кампании',0,4,1,'Социальное доказательство усиливает интерес.'],['Не форсировать',0,2,0,'Отзыв работает органически.']]],
+['Аудитория устала от рекламы','Частота показов становится слишком высокой.',
+ [['Снизить давление',0,1,1,'Сохраняем доверие аудитории.'],['Продолжать',0,3,-1,'Больше контактов ценой лояльности.']]],
+['Появился удачный мем','Строчка песни неожиданно подходит для пользовательского мема.',
+ [['Подхватить · 300 VS₽',-300,7,0,'Шанс на вирусный охват.'],['Не менять образ песни',0,1,1,'Сохраняем позиционирование.']]],
+['Предложение от бренда','Бренд хочет использовать фрагмент песни в своём контенте.',
+ [['Согласиться · +900 VS₽',900,2,0,'Получаем деньги и дополнительный охват.'],['Отказаться',0,0,1,'Сохраняем независимость образа.']]]
+];
+
+/* v10.1 — persistent market trends + producer dilemmas */
+const trendPool=[
+ {name:'Короткие видео растут',key:'v',boost:12,weeks:2,icon:'📱'},
+ {name:'Радио снова в центре внимания',key:'radio',boost:12,weeks:2,icon:'📻'},
+ {name:'Плейлисты набирают силу',key:'pl',boost:12,weeks:3,icon:'🎧'},
+ {name:'Медиа ищут истории',key:'talk',boost:12,weeks:2,icon:'📰'},
+ {name:'Визуальная музыка в тренде',key:'vis',boost:12,weeks:2,icon:'🎬'}
+];
+function ensureTrend(){
+ if(!career.trend || career.trendWeeks<=0){
+   career.trend=trendPool[Math.floor(Math.random()*trendPool.length)];
+   career.trendWeeks=career.trend.weeks;
+ }
+ return career.trend;
+}
+function advanceTrend(){
+ if(career.trendWeeks>0)career.trendWeeks--;
+ if(career.trendWeeks<=0)career.trend=null;
+}
+function trendHTML(){
+ let t=ensureTrend();
+ return `<div class='card' style='cursor:default;margin:8px 0'>
+ <div class='kicker'>ТРЕНД РЫНКА · ЕЩЁ ${career.trendWeeks} НЕД.</div>
+ <h3>${t.icon} ${t.name}</h3>
+ <p class='desc'>Песни, хорошо совпадающие с этим трендом, получают дополнительный рыночный импульс.</p>
+ </div>`;
+}
+function producerDilemma(){
+ const sng=state.song,p=sng.p||sng;
+ const options=[
+  {title:'Блогер предлагает эксклюзив',text:'Отдать фрагмент песни блогеру на неделю?',yes:'Согласиться',no:'Отказаться',
+   yesOutcome:()=>{let ok=Math.random()<(p.v>=80?.68:.38); if(ok){state.delayedBoost=(state.delayedBoost||0)+.18;return 'Ролик блогера получил заметный органический охват.'} state.industryScore=(state.industryScore||0)-3;return 'Эксклюзив не дал ожидаемого эффекта, а неделю продвижения вы потеряли.'},
+   noOutcome:()=> 'Вы сохранили свободу продвижения, но отказались от возможного вирусного импульса.'},
+  {title:'Радио предлагает спецротацию',text:'Доплатить 1 200 VS₽ за дополнительную неделю ротации?',yes:'Вложить 1 200',no:'Пропустить',
+   yesOutcome:()=>{if(career.cash<1200)return 'На счету недостаточно средств — сделка не состоялась.';career.cash-=1200;state.spent+=1200;let ok=Math.random()<(p.radio>=80?.64:.34);if(ok){state.industryScore=(state.industryScore||0)+7;state.radioTail=.20;return 'Ротация дала дополнительный охват и продолжит работать после релиза.'}state.industryScore=(state.industryScore||0)-2;return 'Ротация прошла в слабых слотах и почти не дала новой аудитории.'},
+   noOutcome:()=> 'Вы сохранили 1 200 VS₽ и отказались от дополнительной ротации.'},
+  {title:'Плейлист просит ранний доступ',text:'Редактор готов рассмотреть песню до премьеры. Гарантий попадания нет.',yes:'Отправить',no:'Не отправлять',
+   yesOutcome:()=>{let ok=Math.random()<(p.pl>=82?.70:.40);if(ok){state.playlistExtra=.18;return 'Редактор добавил песню в заметную подборку.'}state.industryScore=(state.industryScore||0)-2;return 'Редактор прослушал трек, но в подборку его не включил.'},
+   noOutcome:()=> 'Вы сделали ставку на другие каналы продвижения.'},
+  {title:'Перенести премьеру?',text:'Команда предлагает задержать релиз и доработать материал за 500 VS₽.',yes:'Доработать',no:'Выпускать сейчас',
+   yesOutcome:()=>{if(career.cash<500)return 'На счету недостаточно средств для доработки.';career.cash-=500;state.spent+=500;let ok=Math.random()<.62;if(ok){state.quality=(state.quality||50)+6;state.industryScore=(state.industryScore||0)+2;return 'Доработка улучшила материал перед выпуском.'}state.industryScore=(state.industryScore||0)-3;return 'Неделя задержки не дала заметного улучшения, а рыночный момент стал слабее.'},
+   noOutcome:()=> 'Вы сохранили бюджет и текущую дату премьеры.'}
+ ];
+ return options[Math.floor(Math.random()*options.length)];
+}
+function flashWallet(){
+ const w=document.getElementById('wallet');if(!w)return;
+ w.classList.remove('wallet-change');void w.offsetWidth;w.classList.add('wallet-change');
+}
+function selectDilemmaChoice(el,choice){
+ window.__dilemmaChoice=choice;
+ document.querySelectorAll('.dilemma-choice').forEach(x=>{
+  x.classList.toggle('selected',x===el);
+  x.setAttribute('aria-pressed',x===el?'true':'false');
+  x.style.pointerEvents='auto';
+ });
+ const d=window.__currentDilemma;
+ const next=document.querySelector('[data-dilemma-next]');
+ if(next)next.disabled=false;
+ const note=document.querySelector('[data-dilemma-result]');
+ if(note)note.innerHTML=`<b>✓ Выбрано: ${choice==='yes'?d.yes:d.no}</b><br>Можно изменить выбор до нажатия «Далее».`;
+}
+function dilemmaScreen(){
+ const d=producerDilemma();
+ shell('Продюсерское решение','ДИЛЕММА ПЕРЕД ПРЕМЬЕРОЙ',`
+ <div class='card' style='cursor:default'>
+  ${visualScene('dilemma')}<div class='kicker'>РЕШЕНИЕ БЕЗ ОЧЕВИДНОГО ОТВЕТА</div>
+  <h3>${d.title}</h3><p class='desc'>${d.text}</p>
+ </div>
+ <div class='choices'>
+  <div class='choice dilemma-choice' data-choice='yes' onclick="selectDilemmaChoice(this,'yes')"><b>${d.yes}</b><span>Рискнуть ради дополнительного эффекта.</span></div>
+  <div class='choice dilemma-choice' data-choice='no' onclick="selectDilemmaChoice(this,'no')"><b>${d.no}</b><span>Сохранить текущую стратегию.</span></div>
+ </div>
+ <div class='decision-result' data-dilemma-result>Выбери один из вариантов.</div><div class='nav'><button class='btn alt' onclick='stagePromo()'>← Продвижение</button><button class='btn' data-dilemma-next disabled onclick='resolveDilemma()'>ДАЛЕЕ →</button></div>`);
+ window.__currentDilemma=d;window.__dilemmaChoice=null;
+}
+function resolveDilemma(){
+ if(!window.__dilemmaChoice){toast('Выбери решение');return}
+ const d=window.__currentDilemma,choice=window.__dilemmaChoice;
+ const outcome=choice==='yes'?d.yesOutcome():d.noOutcome();
+ state.dilemmaResult={choice:(choice==='yes'?d.yes:d.no),outcome};
+ saveCareer();wallet();flashWallet();
+ industryEventScreen();
+}
+function industryEventScreen(){
+ const ev=industryEvents[Math.floor(Math.random()*industryEvents.length)];
+ state.industryEvent=ev;
+ state.industryChoice=null;
+ state.industryReleaseStarted=false;
+ shell('Событие индустрии',ev[0],
+ `<div class='event'><p class='desc'>${ev[1]}</p></div>
+ <div class='choices'>${ev[2].map((c,i)=>`<div class='choice industry-choice' data-industry-choice='${i}' onclick='selectIndustryChoice(this,${i})'><b>${c[0]}</b><div class='small'>${c[4]}</div></div>`).join('')}</div>
+ <div class='decision-result' data-industry-result>Выбери один из вариантов. Выбор можно изменить.</div>
+ <div class='nav'><span class='flow-hint'>После выбора будет отдельный финальный экран.</span><button type='button' class='btn' data-industry-next onclick='industryConfirmScreen()'>ДАЛЕЕ →</button></div>`)
+ const next=document.querySelector('[data-industry-next]');
+ if(next)next.style.opacity='.38';
+}
+function selectIndustryChoice(el,i){
+ const ev=state.industryEvent;
+ if(!ev || !ev[2] || !ev[2][i]){toast('Ошибка события');return}
+ state.industryChoice=i;
+ document.querySelectorAll('.industry-choice').forEach(x=>{
+   const active=Number(x.dataset.industryChoice)===i;
+   x.classList.toggle('selected',active);
+   x.setAttribute('aria-pressed',active?'true':'false');
+ });
+ const c=ev[2][i];
+ const note=document.querySelector('[data-industry-result]');
+ if(note)note.innerHTML=`<b>✓ Выбрано: ${c[0]}</b><br>${c[4]}${c[1]!==0?` · Стоимость при подтверждении: ${c[1]<0?fmt(Math.abs(c[1]))+' VS₽':'+'+fmt(c[1])+' VS₽'}`:''}<br><span>До нажатия «Далее» выбор можно изменить.</span>`;
+ const next=document.querySelector('[data-industry-next]');
+ if(next)next.style.opacity='1';
+}
+function industryConfirmScreen(){
+ const ev=state.industryEvent;
+ const i=state.industryChoice;
+ if(i===null || i===undefined){toast('Сначала выбери один из вариантов');return}
+ if(!ev || !ev[2] || !ev[2][i]){toast('Ошибка выбранного события');return}
+ const c=ev[2][i];
+ const cost=c[1]<0?Math.abs(c[1]):0;
+ shell('Финальный шаг','Подтвердить выпуск',
+ `<div class='card' style='cursor:default'>
+   <div class='kicker'>ВЫБРАННОЕ РЕШЕНИЕ</div>
+   <h3>${c[0]}</h3>
+   <p class='desc'>${c[4]}</p>
+   <div class='stats'>
+     <div class='stat'><b>${cost?fmt(cost)+' VS₽':'0 VS₽'}</b>стоимость решения</div>
+     <div class='stat'><b>${fmt(career.cash)} VS₽</b>текущий баланс</div>
+   </div>
+   <p class='desc'>После нажатия кнопки решение будет применено и начнётся премьера. Вернуться и изменить выбор можно сейчас.</p>
+ </div>
+ <div class='nav'>
+   <button type='button' class='btn alt' onclick='industryEventBack()'>← ИЗМЕНИТЬ ВЫБОР</button>
+   <button type='button' class='btn' onclick='finalReleaseNow()'>ВЫПУСТИТЬ ПЕСНЮ →</button>
+ </div>`)
+}
+function industryEventBack(){
+ const ev=state.industryEvent, chosen=state.industryChoice;
+ shell('Событие индустрии',ev[0],
+ `<div class='event'><p class='desc'>${ev[1]}</p></div>
+ <div class='choices'>${ev[2].map((c,i)=>`<div class='choice industry-choice ${i===chosen?'selected':''}' data-industry-choice='${i}' onclick='selectIndustryChoice(this,${i})'><b>${c[0]}</b><div class='small'>${c[4]}</div></div>`).join('')}</div>
+ <div class='decision-result' data-industry-result><b>✓ Выбрано: ${ev[2][chosen][0]}</b><br>Выбор можно изменить.</div>
+ <div class='nav'><span class='flow-hint'>После выбора будет отдельный финальный экран.</span><button type='button' class='btn' data-industry-next onclick='industryConfirmScreen()'>ДАЛЕЕ →</button></div>`)
+}
+function finalReleaseNow(){
+ try{
+   if(state.industryReleaseStarted)return;
+   primeReleasePreview();
+   const ev=state.industryEvent, i=state.industryChoice;
+   if(i===null || i===undefined || !ev || !ev[2] || !ev[2][i]){toast('Выбор потерян. Вернись назад.');return}
+   const c=ev[2][i], cost=c[1]<0?Math.abs(c[1]):0;
+   if(cost>career.cash){toast(`Недостаточно средств: нужно ${fmt(cost)} VS₽`);return}
+
+   state.industryReleaseStarted=true;
+   if(cost){career.cash-=cost;state.spent+=cost}
+   else if(c[1]>0){career.cash+=c[1]}
+   state.industryScore=c[2]||0;
+   state.industryRep=c[3]||0;
+   state.industryTitle=ev[0];
+   state.industryDecision=c[0];
+
+   wallet();saveCareer();
+   release();
+ }catch(err){
+   state.industryReleaseStarted=false;
+   console.error(err);
+   toast('Ошибка выпуска: '+(err?.message||'неизвестная ошибка'));
+ }
+}
+function chooseIndustryEvent(i){
+ const el=document.querySelector(`[data-industry-choice="${i}"]`);
+ if(el)selectIndustryChoice(el,i);
+}
+ function eventScreen(){shell('Случайное событие','За день до релиза',`<div class='event'><div class='kicker'>ВХОДЯЩЕЕ ПРЕДЛОЖЕНИЕ</div><h3>Музыкальный блогер заметил демо</h3><p>Интеграция стоит <b>700 VS₽</b>. Результат заранее неизвестен.</p></div><div class='nav'><button class='btn alt' onclick='state.event="no";release()'>ОТКАЗАТЬСЯ</button><button class='btn' ${career.cash<700?'disabled':''} onclick='spend(700);state.event="yes";release()'>СОГЛАСИТЬСЯ · 700 VS₽</button></div>`)}
+
+let _releaseShellCapture=null;
+function release(){
+ try{
+  let result=null;
+  const originalShowRelease=showRelease;
+  showRelease=function(streams,loyal,income,partner,score,repGain,notes,profit,producerReview){
+   const songName=state.song?state.song.name:'Новый релиз';
+   const body=`<div class='release'><div class='vinyl'></div><div class='big-number'>${fmt(streams)}</div><div class='desc'>прослушиваний</div><div class='stats'><div class='stat'><b>+${fmt(loyal)}</b>слушателей</div><div class='stat'><b>+${fmt(income)}</b>VS₽ доход</div><div class='stat'><b>+${repGain}</b>репутация</div><div class='stat'><b>${Math.round(score)}</b>Release Score</div></div><div class='card' style='cursor:default;margin-top:12px;text-align:left'><div class='kicker'>ФИНАНСЫ РЕЛИЗА</div><div class='stats'><div class='stat'><b>${fmt(state.spent)}</b>вложено</div><div class='stat'><b>${fmt(income)}</b>доход сейчас</div><div class='stat'><b>${profit>=0?'+':''}${fmt(profit)}</b>результат сейчас</div></div></div><div class='nav'><button class='btn' onclick='careerScreen()'>ПРОДОЛЖИТЬ →</button></div></div>`;
+   result={k:'РЕЛИЗ СОСТОЯЛСЯ',t:songName,b:body,streams:Number(streams)||0};
+  };
+  try{ calculateRelease(); } finally { showRelease=originalShowRelease; }
+  if(!result)throw new Error('Не сформирован результат релиза');
+  runReleaseShow(result);
+ }catch(err){
+  state.industryReleaseStarted=false;
+  console.error('VUSTIN release error:',err);
+  toast('Ошибка запуска релиза: '+(err&&err.message?err.message:'неизвестная ошибка'));
+ }
+}
+function runReleaseShow(result){
+ document.body.dataset.scene='premiere';
+ let screen=$('#screen'),song=state.song?state.song.name:'Новый релиз';
+ const scene=`<div class="scene-head"><div class="scene-place"><i>●</i>ПРЕМЬЕРА</div><div class="scene-route">${[1,2,3,4,5].map(x=>`<span class="on"></span>`).join('')}</div></div>`;
+ let n=3;
+ function countdown(){
+   screen.innerHTML=scene+`<div class="release-show"><div class="release-count">${n}</div><div class="release-song">${song}</div></div>`; countdownSound(n);
+   if(n>1){n--;setTimeout(countdown,720)}
+   else setTimeout(()=>{
+     screen.innerHTML=scene+`<div class="release-show"><div class="release-flash"></div><div class="release-word">РЕЛИЗ</div><div class="release-song">${song}</div><div class="release-disc" style="position:relative"></div><div class="now-playing">♪ Сейчас звучит: ${song}</div></div>`; launchSound();setTimeout(playRealPreview,260);
+     setTimeout(()=>streamsPhase(result,scene,song),1050);
+   },720)
+ }
+ countdown();
+}
+function streamsPhase(result,scene,song){
+ let last=career.history[0],target=last?last.streams:0,screen=$('#screen');
+ screen.innerHTML=scene+`<div class="release-show"><div class="release-live">Релиз в эфире</div><div class="stream-counter" id="liveStreams">0</div><div class="stream-label">прослушиваний</div><div class="release-disc" style="position:relative;width:120px;height:120px"></div></div>`;
+ let el=document.getElementById('liveStreams'),start=performance.now(),dur=1900;
+ function tick(now){
+   let p=Math.min(1,(now-start)/dur),ease=1-Math.pow(1-p,3);
+   el.textContent=fmt(Math.round(target*ease));
+   if(p<1)requestAnimationFrame(tick);
+   else setTimeout(()=>showReleaseResult(result),550);
+ }
+ requestAnimationFrame(tick);
+}
+function showReleaseResult(result){
+ $('#screen').innerHTML=`<div class="scene-head"><div class="scene-place"><i>●</i>ИТОГИ ПРЕМЬЕРЫ</div><div class="scene-route">${[1,2,3,4,5].map(x=>`<span class="on"></span>`).join('')}</div></div><div class="reveal-card"><div class='kicker'>${result.k}</div><h2 class='section-title'>${result.t}</h2>${result.b}</div>`;
+ document.body.dataset.scene='premiere'; successSound();
+}
+
+function productionReview(s,promoIdx,score,income,profit){
+ const good=[],waste=[],better=[], p=s.p;
+ const label={v:'короткие видео',vis:'клип / визуал',pl:'плейлисты',radio:'радио',talk:'PR / медиа',q:'таргет'};
+ const ranked=promoIdx.map(i=>[i,p[promos[i][2]]]).sort((x,y)=>y[1]-x[1]);
+
+ if(ranked.length&&ranked[0][1]>=75)good.push(`${promos[ranked[0][0]][0]} хорошо совпали с характером песни и получили усиленный коммерческий эффект.`);
+ if((state.industryScore||0)>=5)good.push(`Решение в событии «${state.industryTitle}» заметно усилило релиз.`);
+ if(score>=80)good.push('Производство, упаковка и продвижение сложились в сильную комбинацию.');
+ if(profit>0)good.push(`Релиз вернул вложения и заработал ${fmt(profit)} VS₽ сверх затрат.`);
+ if(!good.length)good.push('Релиз состоялся, но ни один фактор не дал выраженного преимущества.');
+
+ ranked.filter(x=>x[1]<65).slice(0,2).forEach(x=>waste.push(`${promos[x[0]][0]} слабо подходят этой песне — такой бюджет почти не создаёт дополнительного охвата.`));
+ if((state.industryScore||0)<0)waste.push(`Решение в событии «${state.industryTitle}» снизило потенциал запуска.`);
+ if(profit<0&&state.spent>7000)waste.push('Высокий бюджет не окупился: дорогой запуск сам по себе не гарантирует результат.');
+ if(!waste.length)waste.push('Явно провальных расходов в этой кампании не обнаружено.');
+
+ const all=promos.map((x,i)=>[i,p[x[2]]]).sort((x,y)=>y[1]-x[1]);
+ const unused=all.find(x=>x[1]>=78&&!promoIdx.includes(x[0]));
+ if(unused)better.push(`Можно было протестировать ${promos[unused[0]][0]}: потенциал песни здесь ${unused[1]}/100.`);
+ if(p.q>=86&&state.studio?.[0]!=='Топ-студия')better.push('Песня чувствительна к качеству записи — более сильная студия могла помочь.');
+ if(p.vis>=90&&!promoIdx.includes(0))better.push('У песни очень высокий визуальный потенциал — клип мог стать ключевым активом.');
+ if(p.long>=90)better.push('У песни высокий потенциал долгой жизни: полезна стратегия не только на первую неделю.');
+ if(!better.length)better.push('Следующий шаг — сохранить сильные решения и точечно проверить другой канал продвижения.');
+ return {good:good.slice(0,3),waste:waste.slice(0,3),better:better.slice(0,3)};
+}
+function reviewHTML(r){
+ const box=(icon,title,arr)=>`<div class="card"><div style="font-size:26px">${icon}</div><h3>${title}</h3>${arr.map(x=>`<p class="desc" style="margin:8px 0">• ${x}</p>`).join('')}</div>`;
+ return `<div class="kicker" style="margin-top:22px">РАЗБОР ПРОДЮСЕРА</div>
+ <div class="grid" style="margin-top:10px">
+ ${box('✓','Что сработало',r.good)}
+ ${box('↘','Что стоило денег зря',r.waste)}
+ ${box('→','Что можно улучшить',r.better)}
+ </div>`;
+}
+
+
+/* v10.0 — living catalog and delayed returns */
+function advanceCatalog(){
+ if(!career.history||!career.history.length){career.lastCatalog=null;return}
+ let addStreams=0,addIncome=0,addListeners=0,revivals=[];
+ career.history.forEach((h,i)=>{
+   let age=Math.max(1,career.releases-i);
+   let base=(h.catalogBase||Math.round((h.streams||0)*.075));
+   let decay=Math.max(.18,1-age*.075);
+   let video=(h.videoTail||0);
+   let pr=(h.prTail||0);
+   let playlist=(h.playlistTail||0),radio=(h.radioTail||0);
+   let tail=base*decay*(1+video*.38+pr*.22+playlist*.28+radio*.20);
+   let revival=false;
+   // rare deterministic-feeling catalog revival: strong long-life songs are much more likely
+   let long=h.long||60;
+   if(long>=82 && Math.random()<.16){tail*=2.1;revival=true}
+   let st=Math.max(0,Math.round(tail));
+   let inc=Math.round(280*Math.pow(Math.max(st,500)/5000,.76));
+   let lis=Math.round(st*(.004+long/25000));
+   addStreams+=st;addIncome+=inc;addListeners+=lis;
+   h.catalogStreams=(h.catalogStreams||0)+st;
+   h.catalogIncome=(h.catalogIncome||0)+inc;
+   if(revival)revivals.push({song:h.song,streams:st});
+ });
+ career.cash+=addIncome;
+ career.listeners+=addListeners;
+ career.catalogIncome=(career.catalogIncome||0)+addIncome;
+ career.catalogStreams=(career.catalogStreams||0)+addStreams;
+ career.lastCatalog={streams:addStreams,income:addIncome,listeners:addListeners,revivals};
+}
+
+
+/* v10.2 — transparent finance & ROI */
+
+/* v12.2 — label growth made visible */
+function labelStage(){
+ let score=(career.rep||0)+(career.listeners||0)/3500+
+   (career.studioLvl||0)*8+(career.marketingLvl||0)*7+
+   (career.videoLvl||0)*7+(career.teamLvl||0)*7;
+ if(score>=55)return 2;
+ if(score>=24)return 1;
+ return 0;
+}
+function labelStageHTML(){
+ let n=labelStage();
+ let stages=[
+  {icon:'🏠',name:'Небольшой кабинет',sub:'Здесь начинается VUSTIN RECORDS',next:'До профессиональной студии'},
+  {icon:'🎚️',name:'Профессиональная студия',sub:'У лейбла уже есть команда, техника и имя',next:'До собственного офиса'},
+  {icon:'🏢',name:'Офис VUSTIN RECORDS',sub:'Полноценный музыкальный лейбл',next:'Максимальный уровень'}
+ ];
+ let a=stages[n];
+ return `<div class="label-growth level-${n}">
+   <div class="label-room">
+    <div class="room-icon">${a.icon}</div>
+    <div class="room-copy"><div class="kicker">VUSTIN RECORDS · УРОВЕНЬ ${n+1}/3</div>
+    <h3>${a.name}</h3><p>${a.sub}</p></div>
+   </div>
+   <div class="growth-track"><i style="width:${n===0?22:n===1?62:100}%"></i></div>
+   <small>${a.next}</small>
+ </div>`;
+}
+function staffVisualHTML(){
+ let staff=[
+  ['🎧','Звукорежиссёр','Качество записи',career.teamLvl||0],
+  ['📈','Маркетолог','Эффективность кампаний',career.marketingLvl||0],
+  ['🎬','Видеограф','Клипы и визуал',career.videoLvl||0],
+  ['📰','PR-менеджер','Медиа и репутация',Math.min(2,Math.floor((career.rep||0)/20))]
+ ];
+ return `<div class="staff-grid">${staff.map(x=>`
+ <div class="staff-card"><span>${x[0]}</span><div><b>${x[1]}</b><small>${x[2]}</small></div>
+ <em>${x[3]>=2?'PRO':x[3]===1?'В команде':'Доступен'}</em></div>`).join('')}</div>`;
+}
+
+function financeTotals(){
+ let h=career.history||[];
+ let invested=h.reduce((a,x)=>a+(x.spent||0),0);
+ let releaseIncome=h.reduce((a,x)=>a+(x.income||0),0);
+ let catalogIncome=h.reduce((a,x)=>a+(x.catalogIncome||0),0);
+ let totalIncome=releaseIncome+catalogIncome;
+ let net=totalIncome-invested;
+ let roi=invested?Math.round((net/invested)*100):0;
+ return {invested,releaseIncome,catalogIncome,totalIncome,net,roi};
+}
+function songROI(h){
+ let invested=h.spent||0,total=(h.income||0)+(h.catalogIncome||0);
+ return invested?Math.round(((total-invested)/invested)*100):0;
+}
+function roiLabel(v){
+ return v>=25?'Сильная инвестиция':v>=0?'Окупилось':v>=-20?'Пока не окупилось':'Высокий убыток';
+}
+function financeDashboardHTML(){
+ let f=financeTotals();
+ return `<div class='card finance-card' style='cursor:default;margin-top:10px'>
+ <div class='kicker'>ФИНАНСЫ ЛЕЙБЛА</div>
+ <div class='stats finance-stats'>
+  <div class='stat'><b>${fmt(f.invested)}</b>вложено</div>
+  <div class='stat'><b>${fmt(f.releaseIncome)}</b>доход релизов</div>
+  <div class='stat'><b>${fmt(f.catalogIncome)}</b>доход каталога</div>
+  <div class='stat'><b>${f.net>=0?'+':''}${fmt(f.net)}</b>чистый результат</div>
+  <div class='stat'><b>${f.roi>=0?'+':''}${f.roi}%</b>ROI сезона</div>
+ </div>
+ <p class='desc'>ROI учитывает первоначальный доход и всё, что песни заработали позже через каталог.</p>
+ </div>`;
+}
+
+function catalogSummaryHTML(){
+ let c=career.lastCatalog;
+ if(!c||!c.streams)return '';
+ let revival=(c.revivals||[])[0];
+ return `<div class='card' style='cursor:default;margin-top:10px'>
+ <div class='kicker'>КАТАЛОГ РАБОТАЕТ</div>
+ <div class='stats'>
+  <div class='stat'><b>+${fmt(c.streams)}</b>старых прослушиваний</div>
+  <div class='stat'><b>+${fmt(c.income)}</b>VS₽</div>
+  <div class='stat'><b>+${fmt(c.listeners)}</b>слушателей</div>
+ </div>
+ ${revival?`<p class='desc'>🔥 «${revival.song}» снова подхватили рекомендации: ${fmt(revival.streams)} прослушиваний за неделю.</p>`:
+ `<p class='desc'>Предыдущие релизы продолжают приносить аудиторию и деньги между премьерами.</p>`}
+ </div>`;
+}
+
+
+/* v11.4 — risk, force majeure and visible consequences */
+const forceMajeurePool=[
+ {kind:'bad',title:'Алгоритмы охладели',text:'Рекомендательные системы дали песне меньше показов, чем ожидалось.',stream:.76,income:.94,rep:0},
+ {kind:'bad',title:'Реклама дала дорогой трафик',text:'Кампания привела много случайных переходов, но слабую конверсию в слушателей.',stream:.84,income:.91,rep:0},
+ {kind:'bad',title:'Плейлист снял трек',text:'Редактор изменил подборку раньше ожидаемого.',stream:.80,income:.95,rep:0},
+ {kind:'bad',title:'Клип задержался',text:'Видео вышло позже основного импульса релиза.',stream:.86,income:.96,rep:0},
+ {kind:'good',title:'Органический всплеск',text:'Слушатели начали самостоятельно делиться песней.',stream:1.28,income:1.12,rep:1},
+ {kind:'good',title:'Пользовательское видео',text:'Неожиданный ролик с песней начал набирать просмотры.',stream:1.35,income:1.10,rep:1},
+ {kind:'good',title:'Неожиданная поддержка радио',text:'Ведущий поставил песню вне запланированной ротации.',stream:1.22,income:1.10,rep:1}
+];
+function rollForceMajeure(){
+ let r=Math.random();
+ // Most releases are normal; negative surprises are deliberately more common than jackpots.
+ if(r<.24)return forceMajeurePool[Math.floor(Math.random()*4)];
+ if(r<.36)return forceMajeurePool[4+Math.floor(Math.random()*3)];
+ return {kind:'neutral',title:'Без форс-мажоров',text:'Релиз прошёл примерно по плану.',stream:1,income:1,rep:0};
+}
+function riskFactorForSpend(){
+ // Overspending raises execution complexity and makes bad ROI possible.
+ let x=Math.max(0,(state.spent-9000)/16000);
+ return Math.min(.18,x*.18);
+}
+
+/* v12.3 — cinematic release moment */
+function releaseMomentHTML(song,streams,income,loyal,profit){
+ let roi=state.spent?Math.round((profit/state.spent)*100):0;
+ return `<div class="release-moment">
+  <div class="release-stage">
+   <div class="vinyl-wrap">
+    <div class="vinyl-disc"><img src="${song.cover||''}" alt=""></div>
+    <img class="release-art" src="${song.cover||''}" alt="">
+   </div>
+   <div class="release-copy">
+    <div class="kicker">ПРЕМЬЕРА · VUSTIN RECORDS</div>
+    <h2>${song.name}</h2>
+    <div class="live-counter" data-target="${streams}">0</div>
+    <small>прослушиваний</small>
+   </div>
+  </div>
+  <div class="reveal-results">
+   <div class="reveal-stat" style="--d:.25s"><b>+${fmt(loyal)}</b><span>постоянных слушателей</span></div>
+   <div class="reveal-stat" style="--d:.45s"><b>${fmt(income)} VS₽</b><span>доход релиза</span></div>
+   <div class="reveal-stat ${profit<0?'loss':'gain'}" style="--d:.65s"><b>${profit>=0?'+':''}${fmt(profit)} VS₽</b><span>результат</span></div>
+   <div class="reveal-stat ${roi<0?'loss':'gain'}" style="--d:.85s"><b>${roi>=0?'+':''}${roi}%</b><span>ROI сейчас</span></div>
+  </div>
+ </div>`;
+}
+function animateReleaseCounter(){
+ let el=document.querySelector('.live-counter');if(!el)return;
+ let target=Number(el.dataset.target||0),start=performance.now(),dur=1450;
+ function tick(now){
+  let p=Math.min(1,(now-start)/dur),ease=1-Math.pow(1-p,3);
+  el.textContent=fmt(Math.round(target*ease));
+  if(p<1)requestAnimationFrame(tick);
+ }
+ requestAnimationFrame(tick);
+}
+
+function consequenceHTML(){
+ let f=state.forceResult,d=state.dilemmaResult;
+ return `<div class='card' style='cursor:default;margin-top:12px;text-align:left'>
+ ${visualScene('force')}<div class='kicker'>ПОСЛЕДСТВИЯ РЕШЕНИЙ</div>
+ ${d?`<p class='desc'><b>Дилемма:</b> ${d.choice}<br><b>Что произошло:</b> ${d.outcome}</p>`:''}
+ ${f?`<p class='desc'><b>${f.kind==='bad'?'⚠️':f.kind==='good'?'🔥':'•'} ${f.title}</b><br>${f.text}</p>`:''}
+ </div>`;
+}
+
+function calculateRelease(){
+ let s=state.song,p=s.p,notes=[];
+ let quality=Math.min(100,p.q*.55+(state.studio?.[2]||0)+(state.arr?.[2]||0)*.7+(state.team.includes(0)?8:0));
+ let weighted=[],weights=[1,.85,.65,.4,.3];
+ state.promo.forEach(idx=>{
+   let pr=promos[idx],val=p[pr[2]];
+   if(state.team.includes(2)&&idx===0)val=Math.min(100,val+12);
+   if(idx===0)val=Math.min(100,val+career.videoLvl*5);
+   if(state.team.includes(3)&&idx===1)val=Math.min(100,val+12);
+   if(state.team.includes(4)&&idx===4)val=Math.min(100,val+12);
+   if(idx!==0)val=Math.min(100,val+career.marketingLvl*3);
+   weighted.push([val,pr[0]]);
+ });
+ weighted.sort((x,y)=>y[0]-x[0]);
+ let denom=weighted.reduce((a,_,i)=>a+(weights[i]||.25),0);
+ let fit=weighted.length?weighted.reduce((a,x,i)=>a+x[0]*(weights[i]||.25),0)/denom:30;
+ weighted.forEach(x=>notes.push([x[0]>=85?'Сильное решение':x[0]>=70?'Хорошее решение':'Слабое решение',`${x[1]}: соответствие песне ${x[0]}/100.`]));
+
+ let market=state.promo.includes(1)?82:65;
+ let industry=Math.max(-10,Math.min(10,state.industryScore||0));
+ let activeTrend=ensureTrend();
+ let trendVal=p[activeTrend.key]||0;
+ let trendBoost=trendVal>=80?7:trendVal>=65?4:trendVal>=50?2:0;
+ industry+=trendBoost;
+ let repBoost=Math.min(85,50+career.rep);
+ let score=Math.max(20,Math.min(97,.30*quality+.30*fit+.15*((p.e+p.talk)/2)+.10*market+.05*repBoost+industry));
+
+ let ranges=score<40?[2000,15000]:score<55?[15000,40000]:score<70?[40000,100000]:score<80?[100000,250000]:score<90?[250000,700000]:[700000,1400000];
+ let lo=score<40?20:score<55?40:score<70?55:score<80?70:score<90?80:90,span=score<40?20:score<80?15:10;
+ let streams=(ranges[0]+(ranges[1]-ranges[0])*((score-lo)/span))*(.9+Math.random()*.2);
+
+ // v9.8: money works only when it matches the song.
+ // Expensive channels can now pay back on the right material, but remain wasteful on a poor fit.
+ const channelPower=[.42,.26,.24,.30,.28,.22]; // clip, reels, playlists, radio, PR, target
+ let activation=0;
+ state.promo.forEach(idx=>{
+   let val=p[promos[idx][2]];
+   if(state.team.includes(2)&&idx===0)val=Math.min(100,val+12);
+   if(idx===0)val=Math.min(100,val+career.videoLvl*5);
+   if(state.team.includes(3)&&idx===1)val=Math.min(100,val+12);
+   if(state.team.includes(4)&&idx===4)val=Math.min(100,val+12);
+   if(idx!==0)val=Math.min(100,val+career.marketingLvl*3);
+   let match=Math.max(0,Math.min(1,(val-55)/45));
+   activation+=channelPower[idx]*match*match;
+ });
+ // diminishing returns stop “buy everything” from becoming the dominant strategy
+ activation=Math.min(.48,activation/(1+Math.max(0,state.promo.length-1)*.30));
+ let productionLift=1+Math.max(0,quality-72)/420;
+ let overspendRisk=riskFactorForSpend();
+ let execution=.88+Math.random()*.22-overspendRisk*Math.random();
+ streams=Math.max(1000,Math.round(streams*(1+activation+(state.delayedBoost||0)+(state.playlistExtra||0))*productionLift*execution));
+ state.forceResult=rollForceMajeure();
+ streams=Math.max(1000,Math.round(streams*state.forceResult.stream));
+ if(state.goal==='hit')streams=Math.round(streams*1.10);
+
+ // Strong production and song longevity create a larger permanent audience.
+ let catalogFactor=1+Math.max(0,quality-72)/180+Math.max(0,p.long-75)/260;
+ let loyal=Math.round(streams*(.018+p.e/6000+p.long/9000)*catalogFactor*(state.goal==='fans'?1.28:1));
+
+ // Less concave revenue curve: a successful large release can now justify a major campaign.
+ let gross=Math.round(820*Math.pow(Math.max(streams,1000)/10000,0.74)*(state.goal==='profit'?1.15:1));
+ gross=Math.round(gross*(state.forceResult?state.forceResult.income:1));
+ let partner=Math.round(gross*(state.contract||0)),income=gross-partner;
+ let repGain=score>=90?6:score>=82?5:score>=74?4:score>=66?3:score>=58?2:score>=48?1:0;
+ if(state.goal==='rep'&&score>=66)repGain+=1;
+ repGain+=(state.industryRep||0); repGain=Math.max(-2,repGain);
+
+ career.cash+=income;career.listeners+=loyal;career.rep=Math.max(0,career.rep+repGain);career.releases++;career.week++;
+
+ let missed=promos.map((x,i)=>[x,i,p[x[2]]]).filter(x=>!state.promo.includes(x[1])).sort((x,y)=>y[2]-x[2])[0];
+ if(missed)notes.push(['Упущенная возможность',`${missed[0][0]} имел потенциал ${missed[2]}/100.`]);
+ let dna=songDNA(s);
+ notes.unshift(['ДНК песни',`Сильные стороны: ${dna.top.map(x=>x[0]).join(', ')}. Слабее: ${dna.weak.map(x=>x[0]).join(', ')}.`]);
+ if(state.industryTitle)notes.unshift(['Событие индустрии',`${state.industryTitle}: ${state.industryDecision}.`]);
+ let goalName=(goals.find(g=>g[0]===state.goal)||[])[1]||'—';
+ notes.unshift(['Цель релиза',`${goalName}: стратегия учтена в итоговом результате.`]);
+
+ let profit=income-state.spent;
+ let producerReview=productionReview(s,state.promo,score,income,profit);
+ advanceCatalog();
+ let videoTail=state.promo.includes(0)?Math.max(0,(p.vis-60)/40):0;
+ let prTail=state.promo.includes(4)?Math.max(0,(p.talk-60)/40):0;
+ let radioTail=state.radioTail||0;
+ let playlistTail=(state.promo.includes(2)?Math.max(0,(p.pl-60)/40):0)+(state.playlistExtra||0);
+ advanceTrend();
+ career.history.unshift({song:s.name,songId:s.id,spent:state.spent,streams,income,profit,loyal,score,repGain,
+   long:p.long||60,catalogBase:Math.round(streams*(.055+(p.long||60)/2200)),
+   videoTail,prTail,playlistTail,radioTail,dilemma:state.dilemmaResult||null,force:state.forceResult||null,catalogStreams:0,catalogIncome:0});
+ setTimeout(animateReleaseCounter,80);
+ showRelease(streams,loyal,income,partner,score,repGain,notes,profit,producerReview);
+}
+function showRelease(streams,loyal,income,partner,score,repGain,notes,profit,producerReview){shell('Релиз состоялся',state.song.name,`<div class='release'><div class='vinyl'></div><div class='big-number'>${fmt(streams)}</div><div class='desc'>прослушиваний</div><div class='stats'><div class='stat'><b>+${fmt(loyal)}</b>слушателей</div><div class='stat'><b>+${fmt(income)}</b>VS₽ доход</div><div class='stat'><b>+${repGain}</b>репутация</div><div class='stat'><b>${Math.round(score)}</b>Release Score</div></div>${partner?`<p class='small'>Партнёру выплачено: ${fmt(partner)} VS₽.</p>`:''}
+${(state.promo.includes(0)||state.promo.includes(2)||state.promo.includes(4))?`<div class='card' style='cursor:default;margin-top:12px;text-align:left'><div class='kicker'>ОТЛОЖЕННЫЙ ЭФФЕКТ</div><p class='desc'>Клип, плейлисты и PR могут продолжать работать после премьеры. Их полная окупаемость проявится в следующих игровых неделях.</p></div>`:''}
+<div class='card' style='cursor:default;margin-top:12px;text-align:left'>
+ ${releaseMomentHTML(s,streams,income,loyal,profit)}${consequenceHTML()}<div class='kicker'>ФИНАНСЫ РЕЛИЗА</div>
+ <div class='stats'>
+  <div class='stat'><b>${fmt(state.spent)}</b>вложено</div>
+  <div class='stat'><b>${fmt(income)}</b>доход сейчас</div>
+  <div class='stat'><b>${profit>=0?'+':''}${fmt(profit)}</b>результат сейчас</div>
+  <div class='stat'><b>${state.spent?Math.round((profit/state.spent)*100):0}%</b>ROI сейчас</div>
+ </div>
+ <p class='desc'>Это промежуточный ROI. Каталог, клип, PR, радио и плейлисты могут изменить итоговую окупаемость позже.</p>
+ </div>
+<div class='card' style='cursor:default;margin-top:16px;text-align:left'>
+<div class='kicker'>ФИНАНСОВЫЙ РЕЗУЛЬТАТ РЕЛИЗА</div>
+<div class='stats'>
+<div class='stat'><b>${fmt(state.spent)}</b>вложено</div>
+<div class='stat'><b>${fmt(income)}</b>доход</div>
+<div class='stat'><b class='${profit>=0?"reserve-good":"reserve-low"}'>${profit>=0?"+":""}${fmt(profit)}</b>${profit>=0?"прибыль":"убыток"}</div>
+<div class='stat'><b>${fmt(career.cash)}</b>капитал</div>
+</div>
+</div></div>${reviewHTML(producerReview)}<h3 style='margin-top:22px'>Технические детали релиза</h3><div class='analysis'>${notes.map(n=>`<div class='note'><b>${n[0]}</b><div class='small'>${n[1]}</div></div>`).join('')}</div><div class='nav'><button class='btn alt' onclick='historyScreen()'>ИСТОРИЯ РЕЛИЗОВ</button><button class='btn' onclick='careerScreen()'>МОЙ ЛЕЙБЛ →</button></div>`)}
+function status(){return career.cash<2000?'Критический резерв':career.cash<7000?'Независимый лейбл':career.cash<20000?'Развивающийся лейбл':'Устойчивый лейбл'}
+
+
+function seasonFinale(){
+ stopRealPreview();setTimeout(()=>gameFeel('СЕЗОН ЗАВЕРШЁН','10 релизов стали историей VUSTIN RECORDS'),500);
+ let H=career.history||[];
+ let totalStreams=H.reduce((a,x)=>a+(x.streams||0),0);
+ let totalIncome=H.reduce((a,x)=>a+(x.income||0),0);
+ let totalSpent=H.reduce((a,x)=>a+(x.spent||0),0);
+ let totalProfit=H.reduce((a,x)=>a+(x.profit||0),0);
+ let bestStreams=H.length?[...H].sort((a,b)=>(b.streams||0)-(a.streams||0))[0]:null;
+ let bestProfit=H.length?[...H].sort((a,b)=>(b.profit||0)-(a.profit||0))[0]:null;
+ let biggestBet=H.length?[...H].sort((a,b)=>(b.spent||0)-(a.spent||0))[0]:null;
+ let goals=[
+   ['10 релизов',career.releases>=10],
+   ['50 000 постоянных слушателей',career.listeners>=50000],
+   ['Репутация 40',career.rep>=40]
+ ];
+ let reached=goals.filter(x=>x[1]).length;
+ let infra=career.studioLvl+career.marketingLvl+career.videoLvl+career.teamLvl;
+ let portrait=[];
+ if(totalProfit>0)portrait.push('Сезон завершён с положительным финансовым результатом.');
+ else portrait.push('Сезон потребовал больше инвестиций, чем вернул напрямую.');
+ if(career.listeners>=50000)portrait.push('Лейбл сформировал заметное ядро постоянных слушателей.');
+ else portrait.push('Аудитория выросла, но цель в 50 000 постоянных слушателей ещё не достигнута.');
+ if(infra>=5)portrait.push('Значительная часть капитала была вложена в инфраструктуру лейбла.');
+ else portrait.push('Развитие шло преимущественно через отдельные релизы, а не инфраструктуру.');
+
+ shell('Финал сезона','VUSTIN RECORDS · Сезон 1 завершён',
+ `<div class='card' style='cursor:default;text-align:center'>
+   <div class='final-crown'>✦</div><div class='kicker'>10 РЕЛИЗОВ · ОДНА ИСТОРИЯ</div>
+   <h2 class='section-title' style='margin-bottom:8px'>Первый сезон завершён</h2>
+   <p class='desc'>Это фактический портрет твоей карьеры за сезон — без оценки «хорошо» или «плохо».</p>
+ </div>
+ <div class='stats' style='margin-top:14px'>
+   <div class='stat'><b>${fmt(totalStreams)}</b>прослушиваний</div>
+   <div class='stat'><b>${fmt(career.listeners)}</b>постоянных слушателей</div>
+   <div class='stat'><b>${career.rep}</b>репутация</div>
+   <div class='stat'><b>${fmt(career.cash)}</b>VS₽ капитал</div>
+ </div>
+ <div class='grid' style='margin-top:14px'>
+   <div class='card'><div class='kicker'>САМЫЙ ПРОСЛУШИВАЕМЫЙ</div><h3>${bestStreams?bestStreams.song:'—'}</h3><div class='big-number' style='font-size:38px'>${bestStreams?fmt(bestStreams.streams):0}</div><div class='small'>прослушиваний</div></div>
+   <div class='card'><div class='kicker'>САМЫЙ ПРИБЫЛЬНЫЙ</div><h3>${bestProfit?bestProfit.song:'—'}</h3><div class='big-number' style='font-size:38px'>${bestProfit?(bestProfit.profit>=0?'+':'')+fmt(bestProfit.profit):0}</div><div class='small'>VS₽ результат релиза</div></div>
+   <div class='card'><div class='kicker'>КРУПНЕЙШАЯ СТАВКА</div><h3>${biggestBet?biggestBet.song:'—'}</h3><div class='big-number' style='font-size:38px'>${biggestBet?fmt(biggestBet.spent):0}</div><div class='small'>VS₽ вложено</div></div>
+ </div>
+ <div class='econbox' style='margin-top:14px'>
+   <div class='kicker'>ЭКОНОМИКА СЕЗОНА</div>
+   <div class='stats'>
+    <div class='stat'><b>${fmt(totalSpent)}</b>вложено</div>
+    <div class='stat'><b>${fmt(totalIncome)}</b>доход релизов</div>
+    <div class='stat'><b class='${totalProfit>=0?"reserve-good":"reserve-low"}'>${totalProfit>=0?"+":""}${fmt(totalProfit)}</b>результат</div>
+   </div>
+ </div>
+ <div class='grid' style='margin-top:14px'>
+   <div class='card'><div class='kicker'>ЦЕЛИ СЕЗОНА · ${reached}/3</div>
+     ${goals.map(g=>`<p class='desc' style='margin:7px 0'>${g[1]?'✓':'○'} ${g[0]}</p>`).join('')}
+   </div>
+   <div class='card'><div class='kicker'>VUSTIN RECORDS</div>
+     <p class='desc'>Студия: <b>${career.studioLvl}/2</b></p>
+     <p class='desc'>Маркетинг: <b>${career.marketingLvl}/2</b></p>
+     <p class='desc'>Видеоотдел: <b>${career.videoLvl}/2</b></p>
+     <p class='desc'>Команда: <b>${career.teamLvl}/2</b></p>
+   </div>
+   <div class='card'><div class='kicker'>ПОРТРЕТ КАРЬЕРЫ</div>
+     ${portrait.map(x=>`<p class='desc' style='margin:7px 0'>${x}</p>`).join('')}
+   </div>
+ </div>
+ <div class='kicker' style='margin-top:22px'>10 РЕЛИЗОВ СЕЗОНА</div>
+ <div style='overflow:auto;-webkit-overflow-scrolling:touch;margin-top:10px'>
+ <table style='width:100%;min-width:760px;border-collapse:collapse'>
+ <thead><tr><th>Песня</th><th>Прослушивания</th><th>Вложено</th><th>Доход</th><th>Результат</th></tr></thead>
+ <tbody>${H.map(x=>`<tr><td>${x.song}</td><td>${fmt(x.streams||0)}</td><td>${fmt(x.spent||0)}</td><td>${fmt(x.income||0)}</td><td>${(x.profit||0)>=0?'+':''}${fmt(x.profit||0)}</td></tr>`).join('')}</tbody>
+ </table></div>
+ <div class='nav'>
+   <button class='btn alt' onclick='historyScreen()'>ИСТОРИЯ РЕЛИЗОВ</button>
+   <button class='btn' onclick='restartSeason()'>НОВЫЙ СЕЗОН →</button>
+ </div>`)
+}
+function restartSeason(){
+ if(!confirm('Начать новый сезон? Текущий прогресс будет сброшен.'))return;
+ deleteSave();
+ career={cash:10000,listeners:0,rep:0,releases:0,history:[],week:1,studioLvl:0,marketingLvl:0,videoLvl:0,teamLvl:0,catalogIncome:0,catalogStreams:0,lastCatalog:null,trend:null,trendWeeks:0};
+ state={};
+ resetRelease();saveCareer();careerScreen();
+}
+
+function developmentScreen(){
+ shell('Развитие лейбла','Инвестируй в постоянные активы',
+ `<p class='desc'>Эти улучшения остаются с лейблом на все будущие релизы. Капитал: <b>${fmt(career.cash)} VS₽</b>.</p>
+ <div class='grid'>${upgrades.map(u=>{
+   let lvl=career[u[0]],cost=upgradeCost(u[0]),max=lvl>=2;
+   return `<div class='card' style='cursor:default'>
+    <div class='kicker'>${u[3][lvl]}</div><h3>${u[1]}</h3><div class='desc'>${u[4]}</div>
+    <div class='price'>${max?'МАКСИМАЛЬНЫЙ УРОВЕНЬ':fmt(cost)+' VS₽'}</div>
+    <button class='btn' style='margin-top:14px;width:100%' ${max||career.cash<cost?'disabled':''} onclick='buyUpgrade("${u[0]}")'>${max?'ГОТОВО':'УЛУЧШИТЬ → '+u[3][lvl+1]}</button>
+   </div>`}).join('')}</div>
+ <div class='nav'><button class='btn alt' onclick='careerScreen()'>← МОЙ ЛЕЙБЛ</button><button class='btn' onclick='newRelease()'>СЛЕДУЮЩИЙ РЕЛИЗ →</button></div>`)
+}
+function buyUpgrade(key){
+ if(!['studioLvl','marketingLvl','videoLvl','teamLvl'].includes(key)||career[key]>=2)return;
+ let c=upgradeCost(key); if(c===null||!Number.isFinite(c)||career.cash<c)return;
+ career.cash-=c; career[key]++; developmentScreen();
+}
+function careerScreen(){if(career.releases>=10)return seasonFinale();let goal=Math.min(100,Math.round((career.releases/10+career.listeners/50000+career.rep/40)/3*100));shell('Карьера',`VUSTIN RECORDS · ${status()}`,`<div class='stats'><div class='stat'><b>${fmt(career.cash)}</b>VS₽</div><div class='stat'><b>${fmt(career.listeners)}</b>слушателей</div><div class='stat'><b>${career.rep}</b>репутация</div><div class='stat'><b>${career.releases}/10</b>релизов</div></div><div class='card' style='cursor:default'><div class='kicker'>ПРОГРЕСС СЕЗОНА · ${goal}%</div><h3>Цель: построить устойчивый музыкальный лейбл</h3><p class='desc'>10 релизов · 50 000 постоянных слушателей · репутация 40. Финальный релиз сезона — «Вальс».</p></div><div class='card' style='cursor:default;margin-top:14px'>
+<div class='kicker'>СЕЗОН 1 · ПРОГРЕСС</div>
+<div class='stats' style='margin-bottom:16px'>
+<div class='stat'><b>${career.releases}/10</b>релизов</div>
+<div class='stat'><b>${fmt(career.listeners)}</b>из 50 000 слушателей</div>
+<div class='stat'><b>${career.rep}</b>из 40 репутации</div>
+</div>
+${labelStageHTML()}<div class='kicker'>ИНФРАСТРУКТУРА</div>
+<div class='stats'>
+<div class='stat'><b>${career.studioLvl}</b>Студия</div>
+<div class='stat'><b>${career.marketingLvl}</b>Маркетинг</div>
+<div class='stat'><b>${career.videoLvl}</b>Видео</div>
+<div class='stat'><b>${career.teamLvl}</b>Команда</div>
+</div></div>
+${labelStageHTML()}${staffVisualHTML()}${financeDashboardHTML()}${catalogSummaryHTML()}<div class='nav'><button class='btn alt' onclick='historyScreen()'>ИСТОРИЯ</button><button class='btn alt' onclick='developmentScreen()'>РАЗВИТИЕ ЛЕЙБЛА</button><button class='btn' onclick='newRelease()'>СЛЕДУЮЩИЙ РЕЛИЗ →</button></div>`)}
+function historyScreen(){
+shell('Аналитика','История релизов',
+career.history.length?
+`<p class='desc'>Здесь отмечены все песни, которые уже выходили в твоём лейбле.</p>
+<div style='overflow:auto'>
+<table style='width:100%;border-collapse:collapse;min-width:860px'>
+<thead><tr style='border-bottom:1px solid var(--line);color:var(--gold2);text-align:left'>
+<th style='padding:13px'>Статус</th><th style='padding:13px'>Песня</th><th style='padding:13px'>Вложено</th>
+<th style='padding:13px'>Прослушивания</th><th style='padding:13px'>Доход</th><th style='padding:13px'>Прибыль</th>
+<th style='padding:13px'>Новые слушатели</th><th style='padding:13px'>Каталог</th><th style='padding:13px'>ROI</th><th style='padding:13px'>Score</th>
+</tr></thead>
+<tbody>${career.history.map((h,i)=>`<tr style='border-bottom:1px solid var(--line)'>
+<td style='padding:13px'><span class='tag' style='background:#123b39;color:#9fe0c2;border-color:#2f665d'>✓ РЕЛИЗ</span></td>
+<td style='padding:13px'><b>${h.song}</b><div class='small'>релиз №${career.releases-i}</div></td>
+<td style='padding:13px'>${fmt(h.spent)}</td>
+<td style='padding:13px'>${fmt(h.streams)} ▶</td>
+<td style='padding:13px'>${fmt(h.income)}</td>
+<td style='padding:13px'><b class='${h.profit>=0?"reserve-good":"reserve-low"}'>${h.profit>=0?"+":""}${fmt(h.profit)}</b></td>
+<td style='padding:13px'>+${fmt(h.loyal)} 👥</td>
+<td style='padding:13px'>${fmt(h.catalogStreams||0)} ▶ · ${fmt(h.catalogIncome||0)} VS₽</td>
+<td style='padding:13px'><b>${songROI(h)>=0?'+':''}${songROI(h)}%</b><br><small>${roiLabel(songROI(h))}</small></td>
+<td style='padding:13px'>${Math.round(h.score)}</td>
+</tr>`).join('')}</tbody></table></div>`:
+`<p class='desc'>Релизов пока нет.</p>`
++`<div class='nav'><button class='btn alt' onclick='careerScreen()'>НАЗАД</button></div>`);}
+
+
+
+
+
+
+
+
+
+let fxTimer=null;
+function gameFeel(title,text){
+ let el=document.getElementById('fxToast');if(!el)return;
+ el.querySelector('b').textContent=title;el.querySelector('span').textContent=text||'';
+ el.classList.remove('show');void el.offsetWidth;el.classList.add('show');
+ clearTimeout(fxTimer);fxTimer=setTimeout(()=>el.classList.remove('show'),2100);
+}
+function pulsePanel(){let p=document.querySelector('.panel');if(p){p.classList.remove('fx-pulse');void p.offsetWidth;p.classList.add('fx-pulse')}}
+
+const SAVE_KEY='vustin_producer_career_v1'; let saveTimer=null;
+function saveCareer(){
+ try{localStorage.setItem(SAVE_KEY,JSON.stringify({version:1,savedAt:Date.now(),career}));
+ let el=document.getElementById('saveIndicator');if(el){el.classList.add('show');clearTimeout(saveTimer);saveTimer=setTimeout(()=>el.classList.remove('show'),1200)}return true}catch(e){return false}
+}
+function loadCareer(){
+ try{let raw=localStorage.getItem(SAVE_KEY);if(!raw)return false;let d=JSON.parse(raw);if(!d||!d.career)return false;
+ career=Object.assign({cash:10000,listeners:0,rep:0,releases:0,history:[],week:1,studioLvl:0,marketingLvl:0,videoLvl:0,teamLvl:0,catalogIncome:0,catalogStreams:0,lastCatalog:null,trend:null,trendWeeks:0},d.career);return true}catch(e){return false}
+}
+function hasSave(){try{return !!localStorage.getItem(SAVE_KEY)}catch(e){return false}}
+function deleteSave(){try{localStorage.removeItem(SAVE_KEY)}catch(e){}}
+function newCareerConfirmed(){
+ if(hasSave()&&!confirm('Начать новую карьеру? Сохранённый прогресс будет удалён.'))return;
+ deleteSave();career={cash:10000,listeners:0,rep:0,releases:0,history:[],week:1,studioLvl:0,marketingLvl:0,videoLvl:0,teamLvl:0,catalogIncome:0,catalogStreams:0,lastCatalog:null,trend:null,trendWeeks:0};
+ resetRelease();saveCareer();careerScreen();
+}
+function saveMenu(){
+ let saved=hasSave();
+ shell('Сохранение','Карьера VUSTIN RECORDS',
+ "<div class='card save-card' style='cursor:default'><div class='kicker'>"+(saved?'СОХРАНЕНИЕ НАЙДЕНО':'НОВАЯ КАРЬЕРА')+"</div><h3>"+(saved?'Продолжить сезон':'Начать первый сезон')+"</h3><p class='desc'>Прогресс хранится в этом браузере на этом устройстве. После важных действий карьера сохраняется автоматически.</p></div><div class='nav'>"+
+ (saved?"<button class='btn' onclick='loadCareer();careerScreen()'>ПРОДОЛЖИТЬ →</button>":"<button class='btn' onclick='newCareerConfirmed()'>НАЧАТЬ ИГРУ →</button>")+
+ (saved?"<button class='btn alt' onclick='newCareerConfirmed()'>НАЧАТЬ ЗАНОВО</button>":"")+"</div>");
+}
+const _buyUpgrade=buyUpgrade;buyUpgrade=function(key){
+ let before=career[key],cash=career.cash;_buyUpgrade(key);
+ if(career[key]>before){let names={studioLvl:'СТУДИЯ РАЗВИТА',marketingLvl:'МАРКЕТИНГ РАЗВИТ',videoLvl:'ВИДЕООТДЕЛ РАЗВИТ',teamLvl:'КОМАНДА УСИЛЕНА'};gameFeel(names[key],`Уровень ${career[key]} · инвестиция ${fmt(cash-career.cash)} VS₽`);pulsePanel()}
+ saveCareer()
+};
+const _chooseIndustryEvent=chooseIndustryEvent;chooseIndustryEvent=function(i){
+ let ev=state.currentIndustryEvent,choice=ev?.choices?.[i]?.[0];_chooseIndustryEvent(i);
+ if(choice)gameFeel('РЕШЕНИЕ ПРИНЯТО',choice);saveCareer()
+};
+const _calculateRelease=calculateRelease;calculateRelease=function(){
+ let oldCash=career.cash,oldRep=career.rep,oldListeners=career.listeners;_calculateRelease();
+ let dc=career.cash-oldCash,dr=career.rep-oldRep,dl=career.listeners-oldListeners;
+ setTimeout(()=>gameFeel(dc>=0?'РЕЛИЗ ПРИНЁС ДОХОД':'РЕЛИЗ ТРЕБУЕТ ИНВЕСТИЦИЙ',`${dc>=0?'+':''}${fmt(dc)} VS₽ · +${fmt(dl)} слушателей · ${dr>=0?'+':''}${dr} репутации`),1450);
+ saveCareer()
+};
+
+function newRelease(){stopRealPreview();
+if(career.cash<1800){
+ career.cash+=5000;
+ shell('Финансовая поддержка','Аванс дистрибьютора',
+ `<div class='event'><b>Лейбл получает 5 000 VS₽</b><p class='desc'>Капитала не хватало даже на минимальный релиз. Дистрибьютор даёт аварийный аванс, чтобы сезон нельзя было заблокировать.</p></div>
+ <div class='nav'><button class='btn' onclick='chooseSong()'>ПРОДОЛЖИТЬ СЕЗОН →</button></div>`);
+ return;
+}if(career.releases>=10){return seasonFinal()}resetRelease();market()}
+function seasonFinal(){shell('Финал сезона','Сезон 1 завершён',`<div class='release'><div class='vinyl'></div><div class='kicker'>VUSTIN RECORDS</div><h2>Ты построил музыкальный лейбл.</h2><div class='stats'><div class='stat'><b>${career.releases}</b>релизов</div><div class='stat'><b>${fmt(career.listeners)}</b>слушателей</div><div class='stat'><b>${career.rep}</b>репутация</div><div class='stat'><b>${fmt(career.cash)}</b>VS₽</div></div><p class='desc'>Следующий этап игры — развитие команды, собственной студии и новые сезоны каталога VUSTIN SOUND.</p><button class='btn' onclick='start()'>НОВАЯ КАРЬЕРА</button></div>`)}
+gameSplash();
+</script>
+<button class="sound-toggle" id="soundToggle" onclick="toggleSound()" title="Звук">🔊</button><button class="help-toggle" id="helpToggle" onclick="onboarding(1,true)" title="Как играть">? <span>КАК ИГРАТЬ</span></button>
+<div class="save-indicator" id="saveIndicator">ПРОГРЕСС СОХРАНЁН</div><div class="fx-toast" id="fxToast"><b></b><span></span></div>
+</div>
+<style>
+#vustin-producer-native {
+  width:100%;
+  min-height:0;
+  background:#041018;
+  overflow:hidden;
+  position:relative;
+}
+#vustin-producer-native * { box-sizing:border-box; }
+
+:root{--navy:#0E3753;--dark:#061018;--panel:#0b202d;--pale:#D7EFFB;--gold:#ddb05b;--gold2:#f0ca7a;--teal:#4b8b91;--white:#f7fafb;--muted:#a9bec9;--line:#294656;--good:#78c9a7;--bad:#e48d8d}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;color:var(--white);font:16px/1.5 Arial,sans-serif;min-height:100vh;background:#061018;overflow-x:hidden}
+body:before{content:"";position:fixed;inset:0;z-index:-3;background:
+linear-gradient(90deg,rgba(4,13,20,.96),rgba(4,13,20,.72) 48%,rgba(4,13,20,.82)),
+url("https://olegvustin.github.io/vustin-sound-game-v2.0/image-01.webp") center/cover no-repeat;filter:saturate(.82)}
+body:after{content:"";position:fixed;inset:0;z-index:-2;background:
+radial-gradient(circle at 78% 15%,rgba(221,176,91,.14),transparent 24%),
+radial-gradient(circle at 12% 70%,rgba(75,139,145,.18),transparent 30%)}
+.app{max-width:1180px;margin:auto;padding:22px 28px 44px}
+.top{display:flex;justify-content:space-between;align-items:center;margin-bottom:22px;padding:10px 0}
+.brand{display:flex;align-items:center;gap:13px;font-weight:800;letter-spacing:1.8px;font-size:13px}.brand:before{content:"";width:42px;height:42px;background:url("https://olegvustin.github.io/vustin-sound-game-v2.0/image-02.webp") center/contain no-repeat;filter:drop-shadow(0 5px 14px #0008)}
+.money{color:var(--gold2);font-weight:900;padding:10px 16px;border:1px solid rgba(221,176,91,.35);border-radius:999px;background:rgba(7,19,29,.72);backdrop-filter:blur(10px)}
+.panel{position:relative;overflow:hidden;background:linear-gradient(145deg,rgba(11,32,45,.94),rgba(7,21,31,.91));border:1px solid rgba(174,194,205,.18);border-radius:28px;padding:34px;box-shadow:0 28px 90px #0009, inset 0 1px 0 #ffffff0d;backdrop-filter:blur(15px);min-height:560px}
+.panel:before{content:"";position:absolute;right:-120px;top:-130px;width:330px;height:330px;border-radius:50%;background:radial-gradient(circle,rgba(221,176,91,.11),transparent 67%);pointer-events:none}
+.kicker{color:var(--gold);font-size:11px;font-weight:900;letter-spacing:2.4px;text-transform:uppercase}
+.hero{min-height:485px;display:flex;flex-direction:column;justify-content:center;max-width:720px;position:relative}
+.hero:after{content:"";position:absolute;right:-330px;top:40px;width:265px;height:265px;border-radius:50%;background:
+radial-gradient(circle at center,#ddb05b 0 5%,#12232d 5.5% 21%,#0a0d10 21.5% 100%);
+box-shadow:0 30px 80px #000c;animation:spin 12s linear infinite;opacity:.95}
+.hero h1{font-family:Georgia,serif;font-size:clamp(44px,7vw,78px);line-height:.98;margin:14px 0 18px;letter-spacing:-2px}
+.hero p{max-width:660px;color:var(--pale);font-size:19px}
+.btn{border:0;border-radius:16px;padding:15px 22px;background:linear-gradient(135deg,var(--gold2),var(--gold));color:#07131d;font-weight:900;cursor:pointer;font-size:14px;letter-spacing:.3px;box-shadow:0 8px 26px rgba(221,176,91,.16);transition:.22s}
+.btn:hover:not(:disabled){transform:translateY(-2px);box-shadow:0 12px 34px rgba(221,176,91,.28)}.btn.alt{background:rgba(8,25,36,.6);color:var(--white);border:1px solid var(--line);box-shadow:none}.btn:disabled{opacity:.35;cursor:not-allowed}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}.card{position:relative;border:1px solid var(--line);background:linear-gradient(155deg,rgba(12,35,49,.95),rgba(7,23,33,.95));border-radius:20px;padding:20px;cursor:pointer;transition:.25s;overflow:hidden}.card:after{content:"♪";position:absolute;right:14px;top:7px;font-size:44px;color:#ffffff08}.card:hover,.card.sel{transform:translateY(-4px);border-color:var(--gold);box-shadow:0 14px 38px #0007}.card.sel:before{content:"ВЫБРАНО";position:absolute;right:12px;bottom:12px;color:var(--gold);font-size:9px;font-weight:900;letter-spacing:1.3px}.card h3{font-family:Georgia,serif;font-size:24px;margin:7px 0 9px}.desc{color:var(--muted);font-size:14px}.tag{display:inline-block;padding:5px 9px;border-radius:99px;background:#123447;color:var(--pale);font-size:11px;margin:7px 3px 0 0;border:1px solid #24495c}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:18px 0}.stat{background:linear-gradient(180deg,#0a202d,#081923);border:1px solid var(--line);border-radius:17px;padding:15px;text-align:center}.stat b{display:block;font-size:24px;color:var(--gold2);margin-bottom:3px}
+.section-title{font-family:Georgia,serif;font-size:34px;margin:7px 0 20px}.market{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}.market div{padding:18px;border-radius:18px;background:linear-gradient(155deg,#0c2635,#081a25);border:1px solid var(--line);min-height:100px}.market b{font-size:21px}.up{color:var(--good)}.down{color:var(--bad)}
+.choices{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}.choice{padding:18px;border:1px solid var(--line);border-radius:18px;background:linear-gradient(155deg,#0c2635,#081a25);cursor:pointer;transition:.2s;min-height:105px}.choice:hover{transform:translateY(-2px);border-color:#50758a}.choice.sel{border-color:var(--gold);background:linear-gradient(155deg,#173a48,#0c2734);box-shadow:inset 0 0 0 1px #ddb05b33}.price{color:var(--gold2);font-weight:900;margin-top:8px}
+.nav{display:flex;justify-content:space-between;gap:12px;margin-top:26px}.event{border-left:4px solid var(--gold);padding:22px;background:linear-gradient(90deg,#102b39,#0a1b26);border-radius:0 20px 20px 0;box-shadow:0 16px 40px #0004}
+.release{text-align:center;padding:12px 30px 24px}.vinyl{width:205px;height:205px;border-radius:50%;margin:8px auto 24px;background:repeating-radial-gradient(circle,#111 0 4px,#202020 5px 7px);display:grid;place-items:center;animation:spin 2.4s linear infinite;box-shadow:0 28px 65px #000c,0 0 0 1px #ffffff12}.vinyl:after{content:"";width:88px;height:88px;border-radius:50%;background:#ddb05b url("https://olegvustin.github.io/vustin-sound-game-v2.0/image-03.webp") center/74% no-repeat;display:block;box-shadow:0 0 0 2px #0e3753}
+@keyframes spin{to{transform:rotate(360deg)}}.big-number{font-family:Georgia,serif;font-size:clamp(50px,8vw,92px);line-height:1;font-weight:700;color:var(--gold2);text-shadow:0 10px 35px #0008}.analysis{display:grid;grid-template-columns:1fr 1fr;gap:12px;text-align:left}.note{padding:15px;border-radius:16px;background:#0a1b26;border:1px solid var(--line)}.note b{color:var(--pale)}.hidden{display:none!important}.small{font-size:13px;color:var(--muted)}
+.wave{height:44px;margin:18px 0;display:flex;align-items:center;justify-content:center;gap:4px;opacity:.7}.wave i{display:block;width:3px;border-radius:9px;background:linear-gradient(var(--gold),var(--teal));animation:pulse 1.15s ease-in-out infinite}.wave i:nth-child(3n){animation-delay:.18s}.wave i:nth-child(4n){animation-delay:.36s}@keyframes pulse{0%,100%{height:8px}50%{height:38px}}
+.progressline{height:4px;background:#102d3c;border-radius:99px;margin:0 0 25px;overflow:hidden}.progressline span{display:block;height:100%;background:linear-gradient(90deg,var(--teal),var(--gold));transition:.35s}
+@media(max-width:850px){.grid,.choices,.market,.stats,.analysis{grid-template-columns:1fr 1fr}.hero:after{opacity:.28;right:-150px}.app{padding:14px}.panel{padding:22px}}
+@media(max-width:620px){.grid,.choices,.market,.stats,.analysis{grid-template-columns:1fr}.hero{min-height:520px}.hero:after{right:-105px;top:15px;width:210px;height:210px}.hero h1{font-size:46px;max-width:90%}.top{font-size:11px}.brand{letter-spacing:.8px}.brand:before{width:34px;height:34px}.money{padding:8px 11px}.panel{border-radius:22px}.nav{flex-direction:column-reverse}.nav .btn{width:100%}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+
+.econbar{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:14px 0 20px}
+.econbox{padding:12px 14px;border:1px solid var(--line);border-radius:14px;background:#081b26}
+.econbox span{display:block;color:var(--muted);font-size:11px;text-transform:uppercase;letter-spacing:.8px}
+.econbox b{font-size:19px;color:var(--gold2)}
+.reserve-good{color:var(--good)!important}.reserve-low{color:var(--bad)!important}
+@media(max-width:620px){.econbar{grid-template-columns:1fr}}
+
+
+/* v5.1 PREMIUM VISUAL LAYER */
+:root{
+ --navy:#0E3753;--ink:#030a10;--panel:#081923;--panel2:#0d2633;--pale:#D7EFFB;
+ --gold:#d7a94d;--gold2:#f3cf7b;--teal:#4f9ba0;--white:#f8fbfc;--muted:#9fb4bf;
+ --line:rgba(171,205,220,.16);--good:#76d0aa;--bad:#ee9292;
+}
+*{box-sizing:border-box}
+body{background:#030a10;color:var(--white)}
+body:before{
+ filter:saturate(.72) contrast(1.04) brightness(.64);
+ background:
+ linear-gradient(90deg,rgba(2,8,13,.98) 0%,rgba(2,9,14,.88) 44%,rgba(3,10,16,.75) 100%),
+ url("https://olegvustin.github.io/vustin-sound-game-v2.0/image-04.png") center/cover no-repeat;
+}
+body:after{
+ background:
+ radial-gradient(circle at 78% 20%,rgba(221,176,91,.15),transparent 23%),
+ radial-gradient(circle at 13% 77%,rgba(64,141,150,.14),transparent 28%),
+ linear-gradient(180deg,transparent 60%,#030a10 100%);
+}
+.app{max-width:1240px;padding:18px 32px 54px}
+.top{
+ position:sticky;top:12px;z-index:20;
+ padding:10px 14px;margin:0 0 18px;
+ background:rgba(4,14,21,.67);border:1px solid rgba(255,255,255,.07);
+ border-radius:18px;backdrop-filter:blur(18px);box-shadow:0 14px 45px #0005
+}
+.brand{font-size:12px;letter-spacing:2px}.brand:before{width:39px;height:39px}
+.money{background:linear-gradient(180deg,rgba(31,34,29,.9),rgba(12,22,27,.86));border-color:rgba(243,207,123,.3);box-shadow:inset 0 1px 0 #ffffff12}
+.panel{
+ min-height:620px;padding:42px;border-radius:30px;
+ background:linear-gradient(145deg,rgba(9,29,40,.93),rgba(4,15,23,.95));
+ border:1px solid rgba(194,221,231,.13);
+ box-shadow:0 36px 110px #000b,inset 0 1px 0 rgba(255,255,255,.055)
+}
+.panel:after{content:"";position:absolute;inset:0;pointer-events:none;border-radius:inherit;background:linear-gradient(115deg,rgba(255,255,255,.025),transparent 25%,transparent 72%,rgba(215,169,77,.035))}
+.kicker{color:var(--gold2);font-size:10px;letter-spacing:2.6px}
+.section-title{font-size:clamp(31px,4vw,47px);letter-spacing:-.7px;margin:8px 0 24px}
+.hero{min-height:530px;max-width:760px}
+.hero h1{font-size:clamp(50px,7vw,86px);letter-spacing:-3.3px;text-shadow:0 12px 50px #000}
+.hero p{font-size:18px;line-height:1.75;color:#c4d5dc}
+.hero:after{
+ width:310px;height:310px;right:-390px;top:75px;
+ background:
+ radial-gradient(circle,#05080a 0 3%,#d8ac54 3.5% 17%,#111 17.5% 20%,#07090b 20.5% 100%);
+ box-shadow:0 38px 100px #000,0 0 0 1px #ffffff10
+}
+.btn{
+ min-height:48px;border-radius:14px;padding:14px 21px;
+ background:linear-gradient(135deg,#f2d17f,#c9943b);
+ box-shadow:0 10px 32px rgba(215,169,77,.16);
+ transition:transform .18s,box-shadow .18s,filter .18s
+}
+.btn:hover:not(:disabled){transform:translateY(-2px);filter:brightness(1.06);box-shadow:0 15px 40px rgba(215,169,77,.25)}
+.btn.alt{background:rgba(8,27,38,.7);border-color:rgba(172,209,223,.18)}
+.grid,.choices{gap:14px}
+.card,.choice{
+ border-color:rgba(171,205,220,.13);
+ background:linear-gradient(145deg,rgba(14,41,54,.92),rgba(6,22,31,.95));
+ box-shadow:inset 0 1px 0 rgba(255,255,255,.035),0 10px 32px rgba(0,0,0,.13)
+}
+.card{border-radius:22px;padding:22px}.choice{border-radius:18px;padding:19px}
+.card:hover,.choice:hover{border-color:rgba(243,207,123,.45);box-shadow:0 18px 46px #0006,inset 0 1px 0 #ffffff0a}
+.card.sel,.choice.sel{
+ border-color:rgba(243,207,123,.75);
+ background:linear-gradient(145deg,rgba(34,57,61,.96),rgba(11,35,45,.96));
+ box-shadow:0 0 0 1px rgba(243,207,123,.12),0 16px 42px #0006
+}
+.card h3{font-size:25px}.desc{line-height:1.65}
+.tag{background:rgba(19,54,70,.68);border-color:rgba(111,172,194,.2)}
+.stats{gap:11px}.stat{
+ position:relative;overflow:hidden;padding:17px 13px;border-radius:18px;
+ background:linear-gradient(180deg,rgba(13,39,52,.9),rgba(6,23,32,.95));
+ border-color:rgba(171,205,220,.12)
+}
+.stat:after{content:"";position:absolute;left:0;right:0;bottom:0;height:2px;background:linear-gradient(90deg,transparent,var(--gold),transparent);opacity:.32}
+.stat b{font-family:Georgia,serif;font-size:27px}
+.market div,.note,.event,.econbox{border-color:rgba(171,205,220,.13);background:linear-gradient(145deg,rgba(13,40,53,.9),rgba(6,23,32,.94))}
+.event{border-left-color:var(--gold2);box-shadow:0 18px 48px #0005}
+.progressline{height:3px;background:#102833}.progressline span{box-shadow:0 0 15px rgba(215,169,77,.5)}
+.wave{opacity:.8}.wave i{width:2px;background:linear-gradient(var(--gold2),var(--teal));box-shadow:0 0 7px rgba(79,155,160,.25)}
+.vinyl{
+ width:230px;height:230px;
+ background:repeating-radial-gradient(circle,#0b0d0e 0 3px,#191d1f 4px 6px);
+ box-shadow:0 35px 80px #000e,0 0 0 1px #ffffff14,0 0 60px rgba(215,169,77,.08)
+}
+.vinyl:after{width:94px;height:94px;background-color:#d7a94d;box-shadow:0 0 0 3px #0e3753,0 0 25px #0007}
+.big-number{font-size:clamp(56px,9vw,104px);letter-spacing:-3px}
+table{background:rgba(4,18,26,.55);border-radius:18px;overflow:hidden}
+thead{background:rgba(215,169,77,.06)}
+tbody tr{transition:.15s}tbody tr:hover{background:rgba(215,169,77,.035)}
+.nav{padding-top:8px}
+@media(max-width:850px){.panel{padding:28px;min-height:580px}.hero:after{right:-210px}.app{padding:12px 16px 40px}}
+@media(max-width:620px){
+ .panel{padding:22px 17px;min-height:560px;border-radius:22px}
+ .top{top:7px}.hero{min-height:555px}.hero h1{font-size:49px;letter-spacing:-2px}
+ .hero:after{width:220px;height:220px;right:-110px;top:28px;opacity:.34}
+ .section-title{font-size:34px}.card h3{font-size:22px}
+}
+
+
+/* v5.2 — visual journey */
+body{transition:background-color .45s ease}
+body[data-scene] .panel{transition:background .45s ease,border-color .45s ease,box-shadow .45s ease}
+body[data-scene] .panel:before{transition:background .45s ease}
+body[data-scene="office"] .panel{
+ background:linear-gradient(140deg,rgba(10,30,41,.96),rgba(5,17,25,.96));
+ box-shadow:0 36px 110px #000b,inset 0 1px 0 #ffffff0d
+}
+body[data-scene="market"] .panel{
+ background:
+ radial-gradient(circle at 82% 15%,rgba(70,151,160,.13),transparent 28%),
+ linear-gradient(140deg,rgba(8,32,44,.96),rgba(5,17,25,.97))
+}
+body[data-scene="studio"] .panel{
+ background:
+ radial-gradient(circle at 82% 18%,rgba(215,169,77,.14),transparent 26%),
+ linear-gradient(145deg,rgba(31,27,23,.94),rgba(7,18,24,.97))
+}
+body[data-scene="art"] .panel{
+ background:
+ radial-gradient(circle at 78% 20%,rgba(91,89,151,.15),transparent 28%),
+ linear-gradient(145deg,rgba(18,28,47,.96),rgba(7,18,28,.97))
+}
+body[data-scene="marketing"] .panel{
+ background:
+ linear-gradient(120deg,rgba(7,29,38,.97),rgba(8,24,35,.95)),
+ repeating-linear-gradient(90deg,transparent 0 58px,rgba(79,155,160,.025) 59px 60px)
+}
+body[data-scene="premiere"] .panel{
+ background:
+ radial-gradient(circle at 50% 10%,rgba(215,169,77,.20),transparent 32%),
+ linear-gradient(180deg,rgba(24,24,23,.95),rgba(4,12,18,.98));
+ border-color:rgba(243,207,123,.22)
+}
+.scene-head{display:flex;align-items:center;justify-content:space-between;gap:16px;margin:-8px 0 24px;padding:10px 13px;border:1px solid rgba(255,255,255,.07);border-radius:14px;background:rgba(3,12,18,.32)}
+.scene-place{display:flex;align-items:center;gap:10px;font:800 10px Arial,sans-serif;letter-spacing:1.8px;text-transform:uppercase;color:#b8cbd3}
+.scene-place i{font-style:normal;font-size:19px}
+.scene-route{display:flex;gap:6px;align-items:center}
+.scene-route span{width:23px;height:3px;border-radius:99px;background:#193441}
+.scene-route span.on{background:linear-gradient(90deg,var(--teal),var(--gold2));box-shadow:0 0 10px rgba(215,169,77,.25)}
+.scene-visual{position:absolute;right:30px;bottom:26px;width:240px;height:150px;opacity:.16;pointer-events:none}
+body[data-scene="studio"] .scene-visual:before{content:"";position:absolute;inset:35px 0 0;background:repeating-linear-gradient(90deg,#d7a94d 0 3px,transparent 3px 12px);clip-path:polygon(0 80%,8% 50%,15% 72%,23% 18%,31% 64%,40% 30%,48% 76%,56% 5%,64% 55%,73% 34%,82% 68%,90% 22%,100% 80%,100% 100%,0 100%)}
+body[data-scene="art"] .scene-visual:before{content:"♪";position:absolute;right:35px;bottom:0;font:140px Georgia,serif;color:#9e9bd4;transform:rotate(-10deg)}
+body[data-scene="marketing"] .scene-visual:before{content:"";position:absolute;inset:25px 0 0;background:linear-gradient(135deg,transparent 0 15%,#4f9ba0 15% 18%,transparent 18% 34%,#d7a94d 34% 38%,transparent 38% 52%,#4f9ba0 52% 56%,transparent 56%)}
+body[data-scene="premiere"] .scene-visual:before{content:"";position:absolute;width:135px;height:135px;border-radius:50%;right:40px;bottom:0;background:repeating-radial-gradient(circle,#090b0c 0 3px,#202326 4px 6px);box-shadow:0 15px 40px #000}
+.scene-caption{margin:-12px 0 20px;color:#6f8d9b;font-size:12px}
+@media(max-width:720px){.scene-route{display:none}.scene-visual{width:130px;height:100px;right:5px;opacity:.09}.scene-head{margin-top:-4px}}
+
+
+/* v5.3 — release show */
+.release-show{min-height:480px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;position:relative;overflow:hidden}
+.release-count{font-family:Georgia,serif;font-size:clamp(110px,22vw,240px);line-height:.85;color:var(--gold2);text-shadow:0 0 60px rgba(215,169,77,.32);animation:countPop .72s ease both}
+.release-word{font-family:Georgia,serif;font-size:clamp(55px,10vw,112px);letter-spacing:-3px;background:linear-gradient(180deg,#fff1bf,#d7a94d);-webkit-background-clip:text;color:transparent;animation:releaseGlow 1.1s ease both}
+.release-song{font-size:20px;color:#c7d7dd;margin-top:12px}
+.release-live{margin-top:25px;color:#7fa0ad;font:800 10px Arial,sans-serif;letter-spacing:2.5px;text-transform:uppercase}
+.stream-counter{font-family:Georgia,serif;font-size:clamp(58px,10vw,105px);letter-spacing:-3px;margin:8px 0;color:#f7fbfc;font-variant-numeric:tabular-nums}
+.stream-label{color:#8eabb7;font-size:13px;letter-spacing:1.5px;text-transform:uppercase}
+.release-disc{width:190px;height:190px;border-radius:50%;margin:15px auto 0;background:repeating-radial-gradient(circle,#090b0c 0 3px,#202326 4px 6px);box-shadow:0 25px 60px #000d,0 0 55px rgba(215,169,77,.12);animation:spin 2.5s linear infinite}
+.release-disc:after{content:"VUSTIN SOUND";display:flex;align-items:center;justify-content:center;position:absolute;width:68px;height:68px;border-radius:50%;background:var(--gold);color:#0e3753;font:800 8px Arial,sans-serif;letter-spacing:1px;left:61px;top:61px}
+.release-flash{position:absolute;inset:-20%;background:radial-gradient(circle,rgba(243,207,123,.24),transparent 42%);animation:flash 1.2s ease both;pointer-events:none}
+.reveal-card{animation:revealUp .55s ease both}
+@keyframes countPop{0%{opacity:0;transform:scale(1.35)}35%{opacity:1}100%{opacity:.9;transform:scale(.88)}}
+@keyframes releaseGlow{0%{opacity:0;transform:scale(.78);filter:blur(10px)}100%{opacity:1;transform:scale(1);filter:blur(0)}}
+@keyframes revealUp{from{opacity:0;transform:translateY(22px)}to{opacity:1;transform:none}}
+@keyframes flash{0%{opacity:0}35%{opacity:1}100%{opacity:0}}
+
+
+.sound-toggle{position:fixed;right:22px;bottom:20px;z-index:80;width:48px;height:48px;border-radius:50%;border:1px solid rgba(243,207,123,.3);background:rgba(4,16,24,.82);backdrop-filter:blur(14px);color:var(--gold2);font-size:19px;cursor:pointer;box-shadow:0 12px 35px #0008}
+.sound-toggle:hover{border-color:var(--gold2);transform:translateY(-1px)}
+.now-playing{margin-top:13px;color:#8ea9b4;font-size:11px;letter-spacing:1.4px;text-transform:uppercase;animation:pulseAudio 1.5s ease-in-out infinite}
+@keyframes pulseAudio{50%{opacity:.48}}
+
+
+/* v5.6 — first-screen vinyl fix */
+.hero{max-width:100%;padding-right:390px;overflow:visible}
+.hero:after{
+ right:35px;
+ top:50%;
+ transform:translateY(-46%);
+ width:300px;
+ height:300px;
+ z-index:1;
+}
+.panel{overflow:hidden}
+@media(max-width:980px){
+ .hero{padding-right:300px}
+ .hero:after{right:15px;width:250px;height:250px}
+}
+@media(max-width:760px){
+ .hero{padding-right:0;padding-top:220px;min-height:650px}
+ .hero:after{
+   width:200px;height:200px;
+   right:auto;left:50%;top:5px;
+   transform:translateX(-50%);
+   opacity:.82;
+ }
+}
+@media(max-width:480px){
+ .hero{padding-top:190px}
+ .hero:after{width:175px;height:175px}
+}
+
+
+/* v5.7 — microphone + headphones hero */
+body[data-scene="office"] .panel{
+ background:
+ linear-gradient(90deg,rgba(3,12,19,.97) 0%,rgba(3,13,20,.89) 43%,rgba(3,12,18,.34) 72%,rgba(3,10,15,.18) 100%),
+ url("https://olegvustin.github.io/vustin-sound-game-v2.0/image-05.webp") center/cover no-repeat;
+}
+body[data-scene="office"] .hero{
+ max-width:650px;
+ padding-right:0;
+ min-height:560px;
+ position:relative;
+ z-index:2;
+}
+body[data-scene="office"] .hero:after{display:none!important}
+body[data-scene="office"] .panel:after{
+ background:linear-gradient(90deg,rgba(2,9,14,.2),transparent 55%,rgba(215,169,77,.025));
+}
+@media(max-width:850px){
+ body[data-scene="office"] .panel{
+  background:
+  linear-gradient(180deg,rgba(3,12,19,.62) 0%,rgba(3,12,19,.92) 46%,rgba(3,12,19,.98) 100%),
+  url("https://olegvustin.github.io/vustin-sound-game-v2.0/image-06.webp") 66% top/auto 58% no-repeat,
+  linear-gradient(145deg,#081d28,#041018);
+ }
+ body[data-scene="office"] .hero{padding-top:260px;min-height:690px;max-width:100%}
+}
+@media(max-width:520px){
+ body[data-scene="office"] .hero{padding-top:220px}
+ body[data-scene="office"] .panel{background-size:auto 47%,auto,auto}
+}
+
+
+/* v5.8 — layout safety audit */
+
+.app{width:min(100%,1240px);margin:0 auto}
+.panel{
+ width:100%;
+ min-width:0;
+ overflow:hidden;
+}
+.panel>*{min-width:0}
+.grid,.choices,.stats,.market,.analysis{min-width:0}
+.card,.choice,.stat,.note,.event,.econbox{min-width:0;overflow-wrap:anywhere}
+.section-title,.hero h1,.hero p,.desc,.small{overflow-wrap:anywhere}
+.nav{display:flex;flex-wrap:wrap;gap:10px}
+.nav .btn{flex:0 1 auto;white-space:normal}
+table{width:100%;max-width:100%}
+img,svg,video,audio{max-width:100%}
+
+/* Desktop: keep the studio hero art inside the card and away from copy */
+body[data-scene="office"] .panel{
+ background-position:center center;
+}
+body[data-scene="office"] .hero{
+ width:min(58%,650px);
+ max-width:650px;
+ min-height:560px;
+}
+body[data-scene="office"] .hero h1{max-width:600px}
+
+/* Decorative elements can never escape the panel */
+.scene-visual{max-width:28%;right:18px;bottom:18px}
+.hero:after,.vinyl,.release-disc{flex:none}
+
+/* Tablet */
+@media(max-width:980px){
+ .app{padding-left:18px;padding-right:18px}
+ .panel{padding:30px}
+ body[data-scene="office"] .hero{width:62%;min-height:570px}
+ .stats{grid-template-columns:repeat(2,minmax(0,1fr))}
+ .grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+
+/* Mobile: stack all content, prevent visual collision and clipped controls */
+@media(max-width:760px){
+ .app{padding:10px 12px 34px}
+ .top{position:relative;top:auto;flex-wrap:wrap;gap:8px}
+ .panel{padding:22px 16px;border-radius:22px;min-height:auto}
+ body[data-scene="office"] .hero{
+   width:100%;max-width:none;min-height:0;
+   padding-top:255px;padding-right:0;
+ }
+ .grid,.choices,.stats,.market,.analysis{grid-template-columns:1fr!important}
+ .nav{align-items:stretch}
+ .nav .btn{width:100%;flex:1 1 100%}
+ .scene-head{align-items:flex-start}
+ .scene-place{line-height:1.35}
+ .scene-visual{max-width:110px;max-height:90px;right:0;bottom:0}
+ .big-number,.stream-counter{word-break:normal}
+ .vinyl{width:min(210px,72vw);height:min(210px,72vw)}
+ .release-show{min-height:430px;padding:18px 0}
+ table{min-width:760px}
+}
+
+/* Narrow phones */
+@media(max-width:480px){
+ body[data-scene="office"] .hero{padding-top:215px}
+ .hero h1{font-size:43px;line-height:.94}
+ .hero p{font-size:15px;line-height:1.6}
+ .section-title{font-size:31px;line-height:1.03}
+ .card,.choice{padding:17px}
+ .top{padding:9px 10px}
+ .money{font-size:11px}
+ .sound-toggle{right:12px;bottom:12px;width:44px;height:44px}
+}
+
+/* Short laptop screens: avoid first-screen vertical crop */
+@media(min-width:761px) and (max-height:780px){
+ .app{padding-top:10px;padding-bottom:24px}
+ .top{position:relative;top:auto;margin-bottom:10px}
+ .panel{padding-top:28px;padding-bottom:28px;min-height:540px}
+ body[data-scene="office"] .hero{min-height:500px}
+ .hero h1{font-size:clamp(46px,6vw,70px)}
+}
+
+
+/* v5.9 — clean first screen: no fake UI baked into background */
+body[data-scene="office"] .panel{
+  overflow:visible;
+  min-height:0;
+  background:
+    linear-gradient(90deg,rgba(4,16,24,.99) 0%,rgba(4,16,24,.97) 48%,rgba(4,16,24,.76) 65%,rgba(4,16,24,.20) 100%),
+    url("https://olegvustin.github.io/vustin-sound-game-v2.0/image-07.webp") right center/58% auto no-repeat,
+    linear-gradient(145deg,#091d28,#041018);
+}
+body[data-scene="office"] .hero{
+  width:58%;
+  max-width:650px;
+  min-height:560px;
+  padding:26px 0 20px;
+}
+body[data-scene="office"] .hero:after{display:none!important}
+body[data-scene="office"] .scene-visual{display:none}
+/* allow every normal screen to grow naturally instead of visually clipping */
+.panel{height:auto;max-height:none}
+#screen{height:auto;max-height:none}
+@media(max-width:900px){
+ body[data-scene="office"] .panel{
+   background:
+    linear-gradient(180deg,rgba(4,16,24,.20) 0%,rgba(4,16,24,.62) 31%,rgba(4,16,24,.98) 48%,rgba(4,16,24,1) 100%),
+    url("https://olegvustin.github.io/vustin-sound-game-v2.0/image-08.webp") center top/100% auto no-repeat,
+    linear-gradient(145deg,#091d28,#041018);
+ }
+ body[data-scene="office"] .hero{
+   width:100%;max-width:none;min-height:0;
+   padding:330px 0 18px;
+ }
+}
+@media(max-width:600px){
+ body[data-scene="office"] .hero{padding-top:245px}
+ body[data-scene="office"] .panel{background-size:auto,auto 280px,auto}
+}
+
+
+/* v6 — mobile audit: 390x844 / 430x932 / 768x1024 */
+
+/* universal touch + safe-area rules */
+button,.btn,.choice,.card{touch-action:manipulation}
+.btn{min-height:48px}
+.sound-toggle{
+ right:max(12px,env(safe-area-inset-right));
+ bottom:max(12px,env(safe-area-inset-bottom));
+}
+.app{padding-bottom:calc(36px + env(safe-area-inset-bottom))}
+
+/* Tablet portrait */
+@media (min-width:601px) and (max-width:820px){
+ .app{padding:12px 18px 42px}
+ .top{position:relative;top:auto}
+ .panel{padding:28px 24px;min-height:0}
+ .grid,.choices{grid-template-columns:repeat(2,minmax(0,1fr))}
+ .stats{grid-template-columns:repeat(2,minmax(0,1fr))}
+ body[data-scene="office"] .hero{padding-top:350px}
+ .hero h1{font-size:58px}
+ .scene-head{margin-bottom:20px}
+ .nav .btn{flex:1 1 180px}
+}
+
+/* Phones */
+@media (max-width:600px){
+ body{font-size:15px}
+ .app{padding:8px 10px calc(28px + env(safe-area-inset-bottom))}
+ .top{
+   position:relative;top:auto;margin-bottom:10px;
+   padding:8px 10px;border-radius:15px;
+ }
+ .brand{font-size:10px;letter-spacing:1.35px;min-width:0}
+ .brand:before{width:31px;height:31px;flex:0 0 31px}
+ .money{font-size:11px;padding:9px 11px;white-space:nowrap}
+ .panel{padding:18px 14px;border-radius:20px;min-height:0}
+ .scene-head{margin:0 0 17px;padding:8px 10px;border-radius:12px}
+ .scene-place{font-size:9px;letter-spacing:1.35px}
+ .scene-place i{font-size:16px}
+ .kicker{font-size:9px;letter-spacing:2px}
+ .section-title{font-size:30px;line-height:1.05;margin:7px 0 17px}
+ .hero{min-height:0}
+ body[data-scene="office"] .hero{
+   width:100%;max-width:none;
+   padding:238px 0 12px;
+ }
+ body[data-scene="office"] .panel{
+   background-position:center top;
+   background-size:auto,auto 260px,auto;
+ }
+ .hero h1{font-size:42px;line-height:.95;letter-spacing:-1.8px;margin-bottom:16px}
+ .hero p{font-size:15px;line-height:1.55;margin-bottom:17px}
+ .grid,.choices,.stats,.market,.analysis{display:grid;grid-template-columns:1fr!important;gap:10px}
+ .card,.choice{padding:16px;border-radius:16px}
+ .card h3{font-size:21px;margin-bottom:8px}
+ .desc{font-size:14px;line-height:1.55}
+ .small{line-height:1.45}
+ .price{font-size:17px}
+ .stats .stat{padding:14px 11px}
+ .stat b{font-size:25px}
+ .nav{display:grid;grid-template-columns:1fr;gap:8px;margin-top:18px}
+ .nav .btn,.btn{width:100%;min-height:50px;padding:13px 14px}
+ .event,.econbox,.note{padding:15px}
+ .wave{height:50px}
+ .vinyl{width:190px;height:190px}
+ .vinyl:after{width:76px;height:76px}
+ .release-show{min-height:400px;padding:12px 0}
+ .release-count{font-size:118px}
+ .release-word{font-size:54px;letter-spacing:-1.8px}
+ .stream-counter{font-size:58px;letter-spacing:-1.8px}
+ .big-number{font-size:58px;letter-spacing:-1.8px}
+ .release-disc{width:165px;height:165px}
+ .release-disc:after{width:58px;height:58px;left:53.5px;top:53.5px}
+ .scene-visual{display:none}
+ /* tables scroll horizontally inside their own region */
+ .panel div[style*="overflow:auto"]{
+   margin-left:-4px;margin-right:-4px;
+   padding-bottom:8px;
+   -webkit-overflow-scrolling:touch;
+ }
+ table{min-width:720px;font-size:12px}
+ th,td{white-space:nowrap}
+}
+
+/* 390px class phones */
+@media (max-width:400px){
+ .app{padding-left:7px;padding-right:7px}
+ .panel{padding-left:12px;padding-right:12px}
+ .brand{letter-spacing:1px}
+ .money{padding:8px 9px}
+ body[data-scene="office"] .hero{padding-top:220px}
+ body[data-scene="office"] .panel{background-size:auto,auto 240px,auto}
+ .hero h1{font-size:38px}
+ .section-title{font-size:28px}
+ .card,.choice{padding:14px}
+ .release-show{min-height:370px}
+}
+
+/* landscape phones / short viewport */
+@media (max-height:520px) and (orientation:landscape){
+ .top{position:relative;top:auto}
+ .panel{min-height:0;padding:16px}
+ body[data-scene="office"] .panel{
+   background-position:right center;
+   background-size:auto,52% auto,auto;
+ }
+ body[data-scene="office"] .hero{
+   width:58%;padding:8px 0;min-height:0
+ }
+ .hero h1{font-size:35px}
+ .hero p{font-size:13px}
+ .scene-head{margin-bottom:10px}
+ .release-show{min-height:330px}
+}
+
+/* prevent long labels / values from escaping */
+.card,.choice,.event,.econbox,.note,.stat,.money,.brand{
+ max-width:100%;
+ overflow-wrap:anywhere;
+}
+
+
+.dev-toggle{position:fixed;left:14px;bottom:max(14px,env(safe-area-inset-bottom));z-index:1000;
+background:#071923;border:1px solid rgba(215,239,251,.22);color:#d7effb;border-radius:14px;
+padding:10px 12px;font:700 11px/1 Arial;letter-spacing:.8px;cursor:pointer;opacity:.62}
+.dev-toggle:hover{opacity:1}
+.dev-panel{position:fixed;left:14px;bottom:62px;z-index:1001;width:min(360px,calc(100vw - 28px));
+background:rgba(4,16,24,.97);border:1px solid rgba(214,166,68,.42);border-radius:18px;
+padding:15px;box-shadow:0 18px 60px rgba(0,0,0,.45);display:none}
+.dev-panel.open{display:block}
+.dev-panel h4{margin:0 0 7px;color:#d6a644}
+.dev-log{max-height:180px;overflow:auto;font:11px/1.45 monospace;color:#b8cad4;background:#020b10;
+padding:9px;border-radius:10px;margin-top:10px;white-space:pre-wrap}
+.dev-panel button{width:100%;margin-top:8px;min-height:42px}
+@media(max-width:600px){.dev-toggle{left:8px;bottom:8px}.dev-panel{left:8px;bottom:54px;width:calc(100vw - 16px)}}
+
+
+.save-indicator{position:fixed;right:14px;bottom:max(14px,env(safe-area-inset-bottom));z-index:999;font:700 10px/1 Arial;letter-spacing:.7px;color:#9db1bc;background:rgba(4,16,24,.78);border:1px solid rgba(215,239,251,.12);padding:8px 10px;border-radius:12px;opacity:0;transition:.25s}.save-indicator.show{opacity:.9}
+@media(max-width:600px){.save-indicator{right:8px;bottom:8px}}
+
+
+.fx-toast{position:fixed;left:50%;top:18%;transform:translate(-50%,-18px) scale(.96);z-index:3000;background:rgba(5,20,29,.96);border:1px solid rgba(214,166,68,.65);box-shadow:0 18px 70px rgba(0,0,0,.5);border-radius:18px;padding:15px 20px;min-width:230px;max-width:min(460px,88vw);text-align:center;opacity:0;pointer-events:none;transition:.32s;color:#eef8fc}.fx-toast.show{opacity:1;transform:translate(-50%,0) scale(1)}.fx-toast b{display:block;color:#d6a644;font-size:20px;margin-bottom:5px}.fx-toast span{font-size:12px;color:#b9cad3}.fx-pulse{animation:fxPulse .55s ease}@keyframes fxPulse{0%{transform:scale(1)}45%{transform:scale(1.025)}100%{transform:scale(1)}}.unlock-card{border-color:rgba(214,166,68,.65)!important;animation:unlockGlow 1.8s ease}@keyframes unlockGlow{45%{box-shadow:0 0 55px rgba(214,166,68,.22)}}.final-crown{font-size:52px;filter:drop-shadow(0 8px 22px rgba(214,166,68,.28));animation:crownIn .8s ease}@keyframes crownIn{from{opacity:0;transform:translateY(16px) scale(.8)}to{opacity:1;transform:none}}
+
+/* v8.2 Tilda Edition */
+
+
+
+
+
+
+
+
+
+}
+@media(max-width:600px){
+ 
+ 
+}
+
+
+/* v8.7 — guided release flow */
+#vustin-producer-native .nav{
+  position:sticky;
+  bottom:10px;
+  z-index:40;
+  padding:12px;
+  margin-left:-12px;
+  margin-right:-12px;
+  border-radius:18px;
+  background:linear-gradient(180deg,rgba(4,16,24,.30),rgba(4,16,24,.96) 35%);
+  backdrop-filter:blur(10px);
+}
+#vustin-producer-native .nav .btn:not(.alt){
+  box-shadow:0 0 0 1px rgba(255,220,145,.16),0 12px 34px rgba(215,169,77,.28);
+}
+#vustin-producer-native .flow-hint{
+  margin:14px 0 0;
+  text-align:center;
+  font-size:12px;
+  opacity:.68;
+}
+#vustin-producer-native .release-choice{
+  border-color:rgba(215,169,77,.42);
+}
+#vustin-producer-native .release-action{
+  margin-top:12px;
+  padding-top:10px;
+  border-top:1px solid rgba(215,169,77,.20);
+  color:var(--gold2);
+  font-weight:900;
+  letter-spacing:.4px;
+}
+@media(max-width:620px){
+  #vustin-producer-native .nav{bottom:6px;padding:8px;margin-left:-8px;margin-right:-8px}
+  #vustin-producer-native .nav .btn:not(.alt){order:-1}
+}
+
+
+
+
+
+
+/* v9.0 — published Tilda layout spacing fix */
+#vustin-producer-native{
+  margin-top:-590px !important;
+  position:relative;
+  z-index:5;
+}
+@media(max-width:980px){
+  #vustin-producer-native{margin-top:0 !important;}
+}
+@media(max-width:640px){
+  #vustin-producer-native{margin-top:-770px !important;}
+}
+
+
+/* v9.1 — Mobile Edition: compact game-like flow, minimal vertical scrolling */
+@media(max-width:640px){
+  html{scroll-behavior:smooth}
+  body{overscroll-behavior-y:contain}
+
+  .app{
+    padding:5px 7px calc(92px + env(safe-area-inset-bottom)) !important;
+  }
+  .top{
+    margin-bottom:6px !important;
+    padding:6px 8px !important;
+    min-height:46px;
+    border-radius:13px !important;
+  }
+  .brand{font-size:9px !important;letter-spacing:1px !important}
+  .brand:before{width:28px !important;height:28px !important;flex-basis:28px !important}
+  .money{font-size:10px !important;padding:7px 9px !important}
+
+  .panel{
+    padding:12px 11px 18px !important;
+    border-radius:17px !important;
+    min-height:0 !important;
+  }
+  .scene-head{
+    margin:0 0 8px !important;
+    padding:6px 8px !important;
+    min-height:34px;
+  }
+  .scene-place{font-size:8px !important}
+  .kicker{font-size:8px !important;letter-spacing:1.5px !important}
+  .section-title{
+    font-size:25px !important;
+    margin:4px 0 9px !important;
+    line-height:1 !important;
+  }
+  .progressline{margin:0 0 9px !important}
+  .desc{
+    font-size:12px !important;
+    line-height:1.35 !important;
+    margin:5px 0 9px !important;
+  }
+  .small{font-size:11px !important;line-height:1.3 !important}
+  .price{font-size:14px !important;margin-top:5px !important}
+
+  /* Decision cards become a horizontal swipe deck instead of a long column. */
+  .grid,.choices{
+    display:flex !important;
+    grid-template-columns:none !important;
+    gap:9px !important;
+    overflow-x:auto;
+    overflow-y:hidden;
+    scroll-snap-type:x mandatory;
+    -webkit-overflow-scrolling:touch;
+    scrollbar-width:none;
+    padding:2px 2px 7px;
+    margin-left:-2px;
+    margin-right:-2px;
+  }
+  .grid::-webkit-scrollbar,.choices::-webkit-scrollbar{display:none}
+  .grid .card,.choices .choice{
+    flex:0 0 82%;
+    min-width:82%;
+    min-height:112px !important;
+    padding:13px !important;
+    border-radius:15px !important;
+    scroll-snap-align:center;
+  }
+  .grid .card h3{font-size:19px !important;margin:5px 0 6px !important}
+  .tag{font-size:9px !important;padding:4px 7px !important;margin-top:5px !important}
+
+  /* Smaller analytical/stat blocks. */
+  .stats,.market,.analysis{
+    gap:7px !important;
+  }
+  .stats{grid-template-columns:repeat(2,1fr)!important}
+  .stats .stat{padding:9px 8px !important}
+  .stat b{font-size:20px !important}
+  .analysis{grid-template-columns:repeat(2,1fr)!important}
+  .note,.event,.econbox{padding:11px !important}
+
+  /* Persistent mobile action bar: no hunting for "ДАЛЕЕ". */
+  .nav{
+    position:fixed !important;
+    left:7px;
+    right:7px;
+    bottom:max(6px,env(safe-area-inset-bottom));
+    z-index:2500 !important;
+    display:grid !important;
+    grid-template-columns:minmax(0,.72fr) minmax(0,1.28fr) !important;
+    gap:7px !important;
+    margin:0 !important;
+    padding:7px !important;
+    border:1px solid rgba(215,239,251,.12);
+    border-radius:16px !important;
+    background:rgba(3,14,21,.94) !important;
+    box-shadow:0 12px 36px rgba(0,0,0,.5);
+    backdrop-filter:blur(14px);
+  }
+  .nav .btn{
+    width:100% !important;
+    min-height:46px !important;
+    padding:10px 8px !important;
+    font-size:11px !important;
+  }
+  .nav .btn:not(.alt){order:2 !important}
+  .nav .btn.alt{order:1 !important}
+
+  /* First career screen: keep the atmosphere but remove the long image-led scroll. */
+  body[data-scene="office"] .panel{
+    background-size:auto,auto 155px,auto !important;
+  }
+  body[data-scene="office"] .hero{
+    padding:142px 0 4px !important;
+  }
+  .hero h1{
+    font-size:34px !important;
+    line-height:.94 !important;
+    margin:4px 0 10px !important;
+  }
+  .hero p{font-size:12px !important;line-height:1.4 !important;margin-bottom:10px !important}
+  .hero .stats{margin:8px 0 !important}
+  .hero>.btn{min-height:47px !important;width:100%}
+
+  .release-show{min-height:330px !important;padding:8px 0 !important}
+  .release-count{font-size:90px !important}
+  .release-word{font-size:42px !important}
+  .stream-counter,.big-number{font-size:45px !important}
+  .vinyl{width:155px !important;height:155px !important}
+
+  /* Tiny swipe cue for decks. */
+  .choices:after,.grid:after{
+    content:"";
+    flex:0 0 7%;
+  }
+}
+
+
+/* v9.5 — Mobile Polish */
+@media(max-width:640px){
+ #vustin-producer-native{margin-top:-810px !important}
+
+ /* One full swipe card + a subtle hint of the next card */
+ .grid .card,.choices .choice{
+   flex:0 0 89% !important;min-width:89% !important;
+   box-sizing:border-box !important;overflow:hidden
+ }
+ .grid,.choices{gap:10px !important;padding-right:8px !important}
+ .grid:after,.choices:after{flex:0 0 1px !important}
+
+ /* Compact market dashboard */
+ body[data-scene="market"] .grid,
+ body[data-scene="market"] .choices{
+   display:grid !important;
+   grid-template-columns:repeat(2,minmax(0,1fr)) !important;
+   overflow:visible !important;scroll-snap-type:none !important;
+   gap:8px !important;padding:0 !important
+ }
+ body[data-scene="market"] .card,
+ body[data-scene="market"] .choice{
+   min-width:0 !important;width:auto !important;
+   min-height:108px !important;padding:10px !important
+ }
+ body[data-scene="market"] .card h3,
+ body[data-scene="market"] .choice h3{font-size:16px !important}
+
+ /* Compact career dashboard */
+ body[data-scene="office"] .panel{padding-bottom:86px !important}
+ body[data-scene="office"] .stats{
+   grid-template-columns:repeat(4,minmax(0,1fr)) !important;gap:5px !important
+ }
+ body[data-scene="office"] .stats .stat{
+   padding:8px 3px !important;min-height:66px !important
+ }
+ body[data-scene="office"] .stat b{font-size:18px !important}
+ body[data-scene="office"] .stat span,
+ body[data-scene="office"] .stat div{font-size:9px !important}
+ body[data-scene="office"] .econbox,
+ body[data-scene="office"] .note{padding:10px !important;margin-top:8px !important}
+ body[data-scene="office"] .econbox h2,
+ body[data-scene="office"] .note h2{
+   font-size:19px !important;line-height:1.05 !important;margin:4px 0 6px !important
+ }
+
+ /* Smaller sound control */
+ .sound-toggle,.sound-btn,#soundToggle{
+   width:40px !important;height:40px !important;
+   min-width:40px !important;min-height:40px !important;
+   right:10px !important;bottom:92px !important
+ }
+
+ /* Hide large site footer on the dedicated mobile game page */
+ body:has(#vustin-producer-native) footer,
+ body:has(#vustin-producer-native) .t-footer,
+ body:has(#vustin-producer-native) #t-footer{display:none !important}
+}
+
+
+/* v9.6 — prevent mobile action bar from covering save/intro text */
+@media(max-width:640px){
+  /* Save menu is the only screen where the fixed bar overlaps a short text card.
+     Reserve real space for the controls inside the panel. */
+  .panel:has(.kicker:first-child) .card:has(.desc){
+    padding-bottom:92px !important;
+  }
+
+  /* General safety: text immediately before a fixed nav gets breathing room. */
+  .panel > .card + .nav{
+    margin-top:10px !important;
+  }
+}
+
+
+@media(max-width:640px){
+  .save-card{padding-bottom:100px !important;min-height:190px !important}
+  .save-card .desc{padding-bottom:6px !important}
+}
+
+/* v9.7 — One Screen Mobile
+   Main production flow is designed to fit inside one phone viewport.
+   Long reference screens (history/development) remain intentionally scrollable. */
+@media(max-width:640px){
+  :root{--mobile-game-h:calc(100dvh - 150px)}
+
+  #vustin-producer-native .app{
+    padding-bottom:76px !important;
+  }
+  #vustin-producer-native .panel{
+    max-height:var(--mobile-game-h);
+    overflow:hidden !important;
+    padding:10px 10px 76px !important;
+  }
+  #vustin-producer-native .scene-head{
+    min-height:30px !important;margin-bottom:5px !important;padding:5px 7px !important;
+  }
+  #vustin-producer-native .scene-route{display:none !important}
+  #vustin-producer-native .section-title{
+    font-size:23px !important;line-height:.98 !important;margin:3px 0 6px !important;
+  }
+  #vustin-producer-native .kicker{font-size:7px !important}
+  #vustin-producer-native .desc{
+    font-size:10.5px !important;line-height:1.25 !important;margin:3px 0 6px !important;
+  }
+  #vustin-producer-native .progressline{margin:0 0 6px !important;height:3px !important}
+  #vustin-producer-native .nav{
+    min-height:58px !important;padding:6px !important;
+  }
+  #vustin-producer-native .nav .btn{
+    min-height:44px !important;font-size:10px !important;padding:8px 6px !important;
+  }
+
+  /* Decision screens: one compact card at a time, horizontal swipe for alternatives. */
+  body[data-mobile-screen="song"] .grid,
+  body[data-mobile-screen="goal"] .choices,
+  body[data-mobile-screen="team"] .choices,
+  body[data-mobile-screen="studio"] .choices,
+  body[data-mobile-screen="arr"] .choices,
+  body[data-mobile-screen="cover"] .choices,
+  body[data-mobile-screen="promo"] .choices{
+    height:245px !important;
+    align-items:stretch !important;
+    margin-top:3px !important;
+  }
+  body[data-mobile-screen="song"] .grid .card,
+  body[data-mobile-screen="goal"] .choices .choice,
+  body[data-mobile-screen="team"] .choices .choice,
+  body[data-mobile-screen="studio"] .choices .choice,
+  body[data-mobile-screen="arr"] .choices .choice,
+  body[data-mobile-screen="cover"] .choices .choice,
+  body[data-mobile-screen="promo"] .choices .choice{
+    flex-basis:92% !important;min-width:92% !important;
+    min-height:0 !important;height:100% !important;
+    padding:11px !important;overflow:hidden !important;
+  }
+  body[data-mobile-screen="song"] .card h3,
+  body[data-mobile-screen="goal"] .choice b,
+  body[data-mobile-screen="team"] .choice b,
+  body[data-mobile-screen="studio"] .choice b,
+  body[data-mobile-screen="arr"] .choice b,
+  body[data-mobile-screen="cover"] .choice b,
+  body[data-mobile-screen="promo"] .choice b{
+    font-size:18px !important;line-height:1.05 !important;
+  }
+  body[data-mobile-screen="song"] .tag{font-size:7px !important;padding:3px 5px !important}
+  body[data-mobile-screen="team"] .choices,
+  body[data-mobile-screen="studio"] .choices,
+  body[data-mobile-screen="arr"] .choices,
+  body[data-mobile-screen="cover"] .choices,
+  body[data-mobile-screen="promo"] .choices{height:205px !important}
+
+  /* Analytics: all five signals visible without scrolling. */
+  body[data-mobile-screen="analysis"] .card{padding:9px !important}
+  body[data-mobile-screen="analysis"] .analysis{
+    display:grid !important;grid-template-columns:repeat(2,minmax(0,1fr)) !important;
+    gap:5px !important;
+  }
+  body[data-mobile-screen="analysis"] .note{padding:7px !important;min-height:52px !important}
+  body[data-mobile-screen="analysis"] .note b{font-size:12px !important}
+  body[data-mobile-screen="analysis"] .small{font-size:9px !important}
+
+  /* Market: four trends + compact stats in one viewport. */
+  body[data-mobile-screen="market"] .market{
+    display:grid !important;grid-template-columns:repeat(2,minmax(0,1fr)) !important;
+    gap:6px !important;margin:4px 0 7px !important;
+  }
+  body[data-mobile-screen="market"] .market>div{
+    padding:10px !important;min-height:72px !important;font-size:13px !important;
+  }
+  body[data-mobile-screen="market"] .stats{
+    grid-template-columns:repeat(4,minmax(0,1fr)) !important;gap:4px !important;
+  }
+  body[data-mobile-screen="market"] .stat{padding:6px 2px !important;min-height:54px !important}
+  body[data-mobile-screen="market"] .stat b{font-size:15px !important}
+
+  /* Career: summary screen, no duplicate large progress blocks. */
+  body[data-mobile-screen="career"] .stats{
+    grid-template-columns:repeat(4,minmax(0,1fr)) !important;gap:4px !important;
+  }
+  body[data-mobile-screen="career"] .stats .stat{
+    min-height:55px !important;padding:6px 2px !important;
+  }
+  body[data-mobile-screen="career"] .stats .stat b{font-size:15px !important}
+  body[data-mobile-screen="career"] .card{
+    padding:8px !important;margin-top:6px !important;
+  }
+  body[data-mobile-screen="career"] .card h3{
+    font-size:17px !important;line-height:1.05 !important;margin:3px 0 !important;
+  }
+  body[data-mobile-screen="career"] .card .stats{
+    grid-template-columns:repeat(4,minmax(0,1fr)) !important;margin-bottom:5px !important;
+  }
+  body[data-mobile-screen="career"] .card .desc{font-size:9px !important}
+
+  /* Save screen: reserve the action bar, never cover copy. */
+  .save-card{
+    min-height:180px !important;
+    padding:12px 12px 88px !important;
+  }
+
+  /* Sound button stays outside the text/action zone. */
+  .sound-toggle,.sound-btn,#soundToggle{
+    width:36px !important;height:36px !important;min-width:36px !important;min-height:36px !important;
+    bottom:78px !important;
+  }
+
+  /* Reference/management screens may scroll internally rather than the whole web page. */
+  body[data-mobile-screen="development"] .panel,
+  body[data-mobile-screen="history"] .panel{
+    overflow-y:auto !important;
+    overscroll-behavior:contain;
+  }
+}
+
+
+@media(max-width:640px){
+ body[data-mobile-screen="dilemma"] .choices{
+   height:190px !important;
+   display:flex !important;overflow-x:auto !important;gap:8px !important;
+ }
+ body[data-mobile-screen="dilemma"] .choice{
+   flex:0 0 88% !important;min-width:88% !important;height:100% !important;padding:12px !important;
+ }
+}
+
+
+@media(max-width:640px){
+ .finance-card{padding:10px !important}
+ .finance-stats{display:grid !important;grid-template-columns:repeat(3,1fr) !important;gap:6px !important}
+ .finance-stats .stat{padding:7px 4px !important;min-width:0 !important}
+ .finance-stats .stat b{font-size:15px !important}
+ .finance-card .desc{font-size:11px !important;margin:6px 0 0 !important}
+}
+
+
+/* v13.17 Visible Onboarding Help */
+.song-cover{
+ width:100%;aspect-ratio:1/1;object-fit:cover;border-radius:14px;
+ display:block;margin:0 0 10px;box-shadow:0 10px 24px rgba(0,0,0,.24)
+}
+.release-cover{
+ width:min(280px,58vw);aspect-ratio:1/1;object-fit:cover;border-radius:20px;
+ display:block;margin:8px auto 14px;box-shadow:0 18px 42px rgba(0,0,0,.38)
+}
+.history-song{display:flex;align-items:center;gap:9px;min-width:150px}
+.history-song img{width:38px;height:38px;object-fit:cover;border-radius:7px;flex:0 0 auto}
+@media(max-width:640px){
+ .song-cover{border-radius:11px;margin-bottom:7px;max-height:128px}
+ .release-cover{width:min(170px,44vw);border-radius:14px;margin:4px auto 8px}
+ .history-song img{width:30px;height:30px}
+}
+
+
+/* v13.17 Visible Onboarding Help */
+.visual-scene{
+ position:relative;overflow:hidden;min-height:88px;border-radius:15px;
+ padding:14px;display:flex;align-items:flex-end;gap:12px;margin-bottom:10px;
+ border:1px solid rgba(215,239,251,.16);
+ background:
+ radial-gradient(circle at 82% 18%,rgba(238,183,74,.26),transparent 28%),
+ linear-gradient(135deg,#12364b,#071923 70%);
+ box-shadow:inset 0 0 40px rgba(0,0,0,.22)
+}
+.visual-scene:after{
+ content:"";position:absolute;inset:0;pointer-events:none;opacity:.34;
+ background:linear-gradient(120deg,transparent 20%,rgba(255,255,255,.08) 50%,transparent 72%)
+}
+.visual-icon{
+ width:58px;height:58px;display:grid;place-items:center;flex:0 0 auto;
+ font-size:34px;border-radius:13px;background:rgba(4,18,27,.58);
+ border:1px solid rgba(255,255,255,.13);backdrop-filter:blur(5px)
+}
+.visual-scene b{display:block;font-size:15px;color:#fff}
+.visual-scene span{display:block;font-size:11px;line-height:1.3;opacity:.72;margin-top:3px}
+.visual-home{background:radial-gradient(circle at 25% 30%,rgba(231,157,80,.28),transparent 35%),linear-gradient(135deg,#32251f,#091c27)}
+.visual-good{background:radial-gradient(circle at 70% 20%,rgba(62,181,230,.32),transparent 34%),linear-gradient(135deg,#0c3349,#071923)}
+.visual-top{background:radial-gradient(circle at 72% 22%,rgba(235,176,69,.34),transparent 34%),linear-gradient(135deg,#3b291a,#081b25)}
+.visual-clip{background:radial-gradient(circle at 75% 20%,rgba(205,72,115,.35),transparent 30%),linear-gradient(135deg,#351b32,#071a26)}
+.visual-reels{background:radial-gradient(circle at 72% 18%,rgba(70,196,232,.38),transparent 32%),linear-gradient(135deg,#12344c,#111b2b)}
+.visual-playlists{background:radial-gradient(circle at 76% 18%,rgba(45,211,139,.30),transparent 32%),linear-gradient(135deg,#0c3a31,#071a26)}
+.visual-radio{background:radial-gradient(circle at 72% 18%,rgba(235,83,67,.32),transparent 32%),linear-gradient(135deg,#3b201d,#071923)}
+.visual-pr{background:radial-gradient(circle at 75% 20%,rgba(223,184,108,.30),transparent 34%),linear-gradient(135deg,#393126,#081a25)}
+.visual-target{background:radial-gradient(circle at 72% 18%,rgba(57,142,238,.34),transparent 34%),linear-gradient(135deg,#172b4c,#071923)}
+.visual-dilemma{min-height:110px;background:radial-gradient(circle at 72% 18%,rgba(38,169,225,.30),transparent 34%),linear-gradient(135deg,#123a51,#081923)}
+.visual-force{min-height:92px;background:radial-gradient(circle at 72% 18%,rgba(230,72,65,.32),transparent 34%),linear-gradient(135deg,#43201e,#081923)}
+@media(max-width:640px){
+ .visual-scene{min-height:62px;padding:8px;margin-bottom:6px;border-radius:11px}
+ .visual-icon{width:42px;height:42px;font-size:25px;border-radius:9px}
+ .visual-scene b{font-size:12px}.visual-scene span{font-size:9px}
+ .visual-dilemma,.visual-force{min-height:64px}
+}
+
+
+/* v13.17 Visible Onboarding Help */
+.label-growth{
+ margin:10px 0;padding:14px;border-radius:18px;border:1px solid rgba(215,239,251,.16);
+ overflow:hidden;position:relative;
+ background:radial-gradient(circle at 78% 18%,rgba(225,168,69,.20),transparent 32%),linear-gradient(135deg,#102c3b,#071923)
+}
+.label-growth.level-1{background:radial-gradient(circle at 75% 18%,rgba(59,173,220,.25),transparent 34%),linear-gradient(135deg,#10384c,#071923)}
+.label-growth.level-2{background:radial-gradient(circle at 78% 18%,rgba(238,183,74,.32),transparent 35%),linear-gradient(135deg,#17394a,#071923)}
+.label-room{display:flex;align-items:center;gap:14px}
+.room-icon{width:82px;height:82px;border-radius:16px;display:grid;place-items:center;font-size:44px;
+ background:rgba(3,16,24,.52);border:1px solid rgba(255,255,255,.12);box-shadow:0 12px 28px rgba(0,0,0,.24)}
+.room-copy h3{margin:3px 0;font-size:20px}.room-copy p{margin:0;opacity:.72;font-size:12px}
+.growth-track{height:6px;border-radius:99px;background:rgba(255,255,255,.10);margin:12px 0 5px;overflow:hidden}
+.growth-track i{display:block;height:100%;border-radius:99px;background:linear-gradient(90deg,#dca83c,#ffe091)}
+.label-growth>small{opacity:.58;font-size:10px}
+.staff-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:7px;margin:9px 0}
+.staff-card{min-width:0;padding:9px;border-radius:12px;border:1px solid rgba(215,239,251,.12);
+ background:rgba(8,31,43,.72);display:flex;align-items:center;gap:7px}
+.staff-card>span{font-size:24px}.staff-card div{min-width:0;flex:1}
+.staff-card b,.staff-card small{display:block}.staff-card b{font-size:11px}.staff-card small{font-size:8px;opacity:.58}
+.staff-card em{font-style:normal;font-size:8px;padding:3px 5px;border-radius:99px;background:rgba(229,181,70,.16);color:#f0c55b}
+@media(max-width:640px){
+ .label-growth{padding:9px;margin:6px 0;border-radius:12px}
+ .room-icon{width:50px;height:50px;font-size:29px;border-radius:10px}
+ .label-room{gap:9px}.room-copy h3{font-size:14px}.room-copy p{font-size:9px}
+ .growth-track{margin:7px 0 3px}
+ .staff-grid{grid-template-columns:repeat(2,1fr);gap:5px;margin:5px 0}
+ .staff-card{padding:6px}.staff-card>span{font-size:18px}.staff-card b{font-size:9px}.staff-card small{font-size:7px}
+}
+
+
+/* v13.17 Visible Onboarding Help */
+.release-moment{margin:8px 0 12px}
+.release-stage{
+ position:relative;overflow:hidden;min-height:260px;border-radius:22px;padding:20px;
+ display:grid;grid-template-columns:minmax(220px,.9fr) 1.1fr;align-items:center;gap:22px;
+ background:
+ radial-gradient(circle at 20% 35%,rgba(227,177,66,.22),transparent 34%),
+ radial-gradient(circle at 78% 20%,rgba(54,151,205,.18),transparent 30%),
+ linear-gradient(135deg,#0d2e40,#061721 72%);
+ border:1px solid rgba(215,239,251,.16);box-shadow:0 18px 45px rgba(0,0,0,.28)
+}
+.vinyl-wrap{position:relative;width:230px;height:210px;margin:auto}
+.vinyl-disc{
+ position:absolute;width:190px;height:190px;left:0;top:10px;border-radius:50%;
+ background:repeating-radial-gradient(circle,#111 0 4px,#181818 5px 7px);
+ box-shadow:0 14px 30px rgba(0,0,0,.45);animation:vinylSpin 5s linear infinite
+}
+.vinyl-disc:after{content:"";position:absolute;inset:44%;border-radius:50%;background:#050505;border:2px solid rgba(255,255,255,.16)}
+.vinyl-disc img{position:absolute;width:68px;height:68px;object-fit:cover;border-radius:50%;left:61px;top:61px}
+.release-art{
+ position:absolute;width:142px;height:142px;object-fit:cover;right:0;top:34px;border-radius:15px;
+ box-shadow:0 18px 34px rgba(0,0,0,.45);transform:rotate(2deg)
+}
+.release-copy h2{font-size:30px;margin:5px 0 12px}
+.live-counter{font-size:42px;line-height:1;font-weight:900;letter-spacing:-1.5px;color:#f2c75e}
+.release-copy>small{opacity:.62}
+.reveal-results{display:grid;grid-template-columns:repeat(4,1fr);gap:7px;margin-top:8px}
+.reveal-stat{
+ padding:10px;border-radius:12px;background:rgba(8,31,43,.78);border:1px solid rgba(215,239,251,.12);
+ opacity:0;transform:translateY(8px);animation:resultReveal .45s ease forwards;animation-delay:var(--d)
+}
+.reveal-stat b,.reveal-stat span{display:block}.reveal-stat b{font-size:16px}.reveal-stat span{font-size:9px;opacity:.6;margin-top:2px}
+.reveal-stat.gain b{color:#8ee2b0}.reveal-stat.loss b{color:#ff9a91}
+@keyframes vinylSpin{to{transform:rotate(360deg)}}
+@keyframes resultReveal{to{opacity:1;transform:none}}
+@media(max-width:640px){
+ .release-stage{min-height:178px;padding:10px;grid-template-columns:128px 1fr;gap:8px;border-radius:14px}
+ .vinyl-wrap{width:128px;height:125px}.vinyl-disc{width:112px;height:112px;top:6px}
+ .vinyl-disc img{width:42px;height:42px;left:35px;top:35px}
+ .release-art{width:78px;height:78px;right:0;top:24px;border-radius:9px}
+ .release-copy h2{font-size:17px;margin:3px 0 8px}.live-counter{font-size:24px;letter-spacing:-.5px}
+ .reveal-results{grid-template-columns:repeat(2,1fr);gap:5px;margin-top:5px}
+ .reveal-stat{padding:6px}.reveal-stat b{font-size:12px}.reveal-stat span{font-size:8px}
+}
+@media(prefers-reduced-motion:reduce){
+ .vinyl-disc,.reveal-stat{animation:none!important}.reveal-stat{opacity:1;transform:none}
+}
+
+
+/* v13.17 Visible Onboarding Help — standalone GitHub/Tilda */
+@media (min-width: 641px){
+  body{margin:0!important}
+  .app,.game,.game-shell,.shell,.wrap,.container{padding-top:8px}
+  .label-growth{margin:5px 0;padding:10px 13px;border-radius:15px}
+  .label-room{gap:10px}
+  .room-icon{width:58px;height:58px;font-size:33px;border-radius:12px}
+  .room-copy h3{font-size:17px;margin:2px 0}
+  .room-copy p{font-size:10px}
+  .growth-track{margin:7px 0 3px}
+  .staff-grid{gap:6px;margin:5px 0}
+  .staff-card{padding:6px 8px}
+  .staff-card>span{font-size:20px}
+  .staff-card b{font-size:10px}
+  .staff-card small,.staff-card em{font-size:7px}
+
+  /* finance panel: five KPIs in one desktop row */
+  .finance-dashboard,.finance-grid,.finance-stats{
+    padding:10px!important;
+    margin:6px 0!important;
+  }
+  .finance-dashboard .stats,
+  .finance-dashboard .stat-grid,
+  .finance-grid,
+  .finance-stats{
+    display:grid!important;
+    grid-template-columns:repeat(5,minmax(0,1fr))!important;
+    gap:7px!important;
+  }
+  .finance-dashboard .stat,
+  .finance-dashboard .metric,
+  .finance-grid>div,
+  .finance-stats>div{
+    min-height:70px!important;
+    padding:8px!important;
+  }
+
+  /* Generic finance cards used by this build */
+  .finance-dashboard>div:not(.kicker):not(.hint):not(p):not(small){
+    min-height:auto;
+  }
+
+  .actions,.footer-actions,.nav-actions{
+    margin-top:7px!important;
+    padding-top:6px!important;
+  }
+}
+
+
+/* v12.6 — tighter integration with VUSTIN SOUND page */
+html,body{min-height:0!important}
+body{padding-bottom:0!important}
+@media(min-width:641px){
+  .app,.game,.game-shell,.shell,.wrap,.container{
+    padding-top:0!important;
+    padding-bottom:0!important;
+  }
+  /* reduce dead air around the resume/start screen */
+  .screen,.panel,.career-screen{
+    margin-bottom:0;
+  }
+}
+
+
+/* v12.7 — content-sized game */
+html,body{height:auto!important;min-height:0!important}
+#app,.app,#game,.game,.game-shell,.shell,.wrap,.container,main{
+  height:auto!important;min-height:0!important;
+}
+body{overflow-y:visible!important}
+@media(min-width:641px){
+  #app,.app,#game,.game,.game-shell,.shell,.wrap,.container,main{
+    padding-bottom:14px!important;margin-bottom:0!important;
+  }
+}
+
+
+/* v12.8 — exact fix for the real height source */
+#vustin-producer-native{
+  min-height:0 !important;
+  height:auto !important;
+  margin-bottom:0 !important;
+}
+@media(min-width:641px){
+  #vustin-producer-native{
+    margin-top:0 !important;
+    padding-bottom:12px !important;
+  }
+}
+
+
+/* v12.9 — clearly interactive dilemma choices */
+.choice,.option,.decision-option,.dilemma-option{
+  cursor:pointer!important;
+  position:relative;
+  border:2px solid rgba(215,239,251,.18)!important;
+  transition:border-color .18s ease,background .18s ease,transform .18s ease,box-shadow .18s ease;
+}
+.choice:hover,.option:hover,.decision-option:hover,.dilemma-option:hover{
+  border-color:#e5b546!important;
+  background:rgba(229,181,70,.10)!important;
+  transform:translateY(-2px);
+}
+.choice.selected,.option.selected,.decision-option.selected,.dilemma-option.selected,
+.choice.active,.option.active,.decision-option.active,.dilemma-option.active{
+  border-color:#efc45c!important;
+  background:linear-gradient(135deg,rgba(229,181,70,.22),rgba(229,181,70,.08))!important;
+  box-shadow:0 0 0 2px rgba(229,181,70,.12),0 10px 24px rgba(0,0,0,.18)!important;
+}
+.choice.selected:after,.option.selected:after,.decision-option.selected:after,.dilemma-option.selected:after,
+.choice.active:after,.option.active:after,.decision-option.active:after,.dilemma-option.active:after{
+  content:"✓ ВЫБРАНО";position:absolute;right:12px;top:10px;
+  font-size:9px;font-weight:900;letter-spacing:1px;color:#efc45c;
+}
+
+
+/* v13.0 — reliable dilemma selection */
+.dilemma-choice{display:flex!important;flex-direction:column!important;gap:7px!important;cursor:pointer!important;position:relative}
+.dilemma-choice b{display:block!important;font-size:16px;line-height:1.2}
+.dilemma-choice span{display:block!important;font-size:12px;line-height:1.35;opacity:.72}
+.dilemma-choice.selected{border-color:#efc45c!important;background:linear-gradient(135deg,rgba(229,181,70,.24),rgba(229,181,70,.08))!important;box-shadow:0 0 0 2px rgba(229,181,70,.12),0 10px 24px rgba(0,0,0,.18)!important}
+.dilemma-choice.selected:after{content:"✓ ВЫБРАНО";position:absolute;right:12px;top:10px;font-size:9px;font-weight:900;letter-spacing:1px;color:#efc45c}
+button[data-dilemma-next]:disabled{opacity:.38!important;cursor:not-allowed!important;filter:saturate(.35)}
+
+
+/* v13.1 — industry event selection */
+.industry-choice{position:relative!important;cursor:pointer!important;transition:.18s ease}
+.industry-choice:hover{border-color:#e5b546!important;background:rgba(229,181,70,.08)!important}
+.industry-choice.selected{border-color:#efc45c!important;background:linear-gradient(135deg,rgba(229,181,70,.24),rgba(229,181,70,.08))!important;box-shadow:0 0 0 2px rgba(229,181,70,.12)!important}
+.industry-choice.selected:after{content:"✓ ВЫБРАНО";position:absolute;right:12px;top:10px;font-size:9px;font-weight:900;letter-spacing:1px;color:#efc45c}
+.industry-choice b,.industry-choice .small{display:block!important}
+.industry-choice .small{margin-top:6px}
+.industry-release-nav{align-items:center!important}
+.industry-release-nav .flow-hint{margin:0!important;opacity:.7}
+button[data-industry-release]:disabled{opacity:.38!important;cursor:not-allowed!important;filter:saturate(.35)}
+
+
+/* v13.2 — decision mechanics and feedback */
+.decision-result{
+ margin:10px 0 4px;padding:10px 12px;border-radius:10px;
+ border:1px solid rgba(215,239,251,.12);background:rgba(6,26,36,.62);
+ font-size:12px;line-height:1.45;color:rgba(235,245,249,.72)
+}
+.decision-result b{color:#efc45c}
+.dilemma-choice.selected,.industry-choice.selected{
+ border:2px solid #efc45c!important;
+ background:linear-gradient(135deg,rgba(229,181,70,.28),rgba(229,181,70,.10))!important;
+ box-shadow:0 0 0 2px rgba(239,196,92,.14),0 10px 24px rgba(0,0,0,.20)!important
+}
+.dilemma-choice.selected:after,.industry-choice.selected:after{
+ content:"✓ ВЫБРАНО";position:absolute;right:12px;top:10px;
+ color:#efc45c;font-size:9px;font-weight:900;letter-spacing:1px
+}
+.industry-release-nav{display:flex!important;justify-content:space-between!important;align-items:center!important;gap:12px!important;margin-top:10px!important}
+.industry-release-nav .btn{display:inline-flex!important;visibility:visible!important;opacity:1}
+.industry-release-nav .btn:disabled{opacity:.35!important}
+@media(max-width:640px){
+ .industry-release-nav{align-items:stretch!important;flex-direction:column!important}
+ .industry-release-nav .btn{width:100%!important;justify-content:center!important}
+}
+
+
+/* v13.3 — transaction feedback */
+#wallet.wallet-change{animation:walletFlash .55s ease}
+@keyframes walletFlash{0%{transform:scale(1)}35%{transform:scale(1.09);box-shadow:0 0 0 3px rgba(239,196,92,.22)}100%{transform:scale(1)}}
+
+
+/* v13.5 — reversible choices before confirmation */
+.dilemma-choice,.industry-choice{pointer-events:auto!important}
+.decision-result span{opacity:.68}
+
+
+/* v13.6 — robust release control */
+.industry-release-btn{pointer-events:auto!important;cursor:pointer!important;opacity:1!important}
+.industry-release-btn.is-locked{opacity:.38!important}
+.industry-release-btn:not(.is-locked){opacity:1!important;background:linear-gradient(135deg,#efc45c,#d8a43c)!important;color:#071923!important}
+
+</style>
+<script>
+/* Tilda Native bootstrap */
+(function(){
+  var root=document.getElementById('vustin-producer-native');
+  if(!root) return;
+  root.setAttribute('data-version','13.17-visible-onboarding-help');
+})();
+</script>
+
+
+<script>
+/* v12.5 — automatic iframe height bridge */
+(function(){
+  let last=0, timer=null;
+  function sendHeight(){
+    const de=document.documentElement, b=document.body;
+    let bottom=0;
+    document.querySelectorAll('body *').forEach(function(el){
+      const cs=getComputedStyle(el);
+      if(cs.position==='fixed' || cs.display==='none') return;
+      const r=el.getBoundingClientRect();
+      if(Number.isFinite(r.bottom)) bottom=Math.max(bottom,r.bottom);
+    });
+    const h=Math.ceil(bottom + window.scrollY + 18);
+    if(Math.abs(h-last)>2){
+      last=h;
+      parent.postMessage({type:'vustin-producer-height',height:h},'*');
+    }
+  }
+  function queue(){
+    clearTimeout(timer);
+    timer=setTimeout(sendHeight,40);
+  }
+  addEventListener('load',()=>{sendHeight();setTimeout(sendHeight,250);setTimeout(sendHeight,900)});
+  addEventListener('resize',queue);
+  if(window.ResizeObserver){
+    new ResizeObserver(queue).observe(document.documentElement);
+    if(document.body)new ResizeObserver(queue).observe(document.body);
+  }
+  new MutationObserver(queue).observe(document.documentElement,{subtree:true,childList:true,attributes:true});
+})();
+</script>
+
+
+<script>
+/* v12.9 — visual feedback for dilemma/decision clicks */
+document.addEventListener('click',function(e){
+  const el=e.target.closest('[onclick]');
+  if(!el) return;
+  const txt=(el.textContent||'').trim();
+  if(!/Доработать|Выпускать сейчас|Согласиться|Отказаться|Подождать|Рискнуть/i.test(txt)) return;
+  const parent=el.parentElement;
+  if(parent){
+    [...parent.children].forEach(x=>x.classList.remove('selected'));
+  }
+  el.classList.add('selected');
+});
+</script>
+
+<div id='buildVersion' style='display:none'>VUSTIN-PRODUCER-13.17</div></body>
+</html>
