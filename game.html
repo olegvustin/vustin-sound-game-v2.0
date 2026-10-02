@@ -1957,7 +1957,7 @@ padding:9px;border-radius:10px;margin-top:10px;white-space:pre-wrap}
 }
 
 
-/* v12.3 Release Moment */
+/* v12.4 Compact UI */
 .song-cover{
  width:100%;aspect-ratio:1/1;object-fit:cover;border-radius:14px;
  display:block;margin:0 0 10px;box-shadow:0 10px 24px rgba(0,0,0,.24)
@@ -1975,7 +1975,7 @@ padding:9px;border-radius:10px;margin-top:10px;white-space:pre-wrap}
 }
 
 
-/* v12.3 Release Moment */
+/* v12.4 Compact UI */
 .visual-scene{
  position:relative;overflow:hidden;min-height:88px;border-radius:15px;
  padding:14px;display:flex;align-items:flex-end;gap:12px;margin-bottom:10px;
@@ -2015,7 +2015,7 @@ padding:9px;border-radius:10px;margin-top:10px;white-space:pre-wrap}
 }
 
 
-/* v12.3 Release Moment */
+/* v12.4 Compact UI */
 .label-growth{
  margin:10px 0;padding:14px;border-radius:18px;border:1px solid rgba(215,239,251,.16);
  overflow:hidden;position:relative;
@@ -2046,7 +2046,7 @@ padding:9px;border-radius:10px;margin-top:10px;white-space:pre-wrap}
 }
 
 
-/* v12.3 Release Moment */
+/* v12.4 Compact UI */
 .release-moment{margin:8px 0 12px}
 .release-stage{
  position:relative;overflow:hidden;min-height:260px;border-radius:22px;padding:20px;
@@ -2094,13 +2094,62 @@ padding:9px;border-radius:10px;margin-top:10px;white-space:pre-wrap}
  .vinyl-disc,.reveal-stat{animation:none!important}.reveal-stat{opacity:1;transform:none}
 }
 
+
+/* v12.4 Compact UI — standalone GitHub/Tilda */
+@media (min-width: 641px){
+  body{margin:0!important}
+  .app,.game,.game-shell,.shell,.wrap,.container{padding-top:8px}
+  .label-growth{margin:5px 0;padding:10px 13px;border-radius:15px}
+  .label-room{gap:10px}
+  .room-icon{width:58px;height:58px;font-size:33px;border-radius:12px}
+  .room-copy h3{font-size:17px;margin:2px 0}
+  .room-copy p{font-size:10px}
+  .growth-track{margin:7px 0 3px}
+  .staff-grid{gap:6px;margin:5px 0}
+  .staff-card{padding:6px 8px}
+  .staff-card>span{font-size:20px}
+  .staff-card b{font-size:10px}
+  .staff-card small,.staff-card em{font-size:7px}
+
+  /* finance panel: five KPIs in one desktop row */
+  .finance-dashboard,.finance-grid,.finance-stats{
+    padding:10px!important;
+    margin:6px 0!important;
+  }
+  .finance-dashboard .stats,
+  .finance-dashboard .stat-grid,
+  .finance-grid,
+  .finance-stats{
+    display:grid!important;
+    grid-template-columns:repeat(5,minmax(0,1fr))!important;
+    gap:7px!important;
+  }
+  .finance-dashboard .stat,
+  .finance-dashboard .metric,
+  .finance-grid>div,
+  .finance-stats>div{
+    min-height:70px!important;
+    padding:8px!important;
+  }
+
+  /* Generic finance cards used by this build */
+  .finance-dashboard>div:not(.kicker):not(.hint):not(p):not(small){
+    min-height:auto;
+  }
+
+  .actions,.footer-actions,.nav-actions{
+    margin-top:7px!important;
+    padding-top:6px!important;
+  }
+}
+
 </style>
 <script>
 /* Tilda Native bootstrap */
 (function(){
   var root=document.getElementById('vustin-producer-native');
   if(!root) return;
-  root.setAttribute('data-version','12.3-release-moment');
+  root.setAttribute('data-version','12.4-compact-ui');
 })();
 </script>
 
