@@ -658,11 +658,11 @@ function resolveProducerChoice(d,choice){
  if(d.cost>0&&career.cash<d.cost)return 'Недостаточно средств: выберите отказ от предложения.';
  career.cash-=d.cost;state.spent+=Math.max(0,d.cost);
  const ok=Math.random()<dilemmaOdds(d);
- state.industryScore=(state.industryScore||0)+Math.round((ok?d.success:d.fail)*.70);
+ state.dilemmaScore=(state.dilemmaScore||0)+Math.round((ok?d.success:d.fail)*.70);
  if(ok){
-  if(d.quality)state.industryScore=Math.min(8,state.industryScore+1);
+  if(d.quality)state.dilemmaScore=Math.min(8,state.dilemmaScore+1);
   if(d.tail)state[d.tail]=Math.min(.12,(state[d.tail]||0)+d.tailValue);
-  if(d.rep)state.industryRep=(state.industryRep||0)+d.rep;
+  if(d.rep)state.dilemmaRep=(state.dilemmaRep||0)+d.rep;
  }
  return ok?`Решение сработало: +${Math.round(d.success*.70)} к оценке релиза${d.rep?', репутация также может вырасти':''}.`:`Риск не оправдался: ${Math.round(d.fail*.70)} к оценке релиза.`;
 }
@@ -778,6 +778,9 @@ function finalReleaseNow(){
    const c=ev[2][i], cost=c[1]<0?Math.abs(c[1]):0;
    if(cost>career.cash){toast(`Недостаточно средств: нужно ${fmt(cost)} VS₽`);return}
 
+   // Older unfinished saves kept the dilemma bonus in the industry fields.
+   if(state.dilemmaScore===undefined)state.dilemmaScore=state.industryScore||0;
+   if(state.dilemmaRep===undefined)state.dilemmaRep=state.industryRep||0;
    state.industryReleaseStarted=true;
    if(cost){career.cash-=cost;state.spent+=cost}
    else if(c[1]>0){career.cash+=c[1]}
@@ -1118,7 +1121,7 @@ function calculateRelease(){
  weighted.forEach(x=>notes.push([x[0]>=85?'Сильное решение':x[0]>=70?'Хорошее решение':'Слабое решение',`${x[1]}: соответствие песне ${x[0]}/100.`]));
 
  let market=state.promo.includes(1)?82:65;
- let industry=Math.max(-7,Math.min(7,state.industryScore||0));
+ let industry=Math.max(-7,Math.min(7,(state.industryScore||0)+(state.dilemmaScore||0)));
  let coverIdx=covers.findIndex(o=>o[0]===state.cover?.[0]);
  if(coverIdx>=0){
    const coverBonus=coverEffect(s,coverIdx,state.promo);
@@ -1184,7 +1187,7 @@ function calculateRelease(){
  // A credible campaign with an excellent reception earns recognition beyond paid reach.
  if(score>=76&&quality>=72&&fit>=72)repGain+=1;
  if(score>=80&&state.promo.some(i=>promoStrategy(i).value>=80))repGain+=1;
- repGain+=(state.industryRep||0);
+ repGain+=(state.industryRep||0)+(state.dilemmaRep||0);
  if(state.forceResult?.rep)repGain+=Math.max(-1,Math.min(1,state.forceResult.rep));
  // Recognition grows more slowly once the label becomes established.
  if(career.rep>=32&&score<77)repGain-=1;
@@ -3349,7 +3352,7 @@ document.addEventListener('click',function(e){
 });
 </script>
 
-<div id='buildVersion' style='display:none'>VUSTIN-PRODUCER-17.6-season-finale</div><script>
+<div id='buildVersion' style='display:none'>VUSTIN-PRODUCER-17.7-dilemma-effects</div><script>
 // Ensure only one preview is audible, including after re-rendering song cards.
 document.addEventListener('play', function(event) {
   if (event.target && event.target.tagName === 'AUDIO') {
