@@ -1339,7 +1339,7 @@ ${labelStageHTML()}<div class='kicker'>ИНФРАСТРУКТУРА</div>
 ${labelStageHTML()}${staffVisualHTML()}${recoveryBudgetHTML()}${financeDashboardHTML()}${catalogSummaryHTML()}<div class='nav'><button class='btn alt' onclick='historyScreen()'>ИСТОРИЯ</button><button class='btn alt' onclick='developmentScreen()'>РАЗВИТИЕ ЛЕЙБЛА</button><button class='btn' onclick='newRelease()'>СЛЕДУЮЩИЙ РЕЛИЗ →</button></div>`)}
 function historyScreen(){
 shell('Аналитика','История релизов',
-career.history.length?
+(career.history.length?
 `<p class='desc'>Здесь отмечены все песни, которые уже выходили в твоём лейбле.</p>
 <div style='overflow:auto'>
 <table style='width:100%;border-collapse:collapse;min-width:860px'>
@@ -1360,7 +1360,7 @@ career.history.length?
 <td style='padding:13px'><b>${songROI(h)>=0?'+':''}${songROI(h)}%</b><br><small>${roiLabel(songROI(h))}</small></td>
 <td style='padding:13px'>${Math.round(h.score)}</td>
 </tr>`).join('')}</tbody></table></div>`:
-`<p class='desc'>Релизов пока нет.</p>`
+`<p class='desc'>Релизов пока нет.</p>`)
 +`<div class='nav'><button class='btn alt' onclick='careerScreen()'>НАЗАД</button></div>`);}
 
 
