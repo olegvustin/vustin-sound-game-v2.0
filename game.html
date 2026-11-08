@@ -197,6 +197,17 @@
 @media(max-width:950px){#screen .production-team{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:640px){#screen .production-grid{grid-template-columns:1fr}#screen .production-option{padding:16px;display:grid;grid-template-columns:56px minmax(0,1fr);column-gap:12px;row-gap:6px}#screen .production-option.is-selected{padding:15px}#screen .production-art{grid-column:1;grid-row:1/4;width:56px;height:56px;border-radius:14px}#screen .production-art svg{width:36px;height:36px}#screen .production-title,#screen .production-price,#screen .production-desc,#screen .production-fit,#screen .production-selection{grid-column:2}#screen .production-title{font-size:17px}#screen .production-price{font-size:19px}#screen .production-budget{gap:18px;padding:12px;flex-wrap:wrap}#screen .production-budget b{font-size:18px}#screen .production-screen .nav .btn{flex:1;min-width:0}}
 </style>
+<style id="season2-production-visual-system">
+#screen .s2-production .production-grid{margin-top:16px}
+#screen .s2-budget{flex-wrap:wrap;justify-content:space-between;margin-bottom:8px}
+#screen .s2-summary{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin:0 0 18px}
+#screen .s2-summary>div{padding:14px;border:1px solid #38687e;border-radius:16px;background:#12394e;min-width:0}
+#screen .s2-summary dt{display:flex;align-items:center;gap:9px;color:#bad6e2;font-size:13px}#screen .s2-summary svg{width:25px;height:25px;display:block}#screen .s2-summary dd{margin:8px 0 0;font-size:16px;line-height:1.4;overflow-wrap:anywhere}
+#screen .s2-estimates{display:flex;flex-wrap:wrap;gap:22px;margin-top:16px}#screen .s2-estimates div{display:grid;gap:4px}#screen .s2-estimates span{font-size:13px;color:#bad6e2}#screen .s2-estimates b{font-size:22px}
+#screen .s2-risk{font-size:14px;line-height:1.5;border-left:3px solid #e9c378;padding:10px 14px;background:#1a3f51;margin:14px 0 0}
+#screen .s2-promo-grid .production-art{width:52px;height:52px}#screen .s2-promo-grid .production-art svg{width:34px;height:34px}
+@media(max-width:640px){#screen .s2-summary{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}#screen .s2-summary>div{padding:10px}#screen .s2-summary dd{font-size:14px}#screen .s2-production .nav{display:flex!important;grid-template-columns:none!important}#screen .s2-production .nav .btn{flex:1 1 120px!important;white-space:normal!important}}
+</style>
 </head>
 <body class="vs-blue">
 <div id="vustin-producer-native">
@@ -517,7 +528,7 @@ shell('Продюсерская стратегия','Какова цель эт�
 <div class='nav'><button class='btn alt' onclick='chooseSong()'>← Песня</button><button class='btn' ${state.goal?'':'disabled'} onclick='teamScreen()'>ДАЛЕЕ →</button></div>`)}
 function productionIcon(kind){
  const paths={sound:'<path d="M8 8v28M22 8v28M36 8v28M3 17h10M17 28h10M31 14h10"/>',marketing:'<path d="M6 36V23h7v13M19 36V15h7v21M32 36V6h7v30"/>',studio:'<rect x="6" y="22" width="32" height="17" rx="3"/><path d="M14 22V10a8 8 0 0 1 16 0v12M11 30h6M25 30h8"/>',arr:'<path d="M4 22h5l4-12 6 25 6-28 5 25 5-10h7"/>',minimal:'<rect x="5" y="5" width="34" height="34" rx="3"/><circle cx="22" cy="22" r="8"/>',art:'<rect x="5" y="5" width="34" height="34" rx="3"/><path d="m8 31 10-15 8 9 6-6 7 12M10 11h5"/>',bright:'<rect x="5" y="5" width="34" height="34" rx="3"/><path d="m24 9-11 16h9l-2 11 12-17h-9z"/>'};
- if(!paths[kind])return promotionIcon({video:'video',smm:'shorts',pr:'pr'}[kind]||'target');
+ if(!paths[kind])return promotionIcon({video:'video',smm:'shorts',pr:'pr',playlist:'playlist',radio:'radio',target:'target'}[kind]||'target');
  return `<svg viewBox="0 0 44 44" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">${paths[kind]}</svg>`;
 }
 function productionBudget(){return `<div class="production-budget" aria-label="Бюджет релиза"><div><span>Доступно</span><b>${fmt(career.cash)} VS₽</b></div><div><span>Вложено в релиз</span><b>${fmt(state.spent)} VS₽</b></div></div>`}
@@ -1877,6 +1888,12 @@ function season2DraftPlan(){
  const reach=d.promo.reduce((sum,i)=>sum+([19,11,13,15,12,14,7,9,8][i]||7),0);
  return {name:'Индивидуальный релиз',cost:teamCost+recording+arrangement+artwork+promotion,quality,reach,desc:'Команда, запись, аранжировка, обложка и продвижение',draft:d};
 }
+function season2VisualBudget(cost){return `<div class="production-budget s2-budget" aria-label="Предварительный бюджет"><div><span>На счету</span><b>${fmt(career.cash)} VS₽</b></div><div><span>Смета до общей скидки инфраструктуры</span><b>${fmt(cost)} VS₽</b></div><div><span>Остаток по этой смете, до содержания</span><b>${fmt(career.cash-cost)} VS₽</b></div></div><p class="production-footnote">Это промежуточная смета: цены вариантов уже учитывают свои скидки. Общая скидка инфраструктуры и минимальная стоимость релиза ещё не применены. Итоговую сумму и резерв на содержание покажем перед подтверждением. Оплата только при выпуске.</p>`}
+function season2VisualCard(icon,title,price,description,active,key,i){
+ const action=`season2ToggleChoice("${key}",${i})`;
+ const safe=action.replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;');
+ return `<button type="button" class="production-option ${active?'is-selected':''}" aria-pressed="${active}" data-ux-key="${safe}" onclick='${action}'><span class="production-art">${productionIcon(icon)}</span><span class="production-title">${title}</span>${price===null?'':`<strong class="production-price">${fmt(price)} VS₽</strong>`}<span class="production-desc">${description}</span><span class="production-selection">${active?'✓ Выбрано':'Выбрать'}</span></button>`;
+}
 function season2ProductionStep(step){
  if(!season2Draft)return season2SongCatalog();
  season2DraftStep=Math.max(0,Math.min(6,step));
@@ -1884,37 +1901,39 @@ function season2ProductionStep(step){
  const song=season2Songs.find(x=>x.id===d.id);
  if(!song)return season2SongCatalog();
  const stages=[
-  {title:'Цель релиза',hint:'Определи стратегию продвижения',key:'goal',items:goals.map(g=>[g[1],g[2]])},
-  {title:'Команда',hint:'Выбери до двух специалистов',key:'team',items:team.map(t=>[t[1],fmt(discountPrice(t[2],'team'))+' VS₽ · '+t[3]])},
-  {title:'Запись',hint:'Выбери студию',key:'studio',items:studios.map(t=>[t[0],fmt(discountPrice(t[1],'studio'))+' VS₽ · качество +'+t[2]])},
-  {title:'Аранжировка',hint:'Определи звучание песни',key:'arr',items:arrs.map(t=>[t[0],fmt(t[1])+' VS₽ · эффект +'+t[2]])},
-  {title:'Обложка',hint:'Выбери оформление релиза',key:'cover',items:covers.map(t=>[t[0],fmt(t[1])+' VS₽'])},
-  {title:'Продвижение',hint:'Выбери до двух каналов',key:'promo',items:promos.map(t=>[t[0],fmt(t[1])+' VS₽'])}
+  {title:'Цель релиза',hint:'Определи стратегию продвижения',key:'goal',items:goals.map(g=>['marketing',g[1],null,g[2]])},
+  {title:'Команда',hint:'Выбери до двух специалистов',key:'team',items:team.map(t=>[t[0],t[1].replace(/^\S+\s/,''),discountPrice(t[2],'team'),t[3]])},
+  {title:'Запись',hint:'Выбери студию',key:'studio',items:studios.map(t=>['studio',t[0],discountPrice(t[1],'studio'),'Качество: +'+t[2]])},
+  {title:'Аранжировка',hint:'Определи звучание песни',key:'arr',items:arrs.map(t=>['arr',t[0],t[1],'Эффект: +'+t[2]])},
+  {title:'Обложка',hint:'Выбери оформление релиза',key:'cover',items:covers.map((t,i)=>[['minimal','art','bright'][i],t[0],t[1],['Типографика и простой символ','Иллюстрация, фотография или метафора','Контрастный образ для рекламы'][i]])},
+  {title:'Продвижение',hint:'Выбери до двух каналов',key:'promo',items:promos.map((t,i)=>[['video','smm','playlist','radio','pr','target','smm','playlist','pr'][i],t[0],season2PromoPrice(i),['Музыкальное видео для релиза','Короткие вертикальные ролики','Музыкальные подборки','Знакомство с эфирной аудиторией','Публикации и история проекта','Рекламная кампания','Небольшой формат коротких роликов','Тематические музыкальные подборки','Публикации в локальных медиа'][i]])}
  ];
  if(step>=stages.length)return season2ReviewProduction();
  const st=stages[step],selected=st.key==='goal'?d.goal!==null:
   (st.key==='team'||st.key==='promo')?true:d[st.key]!==null;
  const cost=season2DraftPlan().cost;
  shell('Сезон 2 · Шаг '+(step+1)+' из 6',st.title,
- `<p class='desc'>${song.name} · ${st.hint}. Бюджет: <b>${fmt(career.cash)} VS₽</b>. Предварительные затраты: <b>${fmt(cost)} VS₽</b>. Оплата только при подтверждении релиза.</p>
- <div class='choices'>${st.items.map((item,i)=>{
+ `<div class="production-screen s2-production"><p class="production-intro"><b>${song.name}</b> · ${st.hint}.${['team','promo'].includes(st.key)?` <b>Выбрано ${d[st.key].length} из 2</b>. Можно продолжить без выбора.`:''}</p>${season2VisualBudget(cost)}
+ <div class="production-grid ${st.key==='team'?'production-team':''} ${st.key==='promo'?'s2-promo-grid':''}">${st.items.map((item,i)=>{
  const active=st.key==='goal'?d.goal===i:(st.key==='team'||st.key==='promo')?d[st.key].includes(i):d[st.key]===i;
- return `<div class='choice ${active?'sel':''}' onclick='season2ToggleChoice("${st.key}",${i})'><b>${item[0]}</b><div class='small'>${item[1]}</div>${active?`<div class='chosen-hint'>✓ ВЫБРАНО</div>`:''}</div>`;
- }).join('')}</div>
- <div class='nav'><button class='btn alt' onclick='${step===0?'season2SongCatalog()':'season2ProductionStep('+(step-1)+')'}'>← НАЗАД</button><button class='btn alt' onclick='season2Infrastructure()'>ИНФРАСТРУКТУРА</button><button class='btn' ${selected?'':'disabled'} onclick='season2ProductionStep(${step+1})'>ДАЛЕЕ →</button></div>`);
+ return season2VisualCard(...item,active,st.key,i);
+ }).join('')}</div>${st.key==='cover'?'<p class="production-footnote">Иконки обозначают подход к оформлению. Настоящая обложка песни не меняется.</p>':''}
+ <div class='nav'><button class='btn alt' onclick='${step===0?'season2SongCatalog()':'season2ProductionStep('+(step-1)+')'}'>← Назад</button><button class='btn alt' onclick='season2Infrastructure()'>Инфраструктура</button><button class='btn' ${selected?'':'disabled'} onclick='season2ProductionStep(${step+1})'>Продолжить →</button></div></div>`);
 }
 function season2ReviewProduction(){
  season2DraftStep=6;
  if(!season2Draft||season2Draft.goal===null||season2Draft.studio===null||season2Draft.arr===null||season2Draft.cover===null)return season2ProductionStep(0);
  const d=season2Draft,song=season2Songs.find(x=>x.id===d.id),plan=season2DraftPlan(),f=season2ReleaseForecast(song,plan);
+ const summary=[['marketing','Цель',goals[d.goal][1]],['sound','Команда',d.team.length?d.team.map(i=>team[i][1]).join(', '):'Без специалистов'],['studio','Запись',studios[d.studio][0]],['arr','Аранжировка',arrs[d.arr][0]],['art','Обложка',covers[d.cover][0]],['pr','Продвижение',d.promo.length?d.promo.map(i=>promos[i][0]).join(', '):'Без дополнительного продвижения']];
  shell('Сезон 2 · Перед премьерой','Проверь релиз',
- `<div class='card' style='cursor:default'><h3>${song.name}</h3><p class='desc'>Цель: ${goals[d.goal][1]} · Команда: ${d.team.length?d.team.map(i=>team[i][1]).join(', '):'без специалистов'}</p>
- <p class='desc'>Запись: ${studios[d.studio][0]} · Аранжировка: ${arrs[d.arr][0]} · Обложка: ${covers[d.cover][0]}</p>
- <p class='desc'>Продвижение: ${d.promo.length?d.promo.map(i=>promos[i][0]).join(', '):'без дополнительного продвижения'}</p>
- <p class='desc'>Скидки инфраструктуры учтены в затратах. Прогноз включает влияние команды, обложки, продвижения и цели релиза.</p><div class='stats'><div class='stat'><b>${fmt(f.cost)}</b>затраты</div><div class='stat'><b>${fmt(f.streams)}</b>ожидаемые прослушивания</div><div class='stat'><b>${fmt(f.income)}</b>ожидаемая выручка</div></div>
- <p class="desc">Еженедельные расходы на содержание лейбла: ${fmt(f.operating)} VS₽. Премиальное производство повышает шанс прорыва, но увеличивает риск убытка.</p><p class="desc">Результат не гарантирован: возможный диапазон прослушиваний ${fmt(Math.round(f.streams*f.risk.downside))}–${fmt(Math.round(f.streams*(1.7+1.1+f.premium*3.1)))}. Инфраструктура уменьшает риск провала.</p> ${f.cost+f.operating>career.cash?`<p class='desc'>Нужен резерв на содержание лейбла: не хватает ${fmt(f.cost+f.operating-career.cash)} VS₽.</p>`:''}</div>
- <div class='nav'><button class='btn alt' onclick='season2ProductionStep(5)'>← ПРОДВИЖЕНИЕ</button><button class='btn alt' onclick='season2Infrastructure()'>ИНФРАСТРУКТУРА</button><button class='btn' ${f.cost+f.operating>career.cash?'disabled':''} onclick='season2PublishSong("${song.id}",-1)'>ВЫПУСТИТЬ ПЕСНЮ →</button></div>`);
+ `<div class="production-screen s2-production"><p class="production-intro"><b>${song.name}</b> · Проверь решения перед выпуском.</p><dl class="s2-summary">${summary.map(([icon,name,value])=>`<div><dt><span aria-hidden="true">${productionIcon(icon)}</span>${name}</dt><dd>${value}</dd></div>`).join('')}</dl>
+ <section class="s2-forecast" aria-label="Предварительный расчёт"><div class="production-budget s2-budget"><div><span>Затраты при выпуске</span><b>${fmt(f.cost)} VS₽</b></div><div><span>Содержание за неделю</span><b>${fmt(f.operating)} VS₽</b></div><div><span>Остаток после обоих расходов</span><b>${fmt(career.cash-f.cost-f.operating)} VS₽</b></div></div><p class="production-footnote">Суммы предварительные. Оплата только при нажатии «Выпустить песню». Скидки инфраструктуры учтены.</p>
+ <div class="s2-estimates"><div><span>Ожидаемые прослушивания</span><b>${fmt(f.streams)}</b></div><div><span>Ожидаемая выручка</span><b>${fmt(f.income)} VS₽</b></div></div>
+ <p class="production-footnote">Прогноз включает влияние команды, обложки, продвижения и цели релиза.</p><p class="s2-risk">Результат не гарантирован. Возможный диапазон прослушиваний: <b>${fmt(Math.round(f.streams*f.risk.downside))}–${fmt(Math.round(f.streams*(1.7+1.1+f.premium*3.1)))}</b>. Премиальное производство повышает шанс прорыва, но увеличивает риск убытка. Инфраструктура уменьшает риск провала.</p>
+ ${f.cost+f.operating>career.cash?`<p class="s2-risk" role="status">Нужен резерв на содержание лейбла: не хватает <b>${fmt(f.cost+f.operating-career.cash)} VS₽</b>.</p>`:''}</section>
+ <div class='nav'><button class='btn alt' onclick='season2ProductionStep(5)'>← Продвижение</button><button class='btn alt' onclick='season2Infrastructure()'>Инфраструктура</button><button class='btn' ${f.cost+f.operating>career.cash?'disabled':''} onclick='season2PublishSong("${song.id}",-1)'>Выпустить песню →</button></div></div>`);
 }
+
 function season2ChooseRelease(id){season2StartProduction(id);}
 function season2PublishSong(id,planIndex){
  if(!season2Ready()||season2Week()>12||season2Released(id))return;
