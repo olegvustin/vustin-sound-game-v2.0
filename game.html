@@ -179,6 +179,24 @@
 @media(max-width:950px){#screen .promotion-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:560px){#screen .promotion-grid{grid-template-columns:1fr;gap:10px}#screen .promotion-category{padding:14px}#screen .promotion-finance{grid-template-columns:1fr;gap:12px}#screen .promotion-totals{grid-template-columns:repeat(2,minmax(0,1fr))}#screen .promotion-totals>div:last-child{grid-column:1/-1}#screen .promotion-totals b{font-size:20px}#screen .promotion-count{grid-column:1/-1;order:-1}#screen .promotion-option-name{font-size:14px}#screen .promotion-option small{font-size:12px}#screen .promotion-screen summary{min-height:32px;line-height:32px}}
 </style>
+<style id="production-visual-system">
+#screen .production-screen{color:#f3fbff}
+#screen .production-intro{font-size:16px;line-height:1.5;margin:0 0 14px}
+#screen .production-budget{display:flex;gap:24px;padding:13px 18px;margin-bottom:18px;border:1px solid #38687e;border-radius:16px;background:#0c2d40}
+#screen .production-budget div{display:flex;flex-direction:column;gap:3px;min-width:0}#screen .production-budget span{font-size:13px;color:#bad6e2}#screen .production-budget b{font-size:20px}
+#screen .production-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+#screen .production-option{appearance:none;font:inherit;display:flex;flex-direction:column;align-items:flex-start;gap:10px;text-align:left;min-width:0;padding:20px;border:1px solid #38687e;border-radius:20px;background:linear-gradient(145deg,#153f56,#0c293c);color:#f3fbff;cursor:pointer;overflow-wrap:anywhere}
+#screen .production-option:hover{border-color:#a8dcec;background:#194c64}#screen .production-option.is-selected{border:2px solid #efcb7c;padding:19px;background:linear-gradient(145deg,#214b5a,#153649)}
+#screen .production-option:focus-visible{outline:3px solid #fff;outline-offset:3px}
+#screen .production-art{display:grid;place-items:center;width:72px;height:72px;background:#224f69;border:1px solid #4c8097;border-radius:18px;color:#b9efff}#screen .production-art svg{width:46px;height:46px}
+#screen .production-title{font-size:20px;font-weight:750;line-height:1.25}#screen .production-price{font-size:22px;color:#f0cf87}
+#screen .production-desc{font-size:15px;line-height:1.45;color:#d1e6ef}#screen .production-fit{font-size:13px;line-height:1.45;color:#c8e1eb}
+#screen .production-selection{font-size:14px;line-height:1.4;margin-top:auto;padding-top:6px;color:#b9efff;font-weight:bold}#screen .is-selected .production-selection{color:#f0cf87}
+#screen .production-footnote{font-size:13px;color:#bad6e2;line-height:1.5;margin:14px 0 0}
+#screen .production-screen .nav{position:static;display:flex;flex-wrap:wrap;gap:10px;margin-top:20px}
+@media(max-width:950px){#screen .production-team{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:640px){#screen .production-grid{grid-template-columns:1fr}#screen .production-option{padding:16px;display:grid;grid-template-columns:56px minmax(0,1fr);column-gap:12px;row-gap:6px}#screen .production-option.is-selected{padding:15px}#screen .production-art{grid-column:1;grid-row:1/4;width:56px;height:56px;border-radius:14px}#screen .production-art svg{width:36px;height:36px}#screen .production-title,#screen .production-price,#screen .production-desc,#screen .production-fit,#screen .production-selection{grid-column:2}#screen .production-title{font-size:17px}#screen .production-price{font-size:19px}#screen .production-budget{gap:18px;padding:12px;flex-wrap:wrap}#screen .production-budget b{font-size:18px}#screen .production-screen .nav .btn{flex:1;min-width:0}}
+</style>
 </head>
 <body class="vs-blue">
 <div id="vustin-producer-native">
@@ -497,11 +515,20 @@ shell('Продюсерская стратегия','Какова цель эт�
 `<p class='desc'>Цель влияет на то, что игра считает особенно успешным результатом. Её нельзя поменять после начала производства.</p>
 <div class='choices'>${goals.map(g=>`<div class='choice ${state.goal===g[0]?'sel':''}' onclick='state.goal="${g[0]}";goalScreen()'><b>${g[1]}</b><div class='small'>${g[2]}</div></div>`).join('')}</div>
 <div class='nav'><button class='btn alt' onclick='chooseSong()'>← Песня</button><button class='btn' ${state.goal?'':'disabled'} onclick='teamScreen()'>ДАЛЕЕ →</button></div>`)}
+function productionIcon(kind){
+ const paths={sound:'<path d="M8 8v28M22 8v28M36 8v28M3 17h10M17 28h10M31 14h10"/>',marketing:'<path d="M6 36V23h7v13M19 36V15h7v21M32 36V6h7v30"/>',studio:'<rect x="6" y="22" width="32" height="17" rx="3"/><path d="M14 22V10a8 8 0 0 1 16 0v12M11 30h6M25 30h8"/>',arr:'<path d="M4 22h5l4-12 6 25 6-28 5 25 5-10h7"/>',minimal:'<rect x="5" y="5" width="34" height="34" rx="3"/><circle cx="22" cy="22" r="8"/>',art:'<rect x="5" y="5" width="34" height="34" rx="3"/><path d="m8 31 10-15 8 9 6-6 7 12M10 11h5"/>',bright:'<rect x="5" y="5" width="34" height="34" rx="3"/><path d="m24 9-11 16h9l-2 11 12-17h-9z"/>'};
+ if(!paths[kind])return promotionIcon({video:'video',smm:'shorts',pr:'pr'}[kind]||'target');
+ return `<svg viewBox="0 0 44 44" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">${paths[kind]}</svg>`;
+}
+function productionBudget(){return `<div class="production-budget" aria-label="Бюджет релиза"><div><span>Доступно</span><b>${fmt(career.cash)} VS₽</b></div><div><span>Вложено в релиз</span><b>${fmt(state.spent)} VS₽</b></div></div>`}
+function productionCard(icon,title,cost,description,selected,action,key,extra=''){
+ return `<button type="button" class="production-option ${selected?'is-selected':''}" aria-pressed="${selected}" data-ux-key="${key.replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;')}" onclick='${action}'><span class="production-art">${productionIcon(icon)}</span><span class="production-title">${title}</span><strong class="production-price">${fmt(cost)} VS₽</strong><span class="production-desc">${description}</span>${extra}<span class="production-selection">${selected?'✓ Выбрано':'Выбрать'}</span></button>`;
+}
 function teamScreen(){
-shell('Команда релиза','Выбери до двух специалистов',
-`<p class='desc'>Специалисты оплачиваются на один релиз. Бюджет: <b>${fmt(career.cash)} VS₽</b>. Выбрано: <b>${state.team.length}/2</b>.</p>
-<div class='choices'>${team.map((m,i)=>`<div class='choice ${state.team.includes(i)?'sel':''}' onclick='toggleTeam(${i})'><b>${m[1]}</b><div class='price'>${fmt(discountPrice(m[2],'team'))} VS₽</div><div class='small'>${m[3]}</div></div>`).join('')}</div>
-<div class='nav'><button class='btn alt' onclick='goalScreen()'>← Цель</button><button class='btn' onclick='analysisScreen()'>ДАЛЕЕ →</button></div>`)}
+ shell('Команда релиза','Выбери до двух специалистов',`<div class="production-screen"><p class="production-intro">Команда на один релиз. <b>Выбрано ${state.team.length} из 2</b>. Можно продолжить без специалистов.</p>${productionBudget()}
+ <div class="production-grid production-team">${team.map((m,i)=>productionCard(m[0],m[1].replace(/^\S+\s/,''),discountPrice(m[2],'team'),m[3],state.team.includes(i),`toggleTeam(${i})`,`toggleTeam(${i})`)).join('')}</div>
+ <div class='nav'><button class='btn alt' onclick='goalScreen()'>← Цель</button><button class='btn' onclick='analysisScreen()'>Продолжить →</button></div></div>`)
+}
 function toggleTeam(i){let p=state.team.indexOf(i),c=discountPrice(team[i][2],'team');if(p>=0){state.team.splice(p,1);refund(c)}else if(state.team.length<2&&spend(c))state.team.push(i);teamScreen()}
 function potentialLabel(v,precise){
  if(!precise)return v>=82?'выглядит перспективно':v>=65?'нейтрально':'повышенный риск';
@@ -515,7 +542,10 @@ function analysisScreen(){
  <div class='analysis'>${rows.map(r=>`<div class='note'><b>${r[0]}</b><div class='small'>${potentialLabel(r[1],precise)}</div></div>`).join('')}</div>
  ${precise?'':`<p class='small'>Без маркетолога прогноз намеренно менее точный.</p>`}</div>
  <div class='nav'><button class='btn alt' onclick='teamScreen()'>← Команда</button><button class='btn' onclick='stageStudio()'>ДАЛЕЕ →</button></div>`)}
-function renderSingle(k,t,opts,key,next,back){shell(k,t,`<p class='desc'>Бюджет: <b>${fmt(career.cash)} VS₽</b> · Потрачено на релиз: <b>${fmt(state.spent)}</b></p><div class='choices'>${opts.map((o,i)=>`<div class='choice ${state[key]?.[0]===o[0]?'sel':''}' onclick='selectOne("${key}",${i},"${t}")'><b>${o[0]}</b><div class='price'>${fmt(o[1])} VS₽</div><div class='small'>Базовый эффект: +${o[2]}</div></div>`).join('')}</div><div class='nav'><button class='btn alt' onclick='${back}()'>← Назад</button><button class='btn' ${state[key]?'':'disabled'} onclick='${next}()'>ДАЛЕЕ →</button></div>`)}
+function renderSingle(k,t,opts,key,next,back){
+ const hints=key==='studio'?['Личный формат записи','Больше возможностей для записи','Максимальный уровень студии']:['Знакомое звучание песни','Новый подход к звучанию','Самая заметная переработка'];
+ shell(k,t,`<div class="production-screen"><p class="production-intro">Выбери один вариант для релиза.</p><div class="production-grid">${opts.map((o,i)=>productionCard(key==='studio'?'studio':'arr',o[0],o[1],hints[i],state[key]?.[0]===o[0],`selectOne("${key}",${i},"${t}")`,`selectOne("${key}",${i},"${t}")`,`<span class="production-fit">Базовый эффект: +${o[2]}</span>`)).join('')}</div><div class='nav'><button class='btn alt' onclick='${back}()'>← Назад</button><button class='btn' ${state[key]?'':'disabled'} onclick='${next}()'>Продолжить →</button></div></div>`)
+}
 function selectOne(key,i){let studioOpts=studios.map(o=>[o[0],discountPrice(o[1],'studio'),o[2]+career.studioLvl*3]);let map={studio:studioOpts,arr:arrs,cover:covers},o=map[key][i];if(state[key])refund(state[key][1]);state[key]=null;if(spend(o[1]))state[key]=o;({studio:stageStudio,arr:stageArr,cover:stageCover}[key])()}
 function stageStudio(){
  let opts=studios.map(o=>[o[0],discountPrice(o[1],'studio'),o[2]+career.studioLvl*3]);
@@ -524,14 +554,7 @@ function stageStudio(){
 function stageArr(){renderSingle('Шаг 3 из 6','Аранжировка',arrs,'arr','stageCover','stageStudio')}
 function stageCover(){
  const song=state.song;
- shell('Шаг 4 из 6','Обложка',`<p class='desc'>Визуальная стратегия для песни <b>${song.name}</b>. Цена не гарантирует успех: важнее соответствие песне и рекламе.</p>
- <p class='desc'>Бюджет: <b>${fmt(career.cash)} VS₽</b> · Потрачено: <b>${fmt(state.spent)} VS₽</b></p>
- <div class='choices'>${covers.map((o,i)=>`<div class='choice ${state.cover?.[0]===o[0]?'sel':''}' onclick='selectOne("cover",${i})'>
- <b>${o[0]}</b><div class='price'>${fmt(o[1])} VS₽</div><div class='small'>${coverDescriptions[i]}</div>
- <div class='small'>Соответствие песне: <b>${coverFit(song,i)>=88?'Высокое':coverFit(song,i)>=75?'Хорошее':'Неочевидное'}</b></div>
- </div>`).join('')}</div>
- <p class='small'>Оригинальная обложка песни в каталоге не изменяется. Здесь выбирается стратегия оформления рекламного релиза.</p>
- <div class='nav'><button class='btn alt' onclick='stageArr()'>← Назад</button><button class='btn' ${state.cover?'':'disabled'} onclick='stagePromo()'>ДАЛЕЕ →</button></div>`)
+ shell('Шаг 4 из 6','Обложка',`<div class="production-screen"><p class="production-intro">Выбери визуальную стратегию. Цена не гарантирует успеха.</p><div class="production-grid">${covers.map((o,i)=>productionCard(['minimal','art','bright'][i],o[0],o[1],coverDescriptions[i],state.cover?.[0]===o[0],`selectOne("cover",${i})`,`selectOne("cover",${i})`,`<span class="production-fit">Соответствие песне: <b>${coverFit(song,i)>=88?'Высокое':coverFit(song,i)>=75?'Хорошее':'Неочевидное'}</b></span>`)).join('')}</div><p class="production-footnote">Иконки обозначают подход к оформлению. Оригинальная обложка песни в каталоге не изменяется.</p><div class='nav'><button class='btn alt' onclick='stageArr()'>← Назад</button><button class='btn' ${state.cover?'':'disabled'} onclick='stagePromo()'>Продолжить →</button></div></div>`)
 }
 const promoDescriptions=[
  'Дорогой видеопродукт: раскрывает визуальный потенциал песни и работает после премьеры.',
