@@ -18,6 +18,8 @@
 .choice-intro{padding:12px 14px;margin-bottom:14px;border:1px solid var(--line);border-radius:14px;background:#091b25;color:var(--muted)}.choice-intro b{color:var(--pale)}
 .demo-btn{width:100%;margin:13px 0 10px;border:1px solid #b88a3d;background:#101d24;color:var(--gold2);border-radius:12px;padding:11px 10px;font-weight:800;cursor:pointer;letter-spacing:.03em}.demo-btn:hover,.demo-btn.playing{background:#3a2c16;border-color:var(--gold2);color:#fff}.song-tags{min-height:30px}
 @media(max-width:640px){.game-splash h1{font-size:32px}.splash-vinyl{width:112px;height:112px}.onboard .stats{grid-template-columns:repeat(3,1fr)}.demo-btn{padding:12px 8px}}
+
+.release-details summary,.career-details summary{cursor:pointer;padding:10px 0;font-weight:800;line-height:1.5}.release-details summary:focus-visible,.career-details summary:focus-visible{outline:2px solid currentColor;outline-offset:4px}
 </style>
 
 <style>
@@ -805,7 +807,12 @@ function release(){
   const originalShowRelease=showRelease;
   showRelease=function(streams,loyal,income,partner,score,repGain,notes,profit,producerReview){
    const songName=state.song?state.song.name:'Новый релиз';
-   const body=`<div class='release'><div class='vinyl'></div><div class='big-number'>${fmt(streams)}</div><div class='desc'>прослушиваний</div><div class='stats'><div class='stat'><b>+${fmt(loyal)}</b>слушателей</div><div class='stat'><b>+${fmt(income)}</b>VS₽ доход</div><div class='stat'><b>+${repGain}</b>репутация</div><div class='stat'><b>${Math.round(score)}</b>Release Score</div></div><div class='card' style='cursor:default;margin-top:12px;text-align:left'><div class='kicker'>ФИНАНСЫ РЕЛИЗА</div><div class='stats'><div class='stat'><b>${fmt(state.spent)}</b>вложено</div><div class='stat'><b>${fmt(income)}</b>доход сейчас</div><div class='stat'><b>${profit>=0?'+':''}${fmt(profit)}</b>результат сейчас</div></div></div><div class='nav'><button class='btn' onclick='careerScreen()'>ПРОДОЛЖИТЬ →</button></div></div>`;
+   const body=`<div class='release'><div class='vinyl'></div><div class='big-number'>${fmt(streams)}</div><div class='desc'>прослушиваний</div><div class='stats'><div class='stat'><b>+${fmt(loyal)}</b>слушателей</div><div class='stat'><b>+${fmt(income)}</b>VS₽ доход</div><div class='stat'><b>${repGain>=0?'+':''}${repGain}</b>репутация</div><div class='stat'><b>${Math.round(score)}</b>Release Score</div></div><div class='card' style='cursor:default;margin-top:12px;text-align:left'><div class='kicker'>ФИНАНСЫ РЕЛИЗА</div><div class='stats'><div class='stat'><b>${fmt(state.spent)}</b>вложено</div><div class='stat'><b>${fmt(income)}</b>доход сейчас</div><div class='stat'><b>${profit>=0?'+':''}${fmt(profit)}</b>результат сейчас</div></div><p class='desc'>Это результат на момент премьеры. Доход каталога в следующие недели может изменить окупаемость.</p>${partner?`<p class='small'>Партнёру выплачено: ${fmt(partner)} VS₽.</p>`:''}</div>
+   ${producerReview?reviewHTML(producerReview):''}
+   ${(state.dilemmaResult||state.forceResult)?consequenceHTML():''}
+   ${(state.promo.includes(0)||state.promo.includes(2)||state.promo.includes(4))?`<p class='desc' style='text-align:left'>Клип, плейлисты и PR могут продолжать работать после премьеры. Их полный эффект проявится в следующих игровых неделях.</p>`:''}
+   <details class='card release-details' style='cursor:default;text-align:left;margin-top:16px'><summary>Технические детали релиза</summary><div class='analysis'>${(notes||[]).map(n=>`<div class='note'><b>${n[0]}</b><div class='small'>${n[1]}</div></div>`).join('')}</div></details>
+   <div class='nav'><button class='btn alt' onclick='historyScreen()'>ИСТОРИЯ РЕЛИЗОВ</button><button class='btn' onclick='careerScreen()'>МОЙ ЛЕЙБЛ →</button></div></div>`;
    result={k:'РЕЛИЗ СОСТОЯЛСЯ',t:songName,b:body,streams:Number(streams)||0};
   };
   try{ calculateRelease(); } finally { showRelease=originalShowRelease; }
@@ -852,22 +859,34 @@ function showReleaseResult(result){
 function productionReview(s,promoIdx,score,income,profit){
  const good=[],waste=[],better=[], p=s.p;
  const label={v:'короткие видео',vis:'клип / визуал',pl:'плейлисты',radio:'радио',talk:'PR / медиа',q:'таргет'};
- const ranked=promoIdx.map(i=>[i,p[promos[i][2]]]).sort((x,y)=>y[1]-x[1]);
+ // Explain the same adjusted channel fit used by calculateRelease, without changing it.
+ const effectiveFit=idx=>{
+  let val=p[promos[idx][2]];
+  if(state.team.includes(2)&&idx===0)val=Math.min(100,val+12);
+  if(idx===0)val=Math.min(100,val+career.videoLvl*5);
+  if(state.team.includes(3)&&(idx===1||idx===6))val=Math.min(100,val+12);
+  if(state.team.includes(4)&&(idx===4||idx===8))val=Math.min(100,val+12);
+  if(idx!==0)val=Math.min(100,val+career.marketingLvl*3);
+  const t=ensureTrend();
+  if(promos[idx][2]===t.key)val=Math.max(0,Math.min(100,val+t.boost*.35));
+  return Math.min(100,val+promoStrategy(idx).visual);
+ };
+ const ranked=promoIdx.map(i=>[i,effectiveFit(i)]).sort((x,y)=>y[1]-x[1]);
 
- if(ranked.length&&ranked[0][1]>=75)good.push(`${promos[ranked[0][0]][0]} хорошо совпали с характером песни и получили усиленный коммерческий эффект.`);
+ if(ranked.length&&ranked[0][1]>=75)good.push(`${promos[ranked[0][0]][0]} получили соответствие ${ranked[0][1]}/100 с учётом команды, инфраструктуры, рынка и визуальной стратегии.`);
  if((state.industryScore||0)>=5)good.push(`Решение в событии «${state.industryTitle}» заметно усилило релиз.`);
  if(score>=80)good.push('Производство, упаковка и продвижение сложились в сильную комбинацию.');
  if(profit>0)good.push(`Релиз вернул вложения и заработал ${fmt(profit)} VS₽ сверх затрат.`);
  if(!good.length)good.push('Релиз состоялся, но ни один фактор не дал выраженного преимущества.');
 
- ranked.filter(x=>x[1]<65).slice(0,2).forEach(x=>waste.push(`${promos[x[0]][0]} слабо подходят этой песне — такой бюджет почти не создаёт дополнительного охвата.`));
+ ranked.filter(x=>x[1]<65).slice(0,2).forEach(x=>waste.push(`${promos[x[0]][0]} получили соответствие ${x[1]}/100 даже с учётом усилений: вклад этого канала в дополнительный охват был ограничен.`));
  if((state.industryScore||0)<0)waste.push(`Решение в событии «${state.industryTitle}» снизило потенциал запуска.`);
- if(profit<0&&state.spent>7000)waste.push('Высокий бюджет не окупился: дорогой запуск сам по себе не гарантирует результат.');
+ if(profit<0&&state.spent>7000)waste.push('Высокий бюджет пока не окупился: дорогой запуск сам по себе не гарантирует результат.');
  if(!waste.length)waste.push('Явно провальных расходов в этой кампании не обнаружено.');
 
  const all=promos.map((x,i)=>[i,p[x[2]]]).sort((x,y)=>y[1]-x[1]);
  const unused=all.find(x=>x[1]>=78&&!promoIdx.includes(x[0]));
- if(unused)better.push(`Можно было протестировать ${promos[unused[0]][0]}: потенциал песни здесь ${unused[1]}/100.`);
+ if(unused)better.push(`Можно было протестировать ${promos[unused[0]][0]}: исходный потенциал песни здесь ${unused[1]}/100, до учёта команды и рыночных усилений.`);
  if(p.q>=86&&state.studio?.[0]!=='Топ-студия')better.push('Песня чувствительна к качеству записи — более сильная студия могла помочь.');
  if(p.vis>=90&&!promoIdx.includes(0))better.push('У песни очень высокий визуальный потенциал — клип мог стать ключевым активом.');
  if(p.long>=90)better.push('У песни высокий потенциал долгой жизни: полезна стратегия не только на первую неделю.');
@@ -1324,21 +1343,19 @@ function buyUpgrade(key){
  let c=upgradeCost(key); if(c===null||!Number.isFinite(c)||career.cash<c)return;
  career.cash-=c; career[key]++; developmentScreen();
 }
-function careerScreen(){if(career.releases>=10)return seasonFinale();let goal=Math.min(100,Math.round((career.releases/10+career.listeners/50000+career.rep/40)/3*100));shell('Карьера',`VUSTIN RECORDS · ${status()}`,`<div class='stats'><div class='stat'><b>${fmt(career.cash)}</b>VS₽</div><div class='stat'><b>${fmt(career.listeners)}</b>слушателей</div><div class='stat'><b>${career.rep}</b>репутация</div><div class='stat'><b>${career.releases}/10</b>релизов</div></div>${career.advanceDebt?`<p class='desc'>Обязательство перед дистрибьютором: <b>${fmt(career.advanceDebt)} VS₽</b> (удерживается из доходов)</p>`:''}<div class='card' style='cursor:default'><div class='kicker'>ПРОГРЕСС СЕЗОНА · ${goal}%</div><h3>Цель: построить устойчивый музыкальный лейбл</h3><p class='desc'>Выпусти 10 песен, собери 50 000 постоянных слушателей и заработай 40 баллов репутации.</p></div><div class='card' style='cursor:default;margin-top:14px'>
-<div class='kicker'>СЕЗОН 1 · ПРОГРЕСС</div>
-<div class='stats' style='margin-bottom:16px'>
-<div class='stat'><b>${career.releases}/10</b>релизов</div>
-<div class='stat'><b>${fmt(career.listeners)}</b>из 50 000 слушателей</div>
-<div class='stat'><b>${career.rep}</b>из 40 баллов репутации</div>
-</div>
-${labelStageHTML()}<div class='kicker'>ИНФРАСТРУКТУРА</div>
-<div class='stats'>
-<div class='stat'><b>${career.studioLvl}</b>Студия</div>
-<div class='stat'><b>${career.marketingLvl}</b>Маркетинг</div>
-<div class='stat'><b>${career.videoLvl}</b>Видео</div>
-<div class='stat'><b>${career.teamLvl}</b>Команда</div>
-</div></div>
-${labelStageHTML()}${staffVisualHTML()}${recoveryBudgetHTML()}${financeDashboardHTML()}${catalogSummaryHTML()}<div class='nav'><button class='btn alt' onclick='historyScreen()'>ИСТОРИЯ</button><button class='btn alt' onclick='developmentScreen()'>РАЗВИТИЕ ЛЕЙБЛА</button><button class='btn' onclick='newRelease()'>СЛЕДУЮЩИЙ РЕЛИЗ →</button></div>`)}
+function careerScreen(){
+ if(career.releases>=10)return seasonFinale();
+ let goal=Math.min(100,Math.round((career.releases/10+career.listeners/50000+career.rep/40)/3*100));
+ shell('Карьера',`VUSTIN RECORDS · ${status()}`,`
+ <div class='stats'><div class='stat'><b>${fmt(career.cash)}</b>VS₽</div><div class='stat'><b>${fmt(career.listeners)}</b>слушателей</div><div class='stat'><b>${career.rep}</b>репутация</div><div class='stat'><b>${career.releases}/10</b>релизов</div></div>
+ ${career.advanceDebt?`<p class='desc'>Обязательство перед дистрибьютором: <b>${fmt(career.advanceDebt)} VS₽</b> (удерживается из доходов)</p>`:''}
+ <div class='card' style='cursor:default'><div class='kicker'>ПРОГРЕСС СЕЗОНА · ${goal}%</div><h3>Построй устойчивый музыкальный лейбл</h3><p class='desc'>Цели сезона: 10 релизов, 50 000 постоянных слушателей и 40 баллов репутации.</p></div>
+ <div class='nav'><button class='btn' onclick='newRelease()'>${hasReleaseDraft()?'ПРОДОЛЖИТЬ РЕЛИЗ':'СЛЕДУЮЩИЙ РЕЛИЗ'} →</button><button class='btn alt' onclick='developmentScreen()'>РАЗВИТИЕ ЛЕЙБЛА</button><button class='btn alt' onclick='historyScreen()'>ИСТОРИЯ</button></div>
+ ${labelStageHTML()}${recoveryBudgetHTML()}${financeDashboardHTML()}${catalogSummaryHTML()}
+ <details class='card career-details' style='cursor:default;margin-top:14px'><summary>Команда и инфраструктура</summary>
+ <div class='stats' style='margin-top:16px'><div class='stat'><b>${career.studioLvl}</b>Студия</div><div class='stat'><b>${career.marketingLvl}</b>Маркетинг</div><div class='stat'><b>${career.videoLvl}</b>Видео</div><div class='stat'><b>${career.teamLvl}</b>Команда</div></div>
+ ${staffVisualHTML()}</details>`);
+}
 function historyScreen(){
 shell('Аналитика','История релизов',
 (career.history.length?
@@ -3301,7 +3318,7 @@ document.addEventListener('click',function(e){
 });
 </script>
 
-<div id='buildVersion' style='display:none'>VUSTIN-PRODUCER-17.4-save-drafts</div><script>
+<div id='buildVersion' style='display:none'>VUSTIN-PRODUCER-17.4-release-review</div><script>
 // Ensure only one preview is audible, including after re-rendering song cards.
 document.addEventListener('play', function(event) {
   if (event.target && event.target.tagName === 'AUDIO') {
