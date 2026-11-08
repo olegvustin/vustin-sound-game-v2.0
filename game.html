@@ -29,6 +29,12 @@
 #screen .choice:focus-visible,#screen button:focus-visible,#screen a:focus-visible{outline:3px solid var(--gold2);outline-offset:4px}
 #screen .section-title:focus{outline:none}.ux-song-select{margin-top:14px;width:100%}
 @media(max-width:520px){.ux-route{padding:10px}.ux-route ol{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px 10px;font-size:12px}}
+
+/* First-release presentation: retain existing theme, prices and handlers. */
+.quick-start h3{font-family:Georgia,serif;font-size:clamp(28px,4vw,44px);line-height:1.15;margin:12px 0 20px}.quick-rules{padding-left:22px;line-height:1.7;color:var(--muted)}.quick-rules li{margin:12px 0}.quick-rules b{color:var(--pale)}
+.song-selection-summary{display:flex;align-items:center;justify-content:space-between;gap:20px;border:1px solid var(--gold);border-radius:18px;padding:18px;margin:18px 0 26px;background:linear-gradient(110deg,rgba(207,172,92,.1),rgba(5,25,31,.8))}.song-selection-summary>div{display:grid;gap:8px}.song-selection-summary b{font-size:21px}.song-selection-summary .btn{flex-shrink:0}.catalog-group{margin:24px 0}.catalog-group summary{cursor:pointer;padding:16px 0;font-weight:800;color:var(--muted)}.catalog-group summary:focus-visible{outline:3px solid var(--gold2);outline-offset:4px}.catalog-group-title{margin:20px 0 16px}
+.production-context{display:flex;align-items:center;gap:16px;border:1px solid var(--line);border-radius:16px;padding:14px 18px;margin:0 0 22px;background:rgba(0,0,0,.18)}.production-context img{width:56px;height:56px;object-fit:cover;border-radius:10px}.production-context .release-name{flex:1;min-width:0}.production-context .release-name b{display:block;font-size:18px;margin-top:5px}.production-context .release-budget{display:flex;gap:22px;font-size:12px;color:var(--muted)}.release-budget b{display:block;color:var(--gold2);font-size:18px;margin-top:4px}.production-choice .choice{padding:22px}.production-choice .choice b{font-size:19px}.production-choice .choice .price{font-size:24px;margin:14px 0 9px}.production-choice .choice.sel,.production-choice .choice.selected{border-color:var(--gold2);box-shadow:inset 4px 0 var(--gold2),0 0 0 1px rgba(218,185,116,.2);background:linear-gradient(130deg,rgba(169,129,48,.2),rgba(5,27,34,.92))}
+@media(max-width:640px){.song-selection-summary{align-items:stretch;flex-direction:column;padding:16px;gap:14px}.song-selection-summary .btn{width:100%}.production-context{flex-wrap:wrap;padding:12px;gap:12px}.production-context .release-budget{width:100%;border-top:1px solid var(--line);padding-top:10px;justify-content:space-between}.production-choice .choice{padding:18px}}
 </style>
 
 <style>
@@ -390,7 +396,10 @@ function gameSplash(){
 function beginNewGame(){
  if(hasSave()&&!confirm('Начать новую карьеру? Сохранённый прогресс будет удалён.'))return;
  deleteSave();
- if(onboardingSeen())start(); else onboarding(1);
+ if(onboardingSeen())start(); else quickOnboarding();
+}
+function quickOnboarding(){
+ shell('ПЕРВЫЙ РЕЛИЗ','Твой первый шаг в музыке',`<div class="quick-start card"><div class="kicker">VUSTIN RECORDS · НАЧНИ С ОДНОЙ ПЕСНИ</div><h3>Послушай. Выбери. Выпусти.</h3><p class="desc">У тебя 10 000 VS₽. Послушай демо настоящих песен VUSTIN SOUND, выбери материал и подготовь релиз.</p><ul class="quick-rules"><li><b>Три ориентира:</b> капитал, слушатели и репутация.</li><li><b>Каждый выбор имеет цену.</b> Сравнивай варианты и оставляй резерв. Дорогой вариант не гарантирует успеха.</li><li><b>После премьеры:</b> увидишь результат и объяснение решений. Карьеру можно продолжить позже.</li></ul><p class="small">В первом сезоне — 10 релизов, затем второй сезон: 12 недель для новых песен и развития лейбла.</p><div class="nav"><button class="btn" onclick="markOnboardingSeen();start()">ПОНЯТНО. НАЧАТЬ →</button><button class="btn alt" onclick="onboarding(1)">ПОЛНАЯ ИНСТРУКЦИЯ</button></div></div>`)
 }
 function onboarding(step,manual=false){
  const dots=[1,2,3].map(i=>`<span class='${i===step?'on':''}'></span>`).join('');
@@ -413,10 +422,12 @@ function lockText(song){return 'Песня пока недоступна'}
 function openSongSelection(){try{chooseSong()}catch(err){console.error('VUSTIN: song selection failed',err);const el=document.querySelector('#screen');if(el){const notice=document.createElement('div');notice.className='card';notice.style.cssText='border:1px solid #d77;padding:16px;margin-top:16px';notice.innerHTML='<b>Не удалось открыть каталог песен.</b><p>Обновите страницу. Если ошибка повторится, сообщите разработчику.</p>';el.appendChild(notice)}}}
 function chooseSong(){
  stopSongDemo();
- shell('Шаг 1 из 6','Выбери песню',
- `<div class='choice-intro'><b>Послушай демо перед выбором.</b> У каждой песни свой характер — стратегия релиза должна ему соответствовать.</div>
- <div class='grid'>${songs.map(song=>{
-  let u=song.unlock(), released=isReleased(song.id), selected=state.song?.id===song.id;
+ const available=songs.filter(song=>song.unlock()&&!isReleased(song.id));
+ const released=songs.filter(song=>isReleased(song.id));
+ const locked=songs.filter(song=>!song.unlock()&&!isReleased(song.id));
+ const validSelected=available.some(song=>song.id===state.song?.id);
+ const cards=list=>list.map(song=>{
+  let u=song.unlock(), released=isReleased(song.id), selected=u&&!released&&state.song?.id===song.id;
   let status=released?'✓ УЖЕ ВЫПУЩЕНА':(u?'ДОСТУПНА':'🔒 '+lockText(song));
   let style=released?'opacity:.62;border-color:#4b8b91;':(u?'':'opacity:.48;cursor:not-allowed');
   let click=(u&&!released)?`onclick='state.song=songs.find(x=>x.id==="${song.id}");chooseSong()'`:'';
@@ -427,11 +438,18 @@ function chooseSong(){
     <button type='button' class='demo-btn listen-song-btn' onclick='playSongDemo(event,"${song.id}",this)'><span class='listen-icon'>▶</span><span>ПОСЛУШАТЬ ПЕСНЮ</span></button><div class='demo-note'>фрагмент · 12 сек.</div>
     <div class='song-tags'>${song.tags.map(t=>`<span class='tag'>${t}</span>`).join('')}</div>
     ${released?`<span class='tag' style='background:#123b39;color:#9fe0c2;border-color:#2f665d'>РЕЛИЗ СОСТОЯЛСЯ</span>`:''}
+    ${selected&&u&&!released?`<button class='btn song-continue' onclick='event.stopPropagation();stopSongDemo();state.recoveryPackage!==undefined?applyRecoveryPackage():goalScreen()'>К ПЛАНУ РЕЛИЗА →</button>`:''}
   </div>`
- }).join('')}</div>
- <div class='nav'><button class='btn alt' onclick='stopSongDemo();market()'>← Рынок</button><button class='btn' ${state.song?'':'disabled'} onclick='stopSongDemo();state.recoveryPackage!==undefined?applyRecoveryPackage():goalScreen()'>ДАЛЕЕ →</button></div>`)
+ }).join('');
+ const nextAction='stopSongDemo();state.recoveryPackage!==undefined?applyRecoveryPackage():goalScreen()';
+ shell('Шаг 1 из 6','Выбери песню',
+ `<div class='choice-intro'><b>Послушай демо перед выбором.</b> У каждой песни свой характер — стратегия релиза должна ему соответствовать.</div>
+ <div class="song-selection-summary" aria-label="Выбранная песня"><div>${validSelected?`<span class="kicker">ТВОЙ СЛЕДУЮЩИЙ РЕЛИЗ</span><b>${state.song.name}</b>`:`<b>Какая песня станет твоим релизом?</b><span class="small">Выбери одну из доступных песен ниже.</span>`}</div><button class="btn" ${validSelected?'':'disabled'} onclick='${nextAction}'>К ПЛАНУ РЕЛИЗА →</button></div>
+ <h3 class="catalog-group-title">Доступны для релиза · ${available.length}</h3><div class='grid'>${cards(available)}</div>
+ ${released.length?`<details class="catalog-group"><summary>Уже выпущены · ${released.length}</summary><div class="grid">${cards(released)}</div></details>`:''}
+ ${locked.length?`<details class="catalog-group"><summary>Откроются позже · ${locked.length}</summary><div class="grid">${cards(locked)}</div></details>`:''}
+ <div class='nav'><button class='btn alt' onclick='stopSongDemo();market()'>← Рынок</button><button class='btn' ${validSelected?'':'disabled'} onclick='${nextAction}'>ДАЛЕЕ →</button></div>`)
 }
-
 
 function goalScreen(){
 shell('Продюсерская стратегия','Какова цель этого релиза?',
@@ -3361,7 +3379,7 @@ document.addEventListener('click',function(e){
 });
 </script>
 
-<div id='buildVersion' style='display:none'>VUSTIN-PRODUCER-17.8-keyboard-navigation</div><script>
+<div id='buildVersion' style='display:none'>VUSTIN-PRODUCER-17.9-first-release</div><script>
 // Ensure only one preview is audible, including after re-rendering song cards.
 document.addEventListener('play', function(event) {
   if (event.target && event.target.tagName === 'AUDIO') {
@@ -3455,6 +3473,23 @@ document.addEventListener('play', function(event) {
  const first=root();if(first)enhance(first.querySelector('.kicker')?.textContent||'',first.querySelector('.section-title')?.textContent||'',null);
 })();
 
+</script>
+<script>
+/* Add read-only release context after existing keyboard/focus enhancement. */
+(function(){
+ const render=shell;
+ shell=function(k,t,body){
+  const result=render.call(this,k,t,body),screen=document.getElementById('screen');
+  const production=!k.toLowerCase().includes('сезон 2')&&['Запись','Аранжировка','Обложка'].includes(t);
+  if(production&&state.song){
+   screen.classList.add('production-choice');
+   const panel=document.createElement('div');panel.className='production-context';
+   panel.innerHTML=`${songCover(state.song,'release-thumb')}<div class="release-name"><span class="kicker">ТВОЙ РЕЛИЗ</span><b>${state.song.name}</b></div><div class="release-budget"><span>Вложено<b>${fmt(state.spent)} VS₽</b></span><span>Осталось<b>${fmt(career.cash)} VS₽</b></span></div>`;
+   const route=screen.querySelector('.ux-route');if(route)route.after(panel);else screen.querySelector('.section-title')?.after(panel);
+  }else screen.classList.remove('production-choice');
+  return result;
+ };
+})();
 </script>
 </body>
 </html>
