@@ -146,7 +146,40 @@
 .song-choice-card.sel:before,.choice-plan.sel:before{content:"✓ ВЫБРАНО";position:absolute;right:12px;top:12px;bottom:auto;color:#efc45c;font-size:10px;font-weight:900;letter-spacing:.8px;z-index:2}
 .chosen-hint{color:#efc45c;font-size:12px;font-weight:900;margin-top:12px;letter-spacing:.5px}
 .song-choice-card audio{position:relative;z-index:3}
-</style></head>
+</style><style id="promotion-visual-system">
+#screen .promotion-screen{--promo-panel:#11394e;--promo-edge:#38687e;--promo-muted:#bad6e2;color:#f3fbff}
+#screen .promotion-intro{font-size:16px;line-height:1.5;margin:0 0 10px}
+#screen .promotion-trend,#screen .promotion-disclaimer{margin:10px 0;color:var(--promo-muted);font-size:13px;line-height:1.5}
+#screen .promotion-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;margin:14px 0}
+#screen .promotion-category{min-width:0;padding:16px;border:1px solid var(--promo-edge);border-radius:18px;background:var(--promo-panel)}
+#screen .promotion-category header{display:flex;align-items:center;gap:12px;margin-bottom:12px}
+#screen .promotion-category h3{margin:0;color:#f3fbff;font-size:19px;line-height:1.2}
+#screen .promotion-category header p{margin:5px 0 0;font-size:12px;line-height:1.4;color:var(--promo-muted)}
+#screen .promotion-icon{width:48px;height:48px;flex:0 0 48px;padding:7px;box-sizing:border-box;border:1px solid #397c93;border-radius:14px;color:#9ce9fa;background:#174b63}
+#screen .promotion-icon svg{width:100%;height:100%}
+#screen .promotion-options{display:grid;gap:8px}
+#screen .promotion-option{display:flex;align-items:center;gap:8px;width:100%;min-height:54px;margin:0;padding:10px;border:1px solid #426b7e;border-radius:10px;background:#092c40;color:#f3fbff;cursor:pointer;font:inherit;text-align:left;box-sizing:border-box;white-space:normal}
+#screen .promotion-option.is-selected{background:#19516b;border-color:#a4edff}
+#screen .promotion-check{width:17px;height:17px;border:1px solid #82b9cd;border-radius:4px;flex:0 0 17px;font-size:15px;line-height:17px;text-align:center;color:#062b40}
+#screen .is-selected .promotion-check{background:#a4edff;border-color:#a4edff}
+#screen .promotion-option-name{flex:1;min-width:0;font-size:13px;line-height:1.3}
+#screen .promotion-option small{display:block;margin-top:4px;font-size:11px;color:var(--promo-muted)}
+#screen .promotion-option strong{font-size:13px;color:#b4efff;white-space:nowrap}
+#screen .promotion-category details{margin-top:10px;font-size:12px;line-height:1.5;color:var(--promo-muted)}
+#screen .promotion-screen summary{cursor:pointer;min-height:24px;line-height:24px;color:#a4edff}
+#screen .promotion-screen details p{margin:8px 0}
+#screen .promotion-option:focus-visible,#screen .promotion-screen summary:focus-visible{outline:3px solid #e1f9ff;outline-offset:3px}
+#screen .promotion-finance{display:grid;grid-template-columns:minmax(0,2fr) minmax(180px,1fr);gap:18px;align-items:center;padding:16px;border:1px solid #4b8198;border-radius:16px;background:#16465d}
+#screen .promotion-totals{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+#screen .promotion-totals span{display:block;font-size:11px;line-height:1.4;color:#c5e0eb}
+#screen .promotion-totals b{display:block;margin-top:5px;font-size:21px;line-height:1.2;color:#f3fbff}
+#screen .promotion-reserve{padding:10px 12px;border-radius:10px;background:#0b3044;font-size:12px;line-height:1.5}
+#screen .promotion-reserve b{color:#b3eadb}#screen .promotion-reserve.low b{color:#ffe0a5}#screen .promotion-reserve.critical b{color:#ffc0bd}#screen .promotion-reserve p{margin:4px 0 0;color:#c5e0eb}
+#screen .promotion-actions{align-items:center;gap:12px}#screen .promotion-count{flex:1;text-align:center;color:var(--promo-muted);font-size:13px}
+@media(max-width:950px){#screen .promotion-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:560px){#screen .promotion-grid{grid-template-columns:1fr;gap:10px}#screen .promotion-category{padding:14px}#screen .promotion-finance{grid-template-columns:1fr;gap:12px}#screen .promotion-totals{grid-template-columns:repeat(2,minmax(0,1fr))}#screen .promotion-totals>div:last-child{grid-column:1/-1}#screen .promotion-totals b{font-size:20px}#screen .promotion-count{grid-column:1/-1;order:-1}#screen .promotion-option-name{font-size:14px}#screen .promotion-option small{font-size:12px}#screen .promotion-screen summary{min-height:32px;line-height:32px}}
+</style>
+</head>
 <body class="vs-blue">
 <div id="vustin-producer-native">
 </div>
@@ -519,15 +552,26 @@ function promoStrategy(i){
  const value=Math.max(0,Math.min(100,base+visual+trend));
  return {value,visual,trend,label:value>=87?'Высокая':value>=73?'Хорошая':value>=58?'Средняя':'Рискованная'};
 }
+function promotionIcon(kind){
+ const paths={video:'<rect x="5" y="10" width="23" height="22" rx="4"/><path d="m28 17 11-6v21l-11-6M9 5h16"/>',shorts:'<rect x="12" y="3" width="21" height="37" rx="5"/><path d="m20 14 9 7-9 7zM21 35h3"/>',playlist:'<path d="M5 9h22M5 18h22M5 27h16M34 12v22"/><ellipse cx="30" cy="34" rx="5" ry="3"/>',radio:'<rect x="4" y="13" width="36" height="25" rx="4"/><path d="m10 9 22-7M29 20h6M29 26h6M29 32h6"/><circle cx="16" cy="26" r="7"/>',pr:'<path d="m5 17 26-9v26L5 25zM12 28l3 12h7l-4-10M37 15l5-3M37 22h6M37 29l5 3"/>',target:'<circle cx="22" cy="23" r="17"/><circle cx="22" cy="23" r="9"/><path d="m22 23 17-18M31 5h8v8"/>'};
+ return `<svg viewBox="0 0 46 46" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">${paths[kind]||''}</svg>`;
+}
 function stagePromo(){
+ const openDetails=new Set([...document.querySelectorAll('#screen .promotion-screen details[open]')].map(el=>el.id));
  const total=state.promo.reduce((n,i)=>n+discountPrice(promos[i][1],i===0?'video':'promo'),0);
  const reserve=career.cash, trend=ensureTrend();
- shell('Шаг 5 из 6','Продвижение',`<p class='desc'>Выбери каналы для песни <b>${state.song.name}</b>. Учитывай характер песни, обложку, рыночный тренд и оставляй резерв на непредвиденные расходы.</p>
- <div class='promo-market'><span class='kicker'>РЫНОК</span><b>${trend.icon} ${trend.name}</b><span class='small'>${trend.advice}</span></div>
- <section class='card promo-budget' aria-label='Бюджет и риск релиза'><div class='kicker'>БЮДЖЕТ И РИСК</div><div class='stats'><div class='stat'><b>${fmt(state.spent)}</b>VS₽ вложено в релиз</div><div class='stat'><b>${fmt(total)}</b>VS₽ из них продвижение</div><div class='stat'><b>${fmt(reserve)}</b>VS₽ осталось</div></div><p class='promo-risk'>${reserve<1000?'⚠️ Критический резерв: следующий этап может потребовать дополнительных средств, а при слабом релизе может понадобиться аванс.':reserve<2500?'⚠️ Низкий резерв: следующий релиз потребует экономии.':'Резерв позволяет сохранить гибкость.'}</p><p class='small'>Ориентир для следующего бюджетного релиза: 2 000–3 000 VS₽. Успех рекламы и окупаемость не гарантированы.</p></section>
- <div class='choices'>${promos.map((o,i)=>{const m=promoStrategy(i),cost=discountPrice(o[1],i===0?'video':'promo');return `<div class='choice ${state.promo.includes(i)?'sel':''}' onclick='togglePromo(${i})'><b>${o[0]}</b><div class='price'>${fmt(cost)} VS₽</div><div class='small'>${promoDescriptions[i]}</div><div class='small'>Прогноз совместимости: <b>${m.label}</b>${m.visual?' · Обложка помогает':''}${m.trend>0?' · Рынок помогает':m.trend<0?' · Рынок мешает':''}</div></div>`}).join('')}</div>
- <p class='small'>Прогноз ориентировочный: результат зависит также от качества записи, решений и случайных событий. Несколько каналов не гарантируют больший доход.</p>
- <div class='nav'><button class='btn alt' onclick='stageCover()'>← Назад</button><button class='btn' ${state.promo.length?'':'disabled'} onclick='dilemmaScreen()'>ДАЛЕЕ →</button></div>`)
+ const groups=[['video','Клип','История песни в кадре',[0]],['shorts','Короткие видео','Охват через Reels и Shorts',[1,6]],['playlist','Плейлисты','Песня в музыкальных подборках',[2,7]],['radio','Радио','Знакомство с эфирной аудиторией',[3]],['pr','PR и медиа','Публикации и разговор о релизе',[4,8]],['target','Таргет','Реклама для выбранной аудитории',[5]]];
+ shell('Шаг 5 из 6','Продвижение',`<div class="promotion-screen">
+ <p class="promotion-intro">Пусть мир услышит <b>${state.song.name}</b>. Можно сочетать несколько вариантов.</p>
+ <details id="promotion-trend" class="promotion-trend" ${openDetails.has('promotion-trend')?'open':''}><summary>Рынок: ${trend.name}</summary><p>${trend.advice}</p></details>
+ <div class="promotion-grid">${groups.map(([key,title,description,ids])=>`<section class="promotion-category" aria-labelledby="promotion-${key}">
+ <header><span class="promotion-icon">${promotionIcon(key)}</span><div><h3 id="promotion-${key}">${title}</h3><p>${description}</p></div></header>
+ <div class="promotion-options">${ids.map(i=>{const o=promos[i],m=promoStrategy(i),cost=discountPrice(o[1],i===0?'video':'promo'),selected=state.promo.includes(i);return `<button type="button" class="promotion-option ${selected?'is-selected':''}" aria-pressed="${selected}" data-ux-key="togglePromo(${i})" onclick="togglePromo(${i})"><span class="promotion-check" aria-hidden="true">${selected?'✓':''}</span><span class="promotion-option-name">${o[0]}<small>Совместимость: ${m.label}</small></span><strong>${fmt(cost)} VS₽</strong></button>`}).join('')}</div>
+ <details id="promotion-detail-${key}" ${openDetails.has('promotion-detail-'+key)?'open':''}><summary>Подробнее о каналах</summary>${ids.map(i=>{const m=promoStrategy(i);return `<p><b>${promos[i][0]}.</b> ${promoDescriptions[i]}${m.visual?' Обложка помогает.':''}${m.trend>0?' Рынок помогает.':m.trend<0?' Рынок мешает.':''}</p>`}).join('')}</details>
+ </section>`).join('')}</div>
+ <section class="promotion-finance" aria-label="Бюджет и риск релиза"><div class="promotion-totals"><div><span>Вложено в релиз</span><b>${fmt(state.spent)} VS₽</b></div><div><span>Из них продвижение</span><b>${fmt(total)} VS₽</b></div><div><span>Осталось в бюджете</span><b>${fmt(reserve)} VS₽</b></div></div><div class="promotion-reserve ${reserve<1000?'critical':reserve<2500?'low':'healthy'}"><b>${reserve<1000?'Критический резерв':reserve<2500?'Низкий резерв':'Резерв: достаточный'}</b><p>${reserve<1000?'Следующий этап может потребовать дополнительных средств, а при слабом релизе может понадобиться аванс.':reserve<2500?'Следующий релиз потребует экономии.':'Резерв позволяет сохранить гибкость.'}</p></div></section>
+ <details id="promotion-disclaimer" class="promotion-disclaimer" ${openDetails.has('promotion-disclaimer')?'open':''}><summary>О прогнозах и бюджете</summary><p>Ориентир для следующего бюджетного релиза: 2 000–3 000 VS₽. Успех рекламы и окупаемость не гарантированы.</p><p>Прогноз ориентировочный: результат зависит также от качества записи, решений и случайных событий. Несколько каналов не гарантируют больший доход.</p></details>
+ <div class="nav promotion-actions"><button class="btn alt" onclick="stageCover()">← Назад</button><span class="promotion-count">Выбрано вариантов: ${state.promo.length}</span><button class="btn" ${state.promo.length?'':'disabled'} onclick="dilemmaScreen()">Продолжить →</button></div></div>`)
 }
 function songDNA(s){
  const p=s.p||s;
