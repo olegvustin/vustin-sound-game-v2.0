@@ -3532,5 +3532,34 @@ body.vs-blue .release-budget b{color:#f7fbff}
 @media(max-width:900px){.office-main{grid-template-columns:1fr}.office-path ol{display:grid;grid-template-columns:1fr 1fr;gap:10px}.office-path li{margin:4px 0}.office-metrics b{font-size:28px}.office-metrics small{display:block;margin-left:0}}
 @media(max-width:540px){.office-metrics{gap:7px}.office-metrics>div{padding:12px 9px;border-radius:12px}.office-metrics span{font-size:10px}.office-metrics b{font-size:23px}.office-metrics small{font-size:11px}.office-release,.office-path{padding:18px}.office-release-body{grid-template-columns:1fr;gap:20px}.office-art{max-width:220px}.office-release-copy h3{font-size:24px}.office-shortcuts{grid-template-columns:1fr;gap:10px}.office-path li{font-size:12px;gap:8px}.office-status{font-size:12px}.office-link{padding:16px}}
 </style>
+<style>
+/* Complete the approved blue system on supporting screens; no game logic changes. */
+body.vs-blue .top{background:#0e3753;border-color:#7195aa;box-shadow:0 10px 28px #041a2b30}
+body.vs-blue .money{color:#f7fbff;background:#193f58;border-color:#7195aa;box-shadow:none}
+body.vs-blue .scene-head,body.vs-blue .choice-intro,body.vs-blue .onboard-tip,body.vs-blue .note,body.vs-blue .econbox,body.vs-blue .market>div{background:#12364d;border-color:#7195aa;color:#d7effb}
+body.vs-blue .scene-place{color:#b7d2e3}
+body.vs-blue .event{background:#173c54;border-color:#7195aa;border-left-color:#d7effb;box-shadow:none}
+body.vs-blue .econbox b{color:#f7fbff}
+body.vs-blue .tag{background:#204a64;border-color:#7195aa;color:#d7effb}
+body.vs-blue .release-next-tip{background:#12364d;border-left-color:#d7effb;color:#d7effb}
+body.vs-blue .industry-choice.selected,body.vs-blue .dilemma-choice.selected{background:#214e69!important;border-color:#c9edff!important;box-shadow:inset 4px 0 #c9edff!important}
+body.vs-blue .industry-choice.selected:after,body.vs-blue .dilemma-choice.selected:after{color:#d7effb}
+body.vs-blue .industry-choice:hover,body.vs-blue .dilemma-choice:hover{background:#204962!important;border-color:#d7effb!important}
+body.vs-blue .label-growth{background:#12364d;border-color:#7195aa}
+body.vs-blue .label-growth>small{opacity:1;color:#b7d2e3}
+/* Legibility takes priority over the legacy fixed-height phone cards. These
+   overrides allow content to grow rather than clipping larger labels. */
+@media(max-width:640px){
+ body.vs-blue #screen{height:auto!important;max-height:none!important;overflow:visible!important}
+ body.vs-blue #screen :is(.grid,.choices){height:auto!important;align-items:stretch!important}
+ body.vs-blue #screen .grid .card,body.vs-blue #screen .choices .choice{height:auto!important;min-height:0!important}
+ body.vs-blue #screen .desc{font-size:14px!important;line-height:1.6!important}
+ body.vs-blue #screen :is(.small,.tag,.note .small,.econbox span,.demo-note){font-size:12px!important;line-height:1.5!important}
+ body.vs-blue #screen .kicker,body.vs-blue .scene-place{font-size:11px!important;line-height:1.5!important}
+ body.vs-blue #screen .nav{position:static!important;left:auto;right:auto;bottom:auto;z-index:auto!important;margin:18px 0 0!important;width:auto;transform:none;background:#12364d!important;box-shadow:none}
+ body.vs-blue #screen .nav .btn{font-size:12px!important;line-height:1.4!important;min-height:48px!important}
+ body.vs-blue .label-growth>small{font-size:12px!important;line-height:1.5!important}
+}
+</style>
 </body>
 </html>
