@@ -369,7 +369,7 @@ function gameSplash(){
    <p class='desc'>Выбирай песни VUSTIN SOUND, принимай продюсерские решения, управляй бюджетом и смотри, как на них реагирует аудитория.</p>
    <div class='splash-features'><span>🎵 реальные песни</span><span>💰 экономика релиза</span><span>📈 карьера продюсера</span></div>
    <div class='nav'>
-    ${saved?`<button class='btn' onclick='loadCareer();careerScreen()'>ПРОДОЛЖИТЬ КАРЬЕРУ →</button><button class='btn alt' onclick='beginNewGame()'>НОВАЯ ИГРА</button>`:`<button class='btn' onclick='beginNewGame()'>НАЧАТЬ ИГРУ →</button>`}
+    ${saved?`<button class='btn' onclick='resumeCareer()'>ПРОДОЛЖИТЬ КАРЬЕРУ →</button><button class='btn alt' onclick='beginNewGame()'>НОВАЯ ИГРА</button>`:`<button class='btn' onclick='beginNewGame()'>НАЧАТЬ ИГРУ →</button>`}
     <button class='btn how-btn' onclick='onboarding(1,true)'>ⓘ КАК ИГРАТЬ?</button>
    </div>
    <div class='splash-time'>Музыкальная бизнес-игра · 5–10 минут</div>
@@ -708,9 +708,9 @@ function resolveDilemma(){
  industryEventScreen();
 }
 function industryEventScreen(){
- const ev=industryEvents[Math.floor(Math.random()*industryEvents.length)];
+ const ev=state.industryEvent||industryEvents[Math.floor(Math.random()*industryEvents.length)];
  state.industryEvent=ev;
- state.industryChoice=null;
+ if(state.industryChoice===undefined)state.industryChoice=null;
  state.industryReleaseStarted=false;
  shell('Событие индустрии',ev[0],
  `<div class='event'><p class='desc'>${ev[1]}</p></div>
@@ -719,6 +719,7 @@ function industryEventScreen(){
  <div class='nav'><span class='flow-hint'>После выбора будет отдельный финальный экран.</span><button type='button' class='btn' data-industry-next onclick='industryConfirmScreen()'>ДАЛЕЕ →</button></div>`)
  const next=document.querySelector('[data-industry-next]');
  if(next)next.style.opacity='.38';
+ if(Number.isInteger(state.industryChoice)&&ev[2][state.industryChoice])selectIndustryChoice(null,state.industryChoice);
 }
 function selectIndustryChoice(el,i){
  const ev=state.industryEvent;
@@ -889,7 +890,8 @@ function advanceCatalog(){
  if(!career.history||!career.history.length){career.lastCatalog=null;return}
  let addStreams=0,addIncome=0,addListeners=0,revivals=[];
  career.history.forEach((h,i)=>{
-   let age=Math.max(1,career.releases-i+(career.season2CatalogAge||0));
+   let releaseNumber=Number.isInteger(h.releaseNumber)?h.releaseNumber:career.releases-i;
+   let age=Math.max(1,career.releases-releaseNumber+(career.season2CatalogAge||0));
    let base=(h.catalogBase||Math.round((h.streams||0)*.075));
    let decay=Math.max(.18,1-age*.075);
    let video=(h.videoTail||0);
@@ -1192,7 +1194,7 @@ function calculateRelease(){
  let radioTail=state.radioTail||0;
  let playlistTail=(state.promo.includes(2)?Math.max(0,(p.pl-60)/40):0)+(state.playlistExtra||0);
  advanceTrend();
- career.history.unshift({song:s.name,songId:s.id,spent:state.spent,streams,income,profit,loyal,score,repGain,
+ career.history.unshift({releaseNumber:career.releases,song:s.name,songId:s.id,spent:state.spent,streams,income,profit,loyal,score,repGain,
    long:p.long||60,catalogBase:Math.round(streams*(.055+(p.long||60)/2200)),
    videoTail,prTail,playlistTail,radioTail,dilemma:state.dilemmaResult||null,force:state.forceResult||null,catalogStreams:0,catalogIncome:0});
  setTimeout(animateReleaseCounter,80);
@@ -1382,12 +1384,30 @@ function pulsePanel(){let p=document.querySelector('.panel');if(p){p.classList.r
 
 const SAVE_KEY='vustin_producer_career_v1'; let saveTimer=null;
 function saveCareer(){
- try{localStorage.setItem(SAVE_KEY,JSON.stringify({version:1,savedAt:Date.now(),career}));
+ try{localStorage.setItem(SAVE_KEY,JSON.stringify({version:2,savedAt:Date.now(),career,draft:state,route:resumeRoute,season2Draft,season2DraftStep,season2SelectedSong,season2SelectedPlan}));
  let el=document.getElementById('saveIndicator');if(el){el.classList.add('show');clearTimeout(saveTimer);saveTimer=setTimeout(()=>el.classList.remove('show'),1200)}return true}catch(e){return false}
 }
 function loadCareer(){
  try{let raw=localStorage.getItem(SAVE_KEY);if(!raw)return false;let d=JSON.parse(raw);if(!d||!d.career)return false;
- career=Object.assign({advanceDebt:0,cash:10000,listeners:0,rep:0,releases:0,history:[],week:1,studioLvl:0,marketingLvl:0,videoLvl:0,teamLvl:0,catalogIncome:0,catalogStreams:0,lastCatalog:null,trend:null,trendWeeks:0},d.career);return true}catch(e){return false}
+ if(d.version!==2&&!localStorage.getItem(SAVE_KEY+'_legacy_backup')){try{localStorage.setItem(SAVE_KEY+'_legacy_backup',raw)}catch(e){}}
+ career=Object.assign({advanceDebt:0,cash:10000,listeners:0,rep:0,releases:0,history:[],week:1,studioLvl:0,marketingLvl:0,videoLvl:0,teamLvl:0,catalogIncome:0,catalogStreams:0,lastCatalog:null,trend:null,trendWeeks:0},d.career);
+ if(!Array.isArray(career.history))career.history=[];
+ career.history.forEach((h,i)=>{if(!Number.isInteger(h.releaseNumber))h.releaseNumber=Math.max(1,career.releases-i)});
+ resetRelease(); season2Draft=null; season2DraftStep=0;season2SelectedSong=null;season2SelectedPlan=null;resumeRoute=null;
+ if(d.version===2){
+   if(d.draft&&typeof d.draft==='object'){
+     state=Object.assign(state,d.draft);
+     state.team=Array.isArray(state.team)?state.team:[];state.promo=Array.isArray(state.promo)?state.promo:[];
+     state.song=songs.find(x=>x.id===d.draft.song?.id)||null;
+     if(state.song&&isReleased(state.song.id))resetRelease();
+   }
+   if(d.season2Draft&&season2Songs.some(x=>x.id===d.season2Draft.id)&&!season2Released(d.season2Draft.id)){
+     season2Draft=d.season2Draft;season2DraftStep=Math.max(0,Math.min(6,Number(d.season2DraftStep)||0));
+   }
+   season2SelectedSong=d.season2SelectedSong||null;season2SelectedPlan=d.season2SelectedPlan??null;
+   if(d.route&&typeof d.route.name==='string')resumeRoute=d.route;
+ }
+ return true}catch(e){return false}
 }
 function hasSave(){try{return !!localStorage.getItem(SAVE_KEY)}catch(e){return false}}
 function deleteSave(){try{localStorage.removeItem(SAVE_KEY)}catch(e){}}
@@ -1400,7 +1420,7 @@ function saveMenu(){
  let saved=hasSave();
  shell('Сохранение','Карьера VUSTIN RECORDS',
  "<div class='card save-card' style='cursor:default'><div class='kicker'>"+(saved?'СОХРАНЕНИЕ НАЙДЕНО':'НОВАЯ КАРЬЕРА')+"</div><h3>"+(saved?'Продолжить сезон':'Начать первый сезон')+"</h3><p class='desc'>Прогресс хранится в этом браузере на этом устройстве. После важных действий карьера сохраняется автоматически.</p></div><div class='nav'>"+
- (saved?"<button class='btn' onclick='loadCareer();careerScreen()'>ПРОДОЛЖИТЬ →</button>":"<button class='btn' onclick='newCareerConfirmed()'>НАЧАТЬ ИГРУ →</button>")+
+ (saved?"<button class='btn' onclick='resumeCareer()'>ПРОДОЛЖИТЬ →</button>":"<button class='btn' onclick='newCareerConfirmed()'>НАЧАТЬ ИГРУ →</button>")+
  (saved?"<button class='btn alt' onclick='newCareerConfirmed()'>НАЧАТЬ ЗАНОВО</button>":"")+"</div>");
 }
 const _buyUpgrade=buyUpgrade;buyUpgrade=function(key){
@@ -1862,6 +1882,44 @@ function runSeason2Project(key){
 }
 
 function seasonFinal(){return seasonFinale()}
+
+// Save schema v2: a paid draft and its balance are one snapshot.
+let resumeRoute=null;
+const resumeScreens={};
+function hasReleaseDraft(){return !!state.song&&!isReleased(state.song.id)}
+function resumeCareer(){
+ if(!loadCareer())return saveMenu();
+ if(season2Draft)return season2ResumeProduction();
+ if(hasReleaseDraft())return resumePaidDraft();
+ if(career.releases>=10&&career.season2Week)return season2Infrastructure();
+ return careerScreen();
+}
+function resumePaidDraft(){
+ const r=resumeRoute;
+ if(r&&resumeScreens[r.name]&& !r.name.startsWith('season2'))return resumeScreens[r.name](...(Array.isArray(r.args)?r.args:[]));
+ if(state.industryEvent){if(state.industryChoice!==null&&state.industryChoice!==undefined)return industryConfirmScreen();return industryEventScreen()}
+ if(state.pendingDilemma)return dilemmaScreen();
+ if(state.cover)return stagePromo();if(state.arr)return stageCover();if(state.studio)return stageArr();
+ if(state.team.length)return teamScreen();if(state.goal)return teamScreen();return goalScreen();
+}
+// Wrapped render functions save after the whole synchronous action, including payments.
+const draftRenderers={market,chooseSong,goalScreen,teamScreen,analysisScreen,stageStudio,stageArr,stageCover,stagePromo,dilemmaScreen,industryEventScreen,industryEventBack,industryConfirmScreen,season2SongCatalog,season2ProductionStep,season2ReviewProduction,season2Infrastructure};
+Object.keys(draftRenderers).forEach(name=>{
+ const original=draftRenderers[name];
+ const wrapped=function(...args){resumeRoute={name,args};const result=original(...args);saveCareer();return result};
+ resumeScreens[name]=wrapped;window[name]=wrapped;
+});
+const originalNewRelease=newRelease;
+newRelease=function(){if(hasReleaseDraft())return resumePaidDraft();return originalNewRelease()};
+// Explicit choices made without a rerender still persist before the next action.
+const originalSelectIndustryChoice=selectIndustryChoice;
+selectIndustryChoice=function(...args){originalSelectIndustryChoice(...args);saveCareer()};
+// Never carry an in-memory season-two draft into an explicitly new career.
+const originalResetRelease=resetRelease;
+resetRelease=function(){originalResetRelease();resumeRoute=null;};
+const originalDeleteSave=deleteSave;
+deleteSave=function(){originalDeleteSave();season2Draft=null;season2DraftStep=0;season2SelectedSong=null;season2SelectedPlan=null;resumeRoute=null};
+
 gameSplash();
 </script>
 <button class="sound-toggle" id="soundToggle" onclick="toggleSound()" title="Звук">🔊</button>
@@ -3243,7 +3301,7 @@ document.addEventListener('click',function(e){
 });
 </script>
 
-<div id='buildVersion' style='display:none'>VUSTIN-PRODUCER-16.6</div><script>
+<div id='buildVersion' style='display:none'>VUSTIN-PRODUCER-17.4-save-drafts</div><script>
 // Ensure only one preview is audible, including after re-rendering song cards.
 document.addEventListener('play', function(event) {
   if (event.target && event.target.tagName === 'AUDIO') {
