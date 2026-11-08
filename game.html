@@ -240,7 +240,7 @@ function songSiteFallback(song,btn){
  const m=GAME_TRACKS[song.id];if(!m)return;
  const old=btn.parentElement.querySelector('.full-song-link');if(old)old.remove();
  const link=document.createElement('a');link.className='full-song-link';link.textContent='Открыть полную песню на сайте ↗';
- link.href='https://vustinsound.com'+m.page;link.target='_blank';link.rel='noopener';
+ link.href='https://vustinsound.com'+m.page;link.target=parent===window?'_blank':'_top';link.rel='noopener';
  link.style.cssText='display:block;padding:10px;font-size:13px;';link.onclick=e=>{e.stopPropagation();stopSongDemo();};btn.after(link);
  toast('Полная песня доступна по ссылке на сайте.');
 }
@@ -487,7 +487,7 @@ function chooseSong(){
  }).join('');
  const nextAction='stopSongDemo();state.recoveryPackage!==undefined?applyRecoveryPackage():goalScreen()';
  shell('Шаг 1 из 6','Выбери песню',
- `<div class='choice-intro'><b>Послушай демо перед выбором.</b> У каждой песни свой характер — стратегия релиза должна ему соответствовать.</div>
+ `<div class='choice-intro'><b>Послушай песню перед выбором. Полные записи доступны через плеер сайта; две песни пока не подключены.</b> У каждой песни свой характер — стратегия релиза должна ему соответствовать.</div>
  <div class="song-selection-summary" aria-label="Выбранная песня"><div>${validSelected?`<span class="kicker">ТВОЙ СЛЕДУЮЩИЙ РЕЛИЗ</span><b>${state.song.name}</b>`:`<b>Какая песня станет твоим релизом?</b><span class="small">Выбери одну из доступных песен ниже.</span>`}</div><button class="btn" ${validSelected?'':'disabled'} onclick='${nextAction}'>К ПЛАНУ РЕЛИЗА →</button></div>
  <h3 class="catalog-group-title">Доступны для релиза · ${available.length}</h3><div class='grid'>${cards(available)}</div>
  ${released.length?`<details class="catalog-group"><summary>Уже выпущены · ${released.length}</summary><div class="grid">${cards(released)}</div></details>`:''}
