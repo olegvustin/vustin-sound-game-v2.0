@@ -214,83 +214,57 @@
 </div>
 <div class='app'><div class='top'><div class='brand'>VUSTIN SOUND · ПРОДЮСЕР</div><div id='wallet' class='money'>10 000 VS₽</div></div><main id='screen' class='panel'></main></div>
 <script>
-let currentPreview=null;
-let primedPreview=null;
-
-function previewSrcForSong(song){
- if(!song)return null;
- if(song.preview)return song.preview+(song.preview.includes('?')?'&':'?')+'v=13.10';
- return null;
-}
-function stopRealPreview(){
- const audios=[currentPreview,primedPreview].filter(Boolean);
- audios.forEach(a=>{try{a.pause();a.currentTime=0}catch(e){}});
- currentPreview=null;primedPreview=null;
-}
-function primeReleasePreview(){
- if(!soundOn||!state.song)return;
- const src=previewSrcForSong(state.song);
- if(!src)return;
- try{
-  if(primedPreview){try{primedPreview.pause()}catch(e){}}
-  const a=new Audio(src);
-  a.preload='auto';
-  a.volume=0.001;
-  a.currentTime=0;
-  primedPreview=a;
-  const promise=a.play();
-  if(promise&&promise.then){
-   promise.then(()=>{
-    try{a.pause();a.currentTime=0;a.volume=.78}catch(e){}
-   }).catch(()=>{});
-  }
- }catch(e){}
-}
-function playRealPreview(){
- const playbackSession=typeof activeReleaseShow==='undefined'?null:activeReleaseShow;
- if(!soundOn||!state.song)return;
- const src=previewSrcForSong(state.song);
- if(!src)return;
- try{
-  let a=primedPreview;
-  if(!a || !a.src || a.src.indexOf(state.song.preview)===-1){
-   a=new Audio(src);a.preload='auto';
-  }
-  currentPreview=a;primedPreview=null;
-  currentPreview.currentTime=0;
-  currentPreview.volume=.78;
-  const promise=currentPreview.play();
-  if(promise&&promise.catch){
-   promise.catch(()=>{
-    if(playbackSession&&!currentReleaseShow(playbackSession))return;
-    // Fallback: show an explicit user-gesture play control if the browser blocks delayed playback.
-    const host=document.querySelector('.now-playing');
-    if(host)host.innerHTML=`<button type="button" class="btn" style="padding:10px 16px" onclick="playRealPreview()">▶ СЛУШАТЬ ФРАГМЕНТ</button>`;
-   });
-  }
- }catch(e){}
-}
-
-
-
-let demoPreview=null,demoButton=null;
-function stopSongDemo(){
- if(demoPreview){try{demoPreview.pause();demoPreview.currentTime=0}catch(e){}demoPreview=null}
- if(demoButton){demoButton.textContent='▶ ПОСЛУШАТЬ ПЕСНЮ';demoButton.classList.remove('playing');demoButton=null}
+const GAME_TRACKS={"pharmacy": {"page": "/song_pharmacy_for_the_soul", "title": "Аптека для души", "sound": "https://soundcloud.com/vustin-sound/pharmacy_for_the_soul"}, "alphabet": {"page": "/song_alphabet_of_love", "title": "Алфавит любви", "sound": "https://soundcloud.com/vustin-sound/alphabet_of_love"}, "lighthouse": {"page": "/song_old_lighthouse", "title": "Старый маяк", "sound": "https://soundcloud.com/vustin-sound/old_lighthouse"}, "solitude100": {"page": "/song_100_years_of_solitude", "title": "100 лет одиночества", "sound": "https://soundcloud.com/vustin-sound/100_years_of_solitude"}, "drawyou": {"page": "/song_i_will_draw_you", "title": "Нарисую тебя", "sound": "https://soundcloud.com/vustin-sound/i_will_draw_you"}, "sandwich": {"page": "/song_sandwich_of_worries", "title": "Бутерброд забот", "sound": "https://soundcloud.com/vustin-sound/sandwich_of_worries"}, "cranes": {"page": "/song_cranes", "title": "Журавли", "sound": "https://soundcloud.com/vustin-sound/cranes?si=9de033cd7a944a5abd17cc6d4d1f2382&utm_source=clipboard&utm_medium=text&utm_campaign=social_sharing"}, "streams": {"page": "/song_streams", "title": "Ручейки", "sound": "https://soundcloud.com/vustin-sound/streams"}, "tired": {"page": "/song_i_am_tired", "title": "Я устал", "sound": "https://soundcloud.com/vustin-sound/i_am_tired"}, "simple": {"page": "/song_be_simple", "title": "Будь проще", "sound": "https://soundcloud.com/vustin-sound/bud-proshhe"}, "jesters": {"page": "/song_fools_and_kings", "title": "Шуты и короли", "sound": "https://soundcloud.com/vustin-sound/fools_and_kings"}, "path": {"page": "/song_my_way", "title": "Мой путь", "sound": "https://soundcloud.com/vustin-sound/my_way?si=feba4d5c927e49ce8cbec5bc54897e55&utm_source=clipboard&utm_medium=text&utm_campaign=social_sharing"}, "wife": {"page": "/song_sorceress-wife", "title": "Жена-волшебница", "sound": "https://soundcloud.com/vustin-sound/sorceress_wife"}, "stay": {"page": "/song_i_will_not_leave", "title": "Я не уйду", "sound": "https://soundcloud.com/vustin-sound/i_will_not_leave"}, "forgive": {"page": "/song_forgive_me", "title": "Простите меня", "sound": "https://soundcloud.com/vustin-sound/forgive_me"}, "dad": {"page": "/song_father", "title": "Батя", "sound": "https://soundcloud.com/vustin-sound/father?si=e09bbbddfd284e1389cb75944a469e81&utm_source=clipboard&utm_medium=text&utm_campaign=social_sharing"}, "hearts": {"page": "/song_hidden_hearts", "title": "Спрятанные сердца", "sound": "https://soundcloud.com/vustin-sound/hidden_hearts"}, "spring": {"page": "/song_spring_love", "title": "Весной так хочется любви", "sound": "https://soundcloud.com/vustin-sound/8march"}};
+// User-initiated music only. No automatic playback during release animations.
+let fullSongOwned=false,selectedAudioPage=null,fullSongActive=false,demoPreview=null,demoButton=null,bridgeReady=false,bridgeOrigin=null,requestTimer=null,audioRequest=0;
+const SITE_ORIGINS=['https://vustinsound.com','https://www.vustinsound.com','https://vustinsound.tilda.ws'];
+try{const o=new URL(document.referrer).origin;if(SITE_ORIGINS.includes(o))bridgeOrigin=o;}catch(_){}
+function sendAudio(action,song){if(parent!==window&&bridgeOrigin)parent.postMessage({type:'vustin-game',version:1,action,song,request:action==='hello'?audioRequest:++audioRequest},bridgeOrigin);}
+function resetAudioButton(){if(demoButton){demoButton.textContent='▶ ПОСЛУШАТЬ ПЕСНЮ';demoButton.classList.remove('playing');demoButton=null;}}
+function stopLocalAudio(){if(demoPreview){demoPreview.pause();demoPreview.currentTime=0;demoPreview=null;fullSongActive=false;}}
+function stopSongDemo(){clearTimeout(requestTimer);stopLocalAudio();if(bridgeReady&&fullSongOwned){sendAudio('pause');fullSongActive=false;}fullSongOwned=false;selectedAudioPage=null;resetAudioButton();}
+function stopRealPreview(){} // Legacy release lifecycle calls remain harmless.
+function primeReleasePreview(){} // Never silently prime audible media.
+function playRealPreview(){}
+window.addEventListener('message',e=>{
+ if((e.source!==parent&&e.source!==top)||e.origin!==bridgeOrigin)return;
+ const d=e.data;if(!d||d.type!=='vustin-player'||d.version!==1)return;
+ if(d.event==='ready'){bridgeReady=true;return;}
+ if(d.event!=='state'||d.request!==audioRequest)return;
+ stopLocalAudio();fullSongActive=!!(d.playing||d.pending);
+ if(fullSongActive)clearTimeout(requestTimer);
+ if(selectedAudioPage&&d.page!==selectedAudioPage){fullSongOwned=false;selectedAudioPage=null;resetAudioButton();}
+ if(!fullSongActive){const failedButton=demoButton;const failedSong=[...songs,...season2Songs].find(s=>GAME_TRACKS[s.id]&&GAME_TRACKS[s.id].page===selectedAudioPage);fullSongOwned=false;resetAudioButton();if(d.failed&&failedButton&&failedSong)songSiteFallback(failedSong,failedButton);}
+});
+function songSiteFallback(song,btn){
+ const m=GAME_TRACKS[song.id];if(!m)return;
+ const old=btn.parentElement.querySelector('.full-song-link');if(old)old.remove();
+ const link=document.createElement('a');link.className='full-song-link';link.textContent='Открыть полную песню на сайте ↗';
+ link.href='https://vustinsound.com'+m.page;link.target='_blank';link.rel='noopener';
+ link.style.cssText='display:block;padding:10px;font-size:13px;';link.onclick=e=>{e.stopPropagation();stopSongDemo();};btn.after(link);
+ toast('Полная песня доступна по ссылке на сайте.');
 }
 function playSongDemo(ev,id,btn){
- if(ev){ev.stopPropagation();ev.preventDefault()}
- const song=songs.find(x=>x.id===id); if(!song||!song.preview)return;
- if(demoPreview&&demoButton===btn){stopSongDemo();return}
- stopSongDemo(); stopRealPreview();
- try{
-  demoButton=btn;btn.textContent='■ ОСТАНОВИТЬ';btn.classList.add('playing');
-  demoPreview=new Audio(song.preview+(song.preview.includes('?')?'&':'?')+'v=14.2');
-  demoPreview.volume=.78;
-  demoPreview.addEventListener('ended',stopSongDemo,{once:true});
-  demoPreview.play().catch(()=>{stopSongDemo();toast('Нажми ещё раз, чтобы включить демо')});
- }catch(e){stopSongDemo()}
+ if(ev){ev.stopPropagation();ev.preventDefault();}
+ const song=[...songs,...season2Songs].find(x=>x.id===id);if(!song)return;
+ if(demoButton===btn){stopSongDemo();return;}
+ stopSongDemo();
+ if(GAME_TRACKS[id]){
+  if(!bridgeReady){songSiteFallback(song,btn);return;}
+  demoButton=btn;btn.textContent='■ ОСТАНОВИТЬ';btn.classList.add('playing');fullSongActive=true;fullSongOwned=true;selectedAudioPage=GAME_TRACKS[id].page;sendAudio('play',id);
+  requestTimer=setTimeout(()=>{stopSongDemo();songSiteFallback(song,btn);},15000);return;
+ }
+ // No verified full recording: honest, explicit fragment fallback.
+ if(!song.preview)return;
+ // Embedded playback of unmapped fragments is disabled: the host may already be playing.
+ if(parent!==window){toast('Полная запись этой песни пока не подключена.');return;}
+ try{demoButton=btn;btn.textContent='■ ОСТАНОВИТЬ ФРАГМЕНТ';btn.classList.add('playing');demoPreview=new Audio(song.preview);demoPreview.volume=.78;fullSongActive=true;const audio=demoPreview;
+ demoPreview.addEventListener('ended',()=>{if(demoPreview===audio)stopSongDemo();},{once:true});demoPreview.play().catch(()=>{if(demoPreview!==audio)return;stopSongDemo();toast('Не удалось включить фрагмент. Попробуй ещё раз.');});}catch(_){stopSongDemo();}
 }
+window.addEventListener('pagehide',stopSongDemo);
+document.addEventListener('visibilitychange',()=>{if(document.hidden)stopSongDemo();});
+if(parent!==window&&bridgeOrigin){sendAudio('hello');setTimeout(()=>sendAudio('hello'),1000);setTimeout(()=>sendAudio('hello'),3000);}
+
 let soundOn=true,audioCtx=null;
 function ac(){
  if(!audioCtx)audioCtx=new (window.AudioContext||window.webkitAudioContext)();
@@ -298,7 +272,7 @@ function ac(){
  return audioCtx;
 }
 function tone(freq=440,dur=.08,type='sine',gain=.025,delay=0){
- if(!soundOn)return;
+ if(!soundOn||fullSongActive)return;
  try{
   let c=ac(),o=c.createOscillator(),g=c.createGain(),t=c.currentTime+delay;
   o.type=type;o.frequency.setValueAtTime(freq,t);
@@ -310,7 +284,7 @@ function uiClick(){tone(620,.045,'sine',.012)}
 function countdownSound(n){tone(n===1?660:440,.12,'sine',.035);tone(n===1?990:660,.10,'sine',.015,.03)}
 function launchSound(){tone(220,.35,'sawtooth',.022);tone(440,.45,'sine',.025,.08);tone(880,.55,'sine',.018,.15)}
 function successSound(){tone(523,.22,'sine',.02);tone(659,.22,'sine',.018,.12);tone(784,.34,'sine',.018,.24)}
-function toggleSound(){soundOn=!soundOn;document.getElementById('soundToggle').textContent=soundOn?'🔊':'🔇';if(!soundOn)stopRealPreview();if(soundOn)uiClick()}
+function toggleSound(){soundOn=!soundOn;document.getElementById('soundToggle').textContent=soundOn?'🔊':'🔇';if(!soundOn){stopSongDemo();stopRealPreview();}if(soundOn)uiClick()}
 document.addEventListener('click',e=>{if(soundOn&&e.target.closest('.btn,.choice,.card')&&!e.target.closest('#soundToggle'))uiClick()},{capture:true});
 
 
@@ -476,7 +450,7 @@ function onboarding(step,manual=false){
  if(step===1) shell('КАК ИГРАТЬ · 1 ИЗ 3','Твоя задача',
  `<div class='onboard onboarding-art onboarding-one'><div class='onboard-photo' aria-hidden='true'></div><div class='onboard-visual'><div class='ov-disc'></div><div class='ov-meters'><i></i><i></i><i></i></div></div><h2>Построй музыкальный лейбл</h2><p>Выпусти 10 песен VUSTIN SOUND и развивай три главных показателя.</p><div class='stats'><div class='stat'><b>VS₽</b>капитал</div><div class='stat'><b>♫</b>слушатели</div><div class='stat'><b>★</b>репутация</div></div><div class='onboard-dots'>${dots}</div><button class='btn' onclick='onboarding(2,${manual})'>ДАЛЕЕ →</button></div>`);
  if(step===2) shell('КАК ИГРАТЬ · 2 ИЗ 3','Ты — продюсер',
- `<div class='onboard onboarding-art onboarding-two'><div class='onboard-photo' aria-hidden='true'></div><div class='onboard-visual'><div class='ov-headphones'>♪</div><div class='ov-wave'>▂▅▃▇▅▂▆▃</div></div><h2>Сначала послушай материал</h2><p>В карточке каждой песни есть 12-секундное демо. Сравни песни, выбери релиз, а затем решай, сколько вложить в студию, аранжировку и продвижение.</p><div class='onboard-tip'><b>Дороже ≠ лучше.</b><br>То, что подходит одной песне, может не сработать с другой.</div><div class='onboard-dots'>${dots}</div><button class='btn' onclick='onboarding(3,${manual})'>ДАЛЕЕ →</button></div>`);
+ `<div class='onboard onboarding-art onboarding-two'><div class='onboard-photo' aria-hidden='true'></div><div class='onboard-visual'><div class='ov-headphones'>♪</div><div class='ov-wave'>▂▅▃▇▅▂▆▃</div></div><h2>Сначала послушай материал</h2><p>Слушай полные песни через плеер сайта. Для двух песен полные записи пока не подключены. Сравни песни, выбери релиз, а затем решай, сколько вложить в студию, аранжировку и продвижение.</p><div class='onboard-tip'><b>Дороже ≠ лучше.</b><br>То, что подходит одной песне, может не сработать с другой.</div><div class='onboard-dots'>${dots}</div><button class='btn' onclick='onboarding(3,${manual})'>ДАЛЕЕ →</button></div>`);
  if(step===3) shell('КАК ИГРАТЬ · 3 ИЗ 3','Деньги и результат',
  `<div class='onboard onboarding-art onboarding-three'><div class='onboard-photo' aria-hidden='true'></div><div class='onboard-visual'><div class='ov-chart'>▁▂▃▅▆█</div><div class='ov-coin'>VS₽</div></div><h2>Каждый релиз — риск</h2><p>Релиз может принести прибыль или убыток. Изучай характер песни, следи за бюджетом и принимай решения как продюсер.</p><div class='onboard-tip'>После премьеры ты увидишь прослушивания, доход, новых слушателей и результат своих решений.</div><div class='onboard-dots'>${dots}</div><button class='btn' onclick='${manual?"gameSplash()":"markOnboardingSeen();start()"}'>${manual?'← ВЕРНУТЬСЯ В МЕНЮ':'ПОНЯТНО. Я ПРОДЮСЕР →'}</button></div>`);
 }
@@ -505,7 +479,7 @@ function chooseSong(){
     <div class='kicker'>${status}</div>
     ${songCover(song)}<h3>${song.name}</h3>
     <div class='desc'>${song.desc}</div>
-    <button type='button' class='demo-btn listen-song-btn' onclick='playSongDemo(event,"${song.id}",this)'><span class='listen-icon'>▶</span><span>ПОСЛУШАТЬ ПЕСНЮ</span></button><div class='demo-note'>фрагмент · 12 сек.</div>
+    <button type='button' class='demo-btn listen-song-btn' onclick='playSongDemo(event,"${song.id}",this)'><span class='listen-icon'>▶</span><span>ПОСЛУШАТЬ ПЕСНЮ</span></button><div class='demo-note'>${GAME_TRACKS[song.id]?'полная песня · плеер сайта':'полная запись пока не подключена'}</div>
     <div class='song-tags'>${song.tags.map(t=>`<span class='tag'>${t}</span>`).join('')}</div>
     ${released?`<span class='tag' style='background:#123b39;color:#9fe0c2;border-color:#2f665d'>РЕЛИЗ СОСТОЯЛСЯ</span>`:''}
     ${selected&&u&&!released?`<button class='btn song-continue' onclick='event.stopPropagation();stopSongDemo();state.recoveryPackage!==undefined?applyRecoveryPackage():goalScreen()'>К ПЛАНУ РЕЛИЗА →</button>`:''}
@@ -980,7 +954,7 @@ function runReleaseShow(result){
    renderReleaseFrame(session,scene+`<div class="release-show"><div class="release-count">${n}</div><div class="release-song">${song}</div></div>`);countdownSound(n);
    if(n>1){n--;releaseShowTimeout(session,countdown,720)}
    else releaseShowTimeout(session,()=>{
-     renderReleaseFrame(session,scene+`<div class="release-show"><div class="release-flash"></div><div class="release-word">РЕЛИЗ</div><div class="release-song">${song}</div><div class="release-disc" style="position:relative"></div><div class="now-playing">♪ Сейчас звучит: ${song}</div></div>`);launchSound();releaseShowTimeout(session,playRealPreview,260);
+     renderReleaseFrame(session,scene+`<div class="release-show"><div class="release-flash"></div><div class="release-word">РЕЛИЗ</div><div class="release-song">${song}</div><div class="release-disc" style="position:relative"></div><div class="now-playing">♪ Выходит релиз: ${song}</div></div>`);launchSound();releaseShowTimeout(session,playRealPreview,260);
      releaseShowTimeout(session,()=>streamsPhase(result,scene,song,session),1050);
    },720);
  }
@@ -1838,7 +1812,7 @@ function season2SongCatalog(){
  const count=(career.season2Releases||[]).length;
  shell('Сезон 2 · Новые песни','Каталог новых релизов',
  `<div class='card' style='cursor:default'><div class='kicker'>${count}/10 ПЕСЕН ВЫПУЩЕНО · НЕДЕЛЯ ${Math.min(season2Week(),12)}/12</div><p class='desc'>10 новых композиций VUSTIN SOUND. Каждый релиз занимает одну неделю из 12. Инфраструктура снижает расходы и увеличивает результаты. 12-секундные фрагменты доступны для прослушивания. Оригинальные обложки с официального сайта показаны там, где они подтверждены.</p><p class='desc'>Капитал: <b>${fmt(career.cash)} VS₽</b> · Слушатели: <b>${fmt(career.listeners)}</b> · Репутация: <b>${career.rep}</b></p></div>
- <div class='grid'>${season2Songs.map(song=>{let done=season2Released(song.id),active=season2SelectedSong===song.id&&!done;return `<div class='card song-choice-card ${active?'sel':''}' style='${done?'opacity:.62;cursor:default': 'cursor:pointer'}' ${done||season2Week()>12?'':`onclick='season2SelectSong("${song.id}")'`}><div class='kicker'>${done?'✓ РЕЛИЗ СОСТОЯЛСЯ':song.genre}</div>${song.cover?`<img class="season2-cover" src="${song.cover}" alt="Обложка песни ${song.name}" loading="lazy" referrerpolicy="no-referrer" onerror="this.style.display='none'">`:`<div class="season2-cover-placeholder" aria-label="Обложка пока не найдена"><span>VUSTIN SOUND</span><strong>${song.name}</strong><small>Обложка ожидается</small></div>`}<h3>${song.name}</h3><audio controls preload="none" onclick="event.stopPropagation()" style="width:100%;max-width:100%;margin:8px 0" src="${song.preview}" aria-label="Фрагмент песни ${song.name}"></audio><p class='desc'>Потенциал качества: ${song.p[0]} · Эмоциональность: ${song.p[1]} · Охват: ${song.p[2]}</p>${officialSongLink(song.id)}<div class='song-tags'><span class='tag'>${song.genre}</span></div>${active?`<div class='chosen-hint'>✓ ПЕСНЯ ВЫБРАНА</div>`:''}</div>`}).join('')}</div>
+ <div class='grid'>${season2Songs.map(song=>{let done=season2Released(song.id),active=season2SelectedSong===song.id&&!done;return `<div class='card song-choice-card ${active?'sel':''}' style='${done?'opacity:.62;cursor:default': 'cursor:pointer'}' ${done||season2Week()>12?'':`onclick='season2SelectSong("${song.id}")'`}><div class='kicker'>${done?'✓ РЕЛИЗ СОСТОЯЛСЯ':song.genre}</div>${song.cover?`<img class="season2-cover" src="${song.cover}" alt="Обложка песни ${song.name}" loading="lazy" referrerpolicy="no-referrer" onerror="this.style.display='none'">`:`<div class="season2-cover-placeholder" aria-label="Обложка пока не найдена"><span>VUSTIN SOUND</span><strong>${song.name}</strong><small>Обложка ожидается</small></div>`}<h3>${song.name}</h3><button class='demo-btn' onclick='playSongDemo(event,"${song.id}",this)'>▶ ПОСЛУШАТЬ ПЕСНЮ</button><div class='demo-note'>${GAME_TRACKS[song.id]?'полная песня · плеер сайта':'полная запись пока не подключена'}</div><p class='desc'>Потенциал качества: ${song.p[0]} · Эмоциональность: ${song.p[1]} · Охват: ${song.p[2]}</p>${officialSongLink(song.id)}<div class='song-tags'><span class='tag'>${song.genre}</span></div>${active?`<div class='chosen-hint'>✓ ПЕСНЯ ВЫБРАНА</div>`:''}</div>`}).join('')}</div>
  <div class='nav'>${season2Week()>12?`<button class='btn' onclick='season2Finale()'>ИТОГИ СЕЗОНА →</button>`:''}<button class='btn alt' onclick='season2Infrastructure(true)'>← ИНФРАСТРУКТУРА</button><button class='btn alt' ${season2Week()<=12?'':'disabled'} onclick='season2WaitWeek()'>ПРОПУСТИТЬ НЕДЕЛЮ</button><button class='btn' ${season2SelectedSong&&!season2Released(season2SelectedSong)&&season2Week()<=12?'':'disabled'} onclick='season2StartProduction(season2SelectedSong)'>ДАЛЕЕ →</button></div>`);
 }
 
@@ -2044,7 +2018,7 @@ function season2Finale(){
  <div class='card' style='cursor:default'><div class='kicker'>СЕЗОН 2 ЗАВЕРШЁН · 12 НЕДЕЛЬ</div><h2>Музыка остаётся с тобой</h2><p class='desc'>Ты выбирал песни, распределял бюджет и развивал VUSTIN RECORDS. Теперь можно посмотреть, какой лейбл получился, и вернуться к настоящей музыке.</p>
  <div class='stats'><div class='stat'><b>${fmt(career.cash)}</b>VS₽ капитал сейчас</div><div class='stat'><b>${fmt(career.listeners)}</b>слушателей за карьеру</div><div class='stat'><b>${career.rep}</b>репутация сейчас</div><div class='stat'><b>${fmt(career.advanceDebt||0)}</b>VS₽ остаток долга</div></div></div>
  <div class='card' style='cursor:default;margin-top:14px'><div class='kicker'>ТВОЙ ВТОРОЙ СЕЗОН</div><div class='stats'><div class='stat'><b>${releases.length}/10</b>песен выпущено</div><div class='stat'><b>${career.season2ProjectsDone||0}</b>проектов проведено</div><div class='stat'><b>${levels}/18</b>уровней инфраструктуры</div></div><p class='desc'>Песни и проекты конкурировали за 12 игровых недель. Выпуск всех десяти песен не был обязательным условием завершения сезона.</p></div>
- ${best?`<div class='card' style='cursor:default;margin-top:14px'><div class='kicker'>САМЫЙ СЛУШАЕМЫЙ РЕЛИЗ СЕЗОНА 2 · НА ПРЕМЬЕРЕ</div><h3>${best.song}</h3><p class='desc'>${fmt(best.streams)} прослушиваний при выпуске. Игровые показатели не отражают реальные прослушивания песни.</p>${bestSong?`<audio controls preload="none" src="${bestSong.preview}" aria-label="Фрагмент песни ${bestSong.name}" style="width:100%;margin:12px 0"></audio>`:''}${officialSongLink(best.songId)}</div>`:`<div class='card' style='cursor:default;margin-top:14px'><h3>Ты сосредоточился на развитии лейбла</h3><p class='desc'>Во втором сезоне новых релизов не было. Все песни можно открыть в игровом каталоге и послушать их фрагменты.</p></div>`}
+ ${best?`<div class='card' style='cursor:default;margin-top:14px'><div class='kicker'>САМЫЙ СЛУШАЕМЫЙ РЕЛИЗ СЕЗОНА 2 · НА ПРЕМЬЕРЕ</div><h3>${best.song}</h3><p class='desc'>${fmt(best.streams)} прослушиваний при выпуске. Игровые показатели не отражают реальные прослушивания песни.</p>${bestSong?`<button class='demo-btn' onclick='playSongDemo(event,"${bestSong.id}",this)'>▶ ПОСЛУШАТЬ ПЕСНЮ</button>`:''}${officialSongLink(best.songId)}</div>`:`<div class='card' style='cursor:default;margin-top:14px'><h3>Ты сосредоточился на развитии лейбла</h3><p class='desc'>Во втором сезоне новых релизов не было. Все песни можно открыть в игровом каталоге и послушать их фрагменты.</p></div>`}
  <details class='card career-details' style='cursor:default;margin-top:14px'><summary>Релизы второго сезона (${releases.length})</summary>${releases.length?releases.map(r=>`<div class='note'><h3>${r.song}</h3><p class='desc'>Неделя ${r.week} · ${fmt(r.streams)} прослушиваний при выпуске · ${fmt(r.income)} VS₽ выручки релиза</p>${officialSongLink(r.songId)}</div>`).join(''):`<p class='desc'>В этом сезоне релизы не выпускались.</p>`}</details>
  <p class='desc'>Прогресс сохранён. Просмотр итогов, инфраструктуры и песен не меняет капитал и не запускает новые игровые недели.</p>
  <div class='nav'><button class='btn' onclick='season2SongCatalog()'>ПОСЛУШАТЬ ПЕСНИ ИГРЫ →</button><button class='btn alt' onclick='season2Infrastructure(true)'>МОЯ ИНФРАСТРУКТУРА</button><button class='btn alt' onclick='seasonFinale()'>ИТОГИ ПЕРВОГО СЕЗОНА</button><button class='btn alt' onclick='newCareerConfirmed()'>НОВАЯ КАРЬЕРА</button></div>`);
