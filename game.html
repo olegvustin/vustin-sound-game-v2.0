@@ -185,6 +185,7 @@ function primeReleasePreview(){
  }catch(e){}
 }
 function playRealPreview(){
+ const playbackSession=typeof activeReleaseShow==='undefined'?null:activeReleaseShow;
  if(!soundOn||!state.song)return;
  const src=previewSrcForSong(state.song);
  if(!src)return;
@@ -199,6 +200,7 @@ function playRealPreview(){
   const promise=currentPreview.play();
   if(promise&&promise.catch){
    promise.catch(()=>{
+    if(playbackSession&&!currentReleaseShow(playbackSession))return;
     // Fallback: show an explicit user-gesture play control if the browser blocks delayed playback.
     const host=document.querySelector('.now-playing');
     if(host)host.innerHTML=`<button type="button" class="btn" style="padding:10px 16px" onclick="playRealPreview()">▶ СЛУШАТЬ ФРАГМЕНТ</button>`;
@@ -346,6 +348,7 @@ function upgradeCost(key){
 }
 function wallet(){ $('#wallet').textContent=fmt(career.cash)+' VS₽';}
 function shell(k,t,body){
+if(typeof activeReleaseShow!=='undefined')cancelReleaseShow();
 let scene='office',place='КАБИНЕТ ПРОДЮСЕРА',icon='◈',step=0;
 if(k.includes('рынок')||k.includes('рынок'.toUpperCase())||t.includes('рынке')){scene='market';place='МУЗЫКАЛЬНЫЙ РЫНОК';icon='⌁';step=1}
 if(t.includes('Запись')||t.includes('Аранжировка')){scene='studio';place='СТУДИЯ ЗВУКОЗАПИСИ';icon='♫';step=2}
@@ -857,33 +860,67 @@ function release(){
   toast('Ошибка запуска релиза: '+(err&&err.message?err.message:'неизвестная ошибка'));
  }
 }
+let releaseShowSerial=0,activeReleaseShow=null;
+function currentReleaseShow(session){return !!session&&!session.done&&activeReleaseShow===session}
+function clearReleaseShowTasks(session){
+ session.timers.forEach(id=>clearTimeout(id));session.timers.clear();
+ if(typeof cancelAnimationFrame==='function')session.frames.forEach(id=>cancelAnimationFrame(id));session.frames.clear();
+}
+function cancelReleaseShow(){
+ const session=activeReleaseShow;if(!session)return;
+ session.done=true;activeReleaseShow=null;clearReleaseShowTasks(session);stopRealPreview();
+}
+function releaseShowTimeout(session,callback,delay){
+ const id=setTimeout(()=>{session.timers.delete(id);if(currentReleaseShow(session))callback()},delay);session.timers.add(id);
+}
+function releaseShowFrame(session,callback){
+ const id=requestAnimationFrame(now=>{session.frames.delete(id);if(currentReleaseShow(session))callback(now)});session.frames.add(id);
+}
+function renderReleaseFrame(session,html){
+ if(!currentReleaseShow(session))return;
+ const screen=$('#screen'),hadFocus=document.activeElement?.classList?.contains('release-skip');
+ screen.innerHTML=html+`<div class="release-skip-controls" style="text-align:center;margin:12px 0"><button type="button" class="btn alt release-skip" onclick="skipReleaseShow(${session.id})">К РЕЗУЛЬТАТУ →</button></div>`;
+ if(hadFocus){const button=screen.querySelector('.release-skip');if(button)button.focus({preventScroll:true})}
+}
+function finishReleaseShow(id,skipped=false){
+ const session=activeReleaseShow;if(!session||session.id!==id||session.done)return;
+ session.done=true;activeReleaseShow=null;clearReleaseShowTasks(session);
+ if(skipped)stopRealPreview();
+ showReleaseResult(session.result);
+ if(skipped){const title=document.querySelector('#screen .section-title');if(title&&title.focus){title.setAttribute('tabindex','-1');title.focus({preventScroll:false})}}
+}
+function skipReleaseShow(id){finishReleaseShow(id,true)}
 function runReleaseShow(result){
+ cancelReleaseShow();
+ const session={id:++releaseShowSerial,result,done:false,timers:new Set(),frames:new Set()};activeReleaseShow=session;
  document.body.dataset.scene='premiere';
- let screen=$('#screen'),song=state.song?state.song.name:'Новый релиз';
+ const song=state.song?state.song.name:'Новый релиз';
  const scene=`<div class="scene-head"><div class="scene-place"><i>●</i>ПРЕМЬЕРА</div><div class="scene-route">${[1,2,3,4,5].map(x=>`<span class="on"></span>`).join('')}</div></div>`;
  let n=3;
  function countdown(){
-   screen.innerHTML=scene+`<div class="release-show"><div class="release-count">${n}</div><div class="release-song">${song}</div></div>`; countdownSound(n);
-   if(n>1){n--;setTimeout(countdown,720)}
-   else setTimeout(()=>{
-     screen.innerHTML=scene+`<div class="release-show"><div class="release-flash"></div><div class="release-word">РЕЛИЗ</div><div class="release-song">${song}</div><div class="release-disc" style="position:relative"></div><div class="now-playing">♪ Сейчас звучит: ${song}</div></div>`; launchSound();setTimeout(playRealPreview,260);
-     setTimeout(()=>streamsPhase(result,scene,song),1050);
-   },720)
+   renderReleaseFrame(session,scene+`<div class="release-show"><div class="release-count">${n}</div><div class="release-song">${song}</div></div>`);countdownSound(n);
+   if(n>1){n--;releaseShowTimeout(session,countdown,720)}
+   else releaseShowTimeout(session,()=>{
+     renderReleaseFrame(session,scene+`<div class="release-show"><div class="release-flash"></div><div class="release-word">РЕЛИЗ</div><div class="release-song">${song}</div><div class="release-disc" style="position:relative"></div><div class="now-playing">♪ Сейчас звучит: ${song}</div></div>`);launchSound();releaseShowTimeout(session,playRealPreview,260);
+     releaseShowTimeout(session,()=>streamsPhase(result,scene,song,session),1050);
+   },720);
  }
  countdown();
 }
-function streamsPhase(result,scene,song){
- let last=career.history[0],target=last?last.streams:0,screen=$('#screen');
- screen.innerHTML=scene+`<div class="release-show"><div class="release-live">Релиз в эфире</div><div class="stream-counter" id="liveStreams">0</div><div class="stream-label">прослушиваний</div><div class="release-disc" style="position:relative;width:120px;height:120px"></div></div>`;
- let el=document.getElementById('liveStreams'),start=performance.now(),dur=1900;
+function streamsPhase(result,scene,song,session=activeReleaseShow){
+ if(!currentReleaseShow(session))return;
+ const target=Number(result.streams)||0;
+ renderReleaseFrame(session,scene+`<div class="release-show"><div class="release-live">Релиз в эфире</div><div class="stream-counter" id="liveStreams">0</div><div class="stream-label">прослушиваний</div><div class="release-disc" style="position:relative;width:120px;height:120px"></div></div>`);
+ const el=document.getElementById('liveStreams'),start=performance.now(),dur=1900;
  function tick(now){
-   let p=Math.min(1,(now-start)/dur),ease=1-Math.pow(1-p,3);
+   const p=Math.min(1,(now-start)/dur),ease=1-Math.pow(1-p,3);
    el.textContent=fmt(Math.round(target*ease));
-   if(p<1)requestAnimationFrame(tick);
-   else setTimeout(()=>showReleaseResult(result),550);
+   if(p<1)releaseShowFrame(session,tick);
+   else releaseShowTimeout(session,()=>finishReleaseShow(session.id),550);
  }
- requestAnimationFrame(tick);
+ releaseShowFrame(session,tick);
 }
+
 function showReleaseResult(result){
  wallet();
  $('#screen').innerHTML=`<div class="scene-head"><div class="scene-place"><i>●</i>ИТОГИ ПРЕМЬЕРЫ</div><div class="scene-route">${[1,2,3,4,5].map(x=>`<span class="on"></span>`).join('')}</div></div><div class="reveal-card"><div class='kicker'>${result.k}</div><h2 class='section-title'>${result.t}</h2>${result.b}</div>`;
