@@ -852,6 +852,7 @@ function streamsPhase(result,scene,song){
  requestAnimationFrame(tick);
 }
 function showReleaseResult(result){
+ wallet();
  $('#screen').innerHTML=`<div class="scene-head"><div class="scene-place"><i>●</i>ИТОГИ ПРЕМЬЕРЫ</div><div class="scene-route">${[1,2,3,4,5].map(x=>`<span class="on"></span>`).join('')}</div></div><div class="reveal-card"><div class='kicker'>${result.k}</div><h2 class='section-title'>${result.t}</h2>${result.b}</div>`;
  document.body.dataset.scene='premiere'; successSound();
 }
