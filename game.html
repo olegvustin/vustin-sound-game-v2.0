@@ -147,7 +147,7 @@
 .chosen-hint{color:#efc45c;font-size:12px;font-weight:900;margin-top:12px;letter-spacing:.5px}
 .song-choice-card audio{position:relative;z-index:3}
 </style></head>
-<body>
+<body class="vs-blue">
 <div id="vustin-producer-native">
 </div>
 <div class='app'><div class='top'><div class='brand'>VUSTIN SOUND · ПРОДЮСЕР</div><div id='wallet' class='money'>10 000 VS₽</div></div><main id='screen' class='panel'></main></div>
@@ -364,7 +364,7 @@ document.body.dataset.mobileScreen=
  t==='Продвижение'?'promo':
  t==='Что происходит на рынке'?'market':
  t==='Продюсерское решение'?'dilemma':
- t.startsWith('VUSTIN RECORDS ·')?'career':
+ (t==='Кабинет продюсера'||t.startsWith('VUSTIN RECORDS ·'))?'career':
  t==='Инвестируй в постоянные активы'?'development':
  t==='История релизов'?'history':
  t==='Продолжить сезон'?'save':'other';
@@ -1381,16 +1381,24 @@ function buyUpgrade(key){
 }
 function careerScreen(){
  if(career.releases>=10)return seasonFinale();
- let goal=Math.min(100,Math.round((career.releases/10+career.listeners/50000+career.rep/40)/3*100));
- shell('Карьера',`VUSTIN RECORDS · ${status()}`,`
- <div class='stats'><div class='stat'><b>${fmt(career.cash)}</b>VS₽</div><div class='stat'><b>${fmt(career.listeners)}</b>слушателей</div><div class='stat'><b>${career.rep}</b>репутация</div><div class='stat'><b>${career.releases}/10</b>релизов</div></div>
+ const goal=Math.min(100,Math.round((career.releases/10+career.listeners/50000+career.rep/40)/3*100));
+ const draft=hasReleaseDraft(),song=draft?state.song:null;
+ const route=draft&&resumeRoute?resumeRoute.name:'';
+ const step=!draft?-1:['stageStudio','stageArr','stageCover'].includes(route)?1:route==='stagePromo'?2:['dilemmaScreen','industryEventScreen','industryEventBack','industryConfirmScreen'].includes(route)?3:0;
+ const best=(career.history||[]).reduce((best,item)=>!best||Number(item.streams)>Number(best.streams)?item:best,null);
+ shell('Твой музыкальный лейбл','Кабинет продюсера',`
+ <div class="producer-office">
+ <div class="office-status"><span>${status()}</span><span>Сезон 1 · Выпущено ${career.releases} / 10</span></div>
+ <div class="office-metrics"><div><span>БЮДЖЕТ</span><b>${fmt(career.cash)} <small>VS₽</small></b></div><div><span>АУДИТОРИЯ</span><b>${fmt(career.listeners)} <small>слушателей</small></b></div><div><span>РЕПУТАЦИЯ</span><b>${career.rep} <small>баллов</small></b></div></div>
  ${career.advanceDebt?`<p class='desc'>Обязательство перед дистрибьютором: <b>${fmt(career.advanceDebt)} VS₽</b> (удерживается из доходов)</p>`:''}
+ <div class="office-main"><section class="office-release"><div class="kicker">${draft?'РЕЛИЗ В РАБОТЕ':'СЛЕДУЮЩИЙ РЕЛИЗ'}</div><div class="office-release-body"><div class="office-art"><div class="office-disc" aria-hidden="true"></div>${song?songCover(song,'office-cover'):`<div class="office-cover office-placeholder" aria-hidden="true">VS</div>`}${song?`<button class="btn alt office-demo" onclick='playSongDemo(event,"${song.id}",this)'>▶ ПОСЛУШАТЬ ПЕСНЮ</button>`:''}</div><div class="office-release-copy"><h3>${song?song.name:'Твоя следующая песня'}</h3><span class="small">VUSTIN SOUND</span><p>${draft?'Продолжи подготовку релиза. Выбранные решения и уже оплаченные этапы сохранены.':'Послушай реальные песни, выбери материал и найди свой путь к слушателю.'}</p><button class="btn" onclick='newRelease()'>${draft?'ПРОДОЛЖИТЬ РЕЛИЗ':'ВЫБРАТЬ ПЕСНЮ'} →</button><p class="small">${draft?'Продолжение с сохранённого этапа':career.cash<2500?'Сначала подберём доступный план релиза.':'Начни с песни и продюсерской цели.'}</p></div></div></section>
+ <aside class="office-path"><div class="kicker">ПУТЬ ЛЕЙБЛА</div><h3>От идеи к премьере</h3><p class="desc">Каждый релиз — новый опыт.</p><ol>${['Песня и команда','Звук и обложка','Продвижение','Решения и премьера'].map((name,i)=>`<li ${i===step?'aria-current="step"':''} class="${i===step?'current':''}"><span>${String(i+1).padStart(2,'0')}</span>${name}</li>`).join('')}</ol><p class="office-reward">★ ${best?`Самый слушаемый релиз при выпуске: «${best.song||'Релиз из истории'}» · ${fmt(best.streams)}`:'Твой первый релиз ещё впереди'}</p></aside></div>
+ <div class="office-shortcuts"><button class="office-link" onclick='historyScreen()'><b>История релизов ↗</b><span>Выпущенные песни и их результаты</span></button><button class="office-link" onclick='developmentScreen()'><b>Моя студия ↗</b><span>Команда и развитие инфраструктуры</span></button><a class="office-link" href="https://vustinsound.com/catalog" target="_blank" rel="noopener noreferrer"><b>Каталог VUSTIN SOUND ↗</b><span>Открой полные версии песен</span></a></div>
  <div class='card' style='cursor:default'><div class='kicker'>ПРОГРЕСС СЕЗОНА · ${goal}%</div><h3>Построй устойчивый музыкальный лейбл</h3><p class='desc'>Цели сезона: 10 релизов, 50 000 постоянных слушателей и 40 баллов репутации.</p></div>
- <div class='nav'><button class='btn' onclick='newRelease()'>${hasReleaseDraft()?'ПРОДОЛЖИТЬ РЕЛИЗ':'СЛЕДУЮЩИЙ РЕЛИЗ'} →</button><button class='btn alt' onclick='developmentScreen()'>РАЗВИТИЕ ЛЕЙБЛА</button><button class='btn alt' onclick='historyScreen()'>ИСТОРИЯ</button></div>
  ${labelStageHTML()}${recoveryBudgetHTML()}${financeDashboardHTML()}${catalogSummaryHTML()}
  <details class='card career-details' style='cursor:default;margin-top:14px'><summary>Команда и инфраструктура</summary>
  <div class='stats' style='margin-top:16px'><div class='stat'><b>${career.studioLvl}</b>Студия</div><div class='stat'><b>${career.marketingLvl}</b>Маркетинг</div><div class='stat'><b>${career.videoLvl}</b>Видео</div><div class='stat'><b>${career.teamLvl}</b>Команда</div></div>
- ${staffVisualHTML()}</details>`);
+ ${staffVisualHTML()}</details></div>`);
 }
 function historyScreen(){
 shell('Аналитика','История релизов',
@@ -3382,7 +3390,7 @@ document.addEventListener('click',function(e){
 });
 </script>
 
-<div id='buildVersion' style='display:none'>VUSTIN-PRODUCER-17.10-release-clarity</div><script>
+<div id='buildVersion' style='display:none'>VUSTIN-PRODUCER-17.11-brand-blue</div><script>
 // Ensure only one preview is audible, including after re-rendering song cards.
 document.addEventListener('play', function(event) {
   if (event.target && event.target.tagName === 'AUDIO') {
@@ -3494,5 +3502,35 @@ document.addEventListener('play', function(event) {
  };
 })();
 </script>
+<style>
+/* Approved VUSTIN SOUND blue direction. Shared color tokens; office-specific layout. */
+body.vs-blue{--navy:#0e3753;--dark:#071c2a;--ink:#071c2a;--panel:#12364d;--panel2:#193f58;--pale:#d7effb;--white:#f7fbff;--muted:#b7d2e3;--line:#7195aa;--gold:#ddb45f;--gold2:#f3cf7b;--teal:#a9d9f3;color:var(--white);background:linear-gradient(180deg,#0e3753,#071c2a);background-attachment:fixed}
+body.vs-blue .panel,body.vs-blue[data-scene] .panel{background:linear-gradient(145deg,#10354d,#0b293d);border-color:#365c73;box-shadow:0 24px 70px #03101a55}
+body.vs-blue .panel:before,body.vs-blue .panel:after{background:none;pointer-events:none}
+body.vs-blue .card,body.vs-blue .choice,body.vs-blue .stat{background:#173c54;border-color:#7195aa;box-shadow:none}
+body.vs-blue .btn{background:#d7effb;color:#0e3753;box-shadow:0 8px 24px #041a2b30;border:1px solid #d7effb}
+body.vs-blue .btn:hover:not(:disabled){background:#e9f7ff;box-shadow:0 10px 28px #041a2b40;filter:none}
+body.vs-blue .btn.alt,body.vs-blue .demo-btn{background:#204a64;color:#e5f5ff;border:1px solid #91b5c9;box-shadow:none}
+body.vs-blue .btn.alt:hover:not(:disabled),body.vs-blue .demo-btn:hover{background:#2a5874}
+body.vs-blue .btn:disabled{opacity:.55;cursor:not-allowed}
+body.vs-blue .stat b,body.vs-blue .wallet,body.vs-blue .price{color:#f7fbff}
+body.vs-blue .kicker{color:#b7d2e3}
+body.vs-blue .section-title{font-family:Arial,sans-serif;font-weight:800;letter-spacing:-.025em}
+body.vs-blue .choice.sel,body.vs-blue .card.sel,body.vs-blue .choice.selected,body.vs-blue .choice.active{background:#214e69!important;border-color:#c9edff!important;box-shadow:inset 4px 0 #c9edff!important}
+body.vs-blue .choice.sel:before,body.vs-blue .card.sel:before,body.vs-blue .choice.selected:before,body.vs-blue .choice.selected:after{color:#d7effb}
+body.vs-blue .choice:hover{border-color:#d7effb!important;background:#204962!important}
+body.vs-blue .ux-route{background:#12364d;border-color:#7195aa}body.vs-blue .ux-route li.current{color:#d7effb}body.vs-blue .ux-route li.done{color:#b7d2e3}
+body.vs-blue #screen :is(button,a,.choice,summary):focus-visible{outline:3px solid #d7effb;outline-offset:4px}
+body.vs-blue .release .big-number,body.vs-blue .office-reward{color:#f3cf7b}
+body.vs-blue .song-selection-summary{background:#173c54;border-color:#8bb4cd}
+body.vs-blue .production-context,body.vs-blue .promo-market{background:#12364d;border-color:#7195aa}
+body.vs-blue .release-budget b{color:#f7fbff}
+.producer-office{color:#f7fbff}.office-status{display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px;margin:0 0 22px;color:#b7d2e3;font-size:14px}.office-status span:last-child{padding:7px 16px;border:1px solid #7195aa;border-radius:30px;color:#d7effb}
+.office-metrics{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px;margin:0 0 24px}.office-metrics>div{background:#193f58;border:1px solid #7195aa;border-radius:18px;padding:20px 22px}.office-metrics span{color:#b7d2e3;font-size:12px;font-weight:800;letter-spacing:.06em}.office-metrics b{display:block;font-size:34px;margin-top:8px}.office-metrics small{font-size:14px;font-weight:400;color:#b7d2e3;margin-left:8px}
+.office-main{display:grid;grid-template-columns:minmax(0,1.8fr) minmax(280px,1fr);gap:22px;margin-bottom:22px}.office-release,.office-path{background:#12364d;border:1px solid #7195aa;border-radius:24px;padding:26px;min-width:0}.office-path{background:#193f58}.office-release-body{display:grid;grid-template-columns:minmax(150px,.9fr) minmax(0,1fr);gap:34px;align-items:center;margin-top:26px}.office-art{position:relative;padding-right:22px}.office-cover{position:relative;display:block;width:100%;aspect-ratio:1;object-fit:cover;border-radius:14px;z-index:1}.office-placeholder{display:grid;place-items:center;background:#214e69;font-size:64px;font-weight:900;color:#d7effb}.office-disc{position:absolute;top:0;right:-10px;width:90%;aspect-ratio:1;border-radius:50%;background:repeating-radial-gradient(circle,#082638 0 5px,#0a2c40 6px 8px)}.office-disc:after{content:"";position:absolute;inset:36%;border-radius:50%;background:#d7effb;border:8px solid #0e3753}.office-demo{position:relative;width:100%;margin-top:16px;z-index:2}.office-release-copy h3,.office-path h3{font-family:Arial,sans-serif;font-size:28px;line-height:1.2;margin:12px 0}.office-release-copy p{color:#b7d2e3;line-height:1.65}.office-release-copy .btn{margin-top:12px}.office-path ol{list-style:none;margin:26px 0;padding:0}.office-path li{display:flex;align-items:center;gap:14px;margin:18px 0;color:#b7d2e3}.office-path li span{display:grid;place-items:center;background:#285773;width:34px;height:34px;flex-shrink:0;border-radius:50%;font-size:12px;font-weight:800}.office-path li.current{color:#f7fbff;font-weight:800}.office-path li.current span{background:#d7effb;color:#0e3753}.office-reward{background:#383c30;border-radius:12px;padding:12px;font-size:13px;line-height:1.6}
+.office-shortcuts{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px;margin-bottom:24px}.office-link{display:block;text-align:left;text-decoration:none;font:inherit;padding:20px;background:#12364d;border:1px solid #7195aa;border-radius:18px;color:#d7effb;cursor:pointer}.office-link:hover{background:#204a64}.office-link b{display:block;font-size:18px;margin-bottom:7px}.office-link span{color:#b7d2e3;font-size:13px}
+@media(max-width:900px){.office-main{grid-template-columns:1fr}.office-path ol{display:grid;grid-template-columns:1fr 1fr;gap:10px}.office-path li{margin:4px 0}.office-metrics b{font-size:28px}.office-metrics small{display:block;margin-left:0}}
+@media(max-width:540px){.office-metrics{gap:7px}.office-metrics>div{padding:12px 9px;border-radius:12px}.office-metrics span{font-size:10px}.office-metrics b{font-size:23px}.office-metrics small{font-size:11px}.office-release,.office-path{padding:18px}.office-release-body{grid-template-columns:1fr;gap:20px}.office-art{max-width:220px}.office-release-copy h3{font-size:24px}.office-shortcuts{grid-template-columns:1fr;gap:10px}.office-path li{font-size:12px;gap:8px}.office-status{font-size:12px}.office-link{padding:16px}}
+</style>
 </body>
 </html>
