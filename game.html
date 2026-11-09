@@ -2785,17 +2785,12 @@ padding:9px;border-radius:10px;margin-top:10px;white-space:pre-wrap}
 
 
 
-/* v9.0 — published Tilda layout spacing fix */
+/* Standalone iframe: legacy Tilda offsets must not pull the app above the viewport.
+   This empty compatibility marker precedes .app; keep it in normal flow. */
 #vustin-producer-native{
-  margin-top:-590px !important;
+  margin-top:0 !important;
   position:relative;
   z-index:5;
-}
-@media(max-width:980px){
-  #vustin-producer-native{margin-top:0 !important;}
-}
-@media(max-width:640px){
-  #vustin-producer-native{margin-top:-770px !important;}
 }
 
 
@@ -2938,7 +2933,6 @@ padding:9px;border-radius:10px;margin-top:10px;white-space:pre-wrap}
 
 /* v9.5 — Mobile Polish */
 @media(max-width:640px){
- #vustin-producer-native{margin-top:-810px !important}
 
  /* One full swipe card + a subtle hint of the next card */
  .grid .card,.choices .choice{
