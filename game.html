@@ -451,7 +451,7 @@ function onboarding(step,manual=false){
  step=Math.max(1,Math.min(3,Number(step)||1));
  const pages=[
  {title:'Построй свой лейбл',lead:'От первой песни до собственного каталога VUSTIN SOUND.',art:'one',items:[['₽','10 000 VS₽ на старте','Следи за капиталом и оставляй резерв.'],['♫','10 релизов в первом сезоне','Выбирай песни и находи свою аудиторию.'],['☆','Расти как продюсер','Цели: 50 000 слушателей и 40 репутации.']],tip:'После 10 релизов откроется второй сезон: 12 недель для новых песен и развития лейбла.'},
- {title:'Послушай. Выбери. Выпусти.',lead:'Подбирай решения под характер песни, а не под самую высокую цену.',art:'two',items:[['♪','Послушай песню','Полная запись играет в плеере сайта.'],['◎','Подготовь релиз','Выбери материал, студию и аранжировку.'],['↗','Найди слушателей','Реши, сколько вложить в продвижение.']],tip:'Дороже ≠ лучше. То, что подходит одной песне, может не сработать с другой.'},
+ {title:'Послушай. Выбери. Выпусти.',lead:'Подбирай решения под характер песни, а не под самую высокую цену.',art:'two',items:[['♪','Послушай песню','Полная запись играет в плеере сайта.'],['◎','Подготовь релиз','Выбери материал, студию и аранжировку.'],['→','Найди слушателей','Реши, сколько вложить в продвижение.']],tip:'Дороже ≠ лучше. То, что подходит одной песне, может не сработать с другой.'},
  {title:'Каждый релиз — риск',lead:'Прибыль не гарантирована. Сравнивай вложения и результат.',art:'three',items:[['₽','Береги бюджет','Релиз может принести прибыль или убыток.'],['♫','Смотри на результат','После премьеры увидишь прослушивания, доход и новых слушателей.'],['☆','Учись на решениях','Разбирай итоги и учитывай характер следующей песни.']],tip:'Карьеру можно продолжить позже. Деньги и прогресс сохраняются между релизами.'}
  ];
  const p=pages[step-1];
@@ -460,7 +460,7 @@ function onboarding(step,manual=false){
  const chart=`<svg viewBox="0 0 240 180" aria-hidden="true" focusable="false"><rect x="12" y="20" width="216" height="140" rx="22" fill="#12364d" stroke="#7195aa"/><path d="M42 48v90h156" fill="none" stroke="#7195aa" stroke-width="3"/><g fill="#75c8f1"><rect x="59" y="108" width="24" height="30" rx="4"/><rect x="97" y="84" width="24" height="54" rx="4"/><rect x="135" y="60" width="24" height="78" rx="4"/></g><circle cx="184" cy="63" r="26" fill="#dfb75f"/><path d="m184 45 5 12 13 1-10 9 3 13-11-7-11 7 3-13-10-9 13-1z" fill="#12364d"/></svg>`;
  const illustration=[vinyl,headphones,chart][step-1];
  shell('КАК ИГРАТЬ · '+step+' ИЗ 3',p.title,`<section class="how-to" aria-labelledby="how-to-title">
- <header class="how-to-top"><p>Как играть <span>· ${step} из 3</span></p><button type="button" class="how-to-close" onclick="${manual?'gameSplash()':'quickOnboarding()'}">${manual?'В меню':'К началу'} <span aria-hidden="true">↗</span></button></header>
+ <header class="how-to-top"><p>Как играть <span>· ${step} из 3</span></p><button type="button" class="how-to-close" onclick="${manual?'gameSplash()':'quickOnboarding()'}">${manual?'В меню':'К началу'} <span aria-hidden="true">→</span></button></header>
  <div class="how-to-intro"><div><h1 id="how-to-title">${p.title}</h1><p class="how-to-lead">${p.lead}</p></div><div class="how-to-art how-to-art-${p.art}" aria-hidden="true">${illustration}</div></div>
  <ol class="how-to-cards">${p.items.map(([icon,title,text])=>`<li><span class="how-to-icon" aria-hidden="true">${icon}</span><div><h2>${title}</h2><p>${text}</p></div></li>`).join('')}</ol>
  <p class="how-to-tip">${p.tip}</p>
