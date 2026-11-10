@@ -6132,3 +6132,117 @@ for(const [name,season] of [['seasonFinale',1],['season2Finale',2]]){const prev=
 .reward-link-fallback input{display:block;width:100%;min-width:0;box-sizing:border-box;margin:8px 0;padding:10px;border-radius:8px;background:#fff;color:#12364d;font-size:14px}
 .reward-link-fallback input[hidden]{display:none}
 </style>
+<style id="song-cover-choices">/* Full artwork is the choice, not a decorative generic icon. */
+#screen .cover-choice-grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;align-items:stretch}
+#screen .cover-art-option{min-width:0;padding:12px;display:flex;flex-direction:column;gap:9px;text-align:left;overflow:hidden}
+#screen .cover-choice-art{display:block;position:relative;width:100%;aspect-ratio:1;border-radius:10px;overflow:hidden;background:#102d3e;border:1px solid #7896a455;flex:none}
+#screen .cover-choice-image{display:block;width:100%;height:100%;object-fit:contain;object-position:center;margin:0;max-width:none;border-radius:0}
+#screen .cover-art-option .production-title{font-size:16px;line-height:1.25;overflow-wrap:normal;word-break:normal}
+#screen .cover-art-option .production-price{font-size:15px}
+#screen .cover-art-option .production-desc{font-size:12px;line-height:1.45}
+#screen .cover-art-option .production-selection{margin-top:auto}
+#screen .cover-art-option.is-selected .cover-choice-art{border-color:var(--gold,#dfbd75);box-shadow:0 0 0 1px var(--gold,#dfbd75)}
+#screen .cover-history-image{display:block;width:64px;height:64px;object-fit:contain;border-radius:7px;margin:0 0 8px;background:#102d3e}
+#screen .cover-image-unavailable{font-size:11px;color:#d5e4ed;object-fit:contain}
+@media(max-width:640px){
+ #screen .cover-choice-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+ #screen .cover-art-option{padding:9px;gap:7px}
+ #screen .cover-art-option .production-title{font-size:14px}
+ #screen .cover-art-option .production-price{font-size:13px}
+ #screen .cover-art-option .production-fit{font-size:11px;line-height:1.3}
+}
+@media(max-width:640px){
+ #screen .cover-choice-grid{grid-template-columns:1fr}
+ #screen .cover-art-option{display:grid;grid-template-columns:clamp(112px,36vw,160px) minmax(0,1fr);align-items:start;column-gap:12px}
+ #screen .cover-choice-art{grid-column:1;grid-row:1 / span 5}
+ #screen .cover-art-option>span:not(.cover-choice-art),#screen .cover-art-option>strong{grid-column:2}
+ #screen .cover-art-option .production-selection{align-self:end;margin-top:3px}
+}
+</style>
+<script id="song-cover-choices-js">window.COVER_ARTWORK={"pharmacy": {"original": "cover-pharmacy-original.webp", "art": "cover-pharmacy-original.webp", "minimal": "cover-pharmacy-minimal.webp", "promo": "cover-pharmacy-promo.webp", "sourceOriginal": "https://static.tildacdn.biz/tild3730-3062-4466-b833-303963306163/__.png"}, "alphabet": {"original": "cover-alphabet-original.webp", "art": "cover-alphabet-original.webp", "minimal": "cover-alphabet-minimal.webp", "promo": "cover-alphabet-promo.webp", "sourceOriginal": "https://static.tildacdn.biz/tild3136-3266-4561-a361-306563373031/ChatGPT_Image_23__20.png"}, "lighthouse": {"original": "cover-lighthouse-original.webp", "art": "cover-lighthouse-original.webp", "minimal": "cover-lighthouse-minimal.webp", "promo": "cover-lighthouse-promo.webp", "sourceOriginal": "https://static.tildacdn.biz/tild6364-6431-4433-b561-646562333265/cd291c9d-7ed5-4735-9.png"}, "solitude100": {"original": "cover-solitude100-original.webp", "art": "cover-solitude100-original.webp", "minimal": "cover-solitude100-minimal.webp", "promo": "cover-solitude100-promo.webp", "sourceOriginal": "https://static.tildacdn.biz/tild3232-3961-4161-b438-653635613963/100___.png"}, "drawyou": {"original": "cover-drawyou-original.webp", "art": "cover-drawyou-original.webp", "minimal": "cover-drawyou-minimal.webp", "promo": "cover-drawyou-promo.webp", "sourceOriginal": "https://static.tildacdn.biz/tild6435-6532-4730-b838-636139616533/photo_2026-06-19_16-.jpg"}, "sandwich": {"original": "cover-sandwich-original.webp", "art": "cover-sandwich-original.webp", "minimal": "cover-sandwich-minimal.webp", "promo": "cover-sandwich-promo.webp", "sourceOriginal": "https://static.tildacdn.biz/tild3036-6162-4464-b933-303366323435/photo_2026-06-19_12-.jpg"}, "cranes": {"original": "cover-cranes-original.webp", "art": "cover-cranes-original.webp", "minimal": "cover-cranes-minimal.webp", "promo": "cover-cranes-promo.webp", "sourceOriginal": "https://static.tildacdn.biz/tild6562-6163-4938-b135-373266356261/ChatGPT_Image_15__20.png"}, "streams": {"original": "cover-streams-original.webp", "art": "cover-streams-original.webp", "minimal": "cover-streams-minimal.webp", "promo": "cover-streams-promo.webp", "sourceOriginal": "https://static.tildacdn.biz/tild3330-3566-4635-b735-343434363965/20a5709c-11b5-48c2-b.png"}, "tired": {"original": "cover-tired-original.webp", "art": "cover-tired-original.webp", "minimal": "cover-tired-minimal.webp", "promo": "cover-tired-promo.webp", "sourceOriginal": "https://static.tildacdn.biz/tild3962-3562-4764-a564-346566326262/_.jpeg"}, "simple": {"original": "cover-simple-original.webp", "art": "cover-simple-original.webp", "minimal": "cover-simple-minimal.webp", "promo": "cover-simple-promo.webp", "sourceOriginal": "https://static.tildacdn.biz/tild3035-6231-4964-b938-313131376633/_______________.jpg"}, "jesters": {"original": "cover-jesters-original.webp", "art": "cover-jesters-original.webp", "minimal": "cover-jesters-minimal.webp", "promo": "cover-jesters-promo.webp", "sourceOriginal": "https://static.tildacdn.biz/tild3039-3732-4364-a537-653234373663/1f6b5610-85d0-4d23-a.png"}, "path": {"original": "cover-path-original.webp", "art": "cover-path-original.webp", "minimal": "cover-path-minimal.webp", "promo": "cover-path-promo.webp", "sourceOriginal": "https://static.tildacdn.biz/tild3333-6433-4664-b430-323962653438/22a8abe6-b8bf-4296-b.png"}, "wife": {"original": "cover-wife-original.webp", "art": "cover-wife-original.webp", "minimal": "cover-wife-minimal.webp", "promo": "cover-wife-promo.webp", "sourceOriginal": "https://static.tildacdn.biz/tild3565-6663-4831-a264-666164363331/b640a1a1-7f52-4c0a-8.png"}, "palimpsest": {"original": "cover-palimpsest-original.webp", "art": "cover-palimpsest-original.webp", "minimal": "cover-palimpsest-minimal.webp", "promo": "cover-palimpsest-promo.webp", "sourceOriginal": "https://static.tildacdn.biz/tild3261-3737-4665-b731-336230646232/photo_2026-07-20_13-.jpg"}, "stay": {"original": "cover-stay-original.webp", "art": "cover-stay-original.webp", "minimal": "cover-stay-minimal.webp", "promo": "cover-stay-promo.webp", "sourceOriginal": "https://static.tildacdn.biz/tild3636-3539-4366-a162-623339623066/photo_2026-07-20_10-.jpg"}, "forgive": {"original": "cover-forgive-original.webp", "art": "cover-forgive-original.webp", "minimal": "cover-forgive-minimal.webp", "promo": "cover-forgive-promo.webp", "sourceOriginal": "https://static.tildacdn.biz/tild3863-3064-4938-b765-666131326530/d5fe09a4-405b-4936-a.png"}, "littlepeople": {"original": "cover-littlepeople-original.webp", "art": "cover-littlepeople-original.webp", "minimal": "cover-littlepeople-minimal.webp", "promo": "cover-littlepeople-promo.webp", "sourceOriginal": "https://static.tildacdn.biz/tild3635-3461-4333-b938-336666333435/photo_2026-07-31_11-.jpg"}, "dad": {"original": "cover-dad-original.webp", "art": "cover-dad-original.webp", "minimal": "cover-dad-minimal.webp", "promo": "cover-dad-promo.webp", "sourceOriginal": "https://static.tildacdn.biz/tild3065-3837-4531-a438-626535623739/photo_2026-03-04_11-.jpg"}, "hearts": {"original": "cover-hearts-original.webp", "art": "cover-hearts-original.webp", "minimal": "cover-hearts-minimal.webp", "promo": "cover-hearts-promo.webp", "sourceOriginal": "https://static.tildacdn.biz/tild6366-3465-4566-a635-333031336666/6d22cb4e-61fc-42cc-9.png"}, "spring": {"original": "cover-spring-original.webp", "art": "cover-spring-original.webp", "minimal": "cover-spring-minimal.webp", "promo": "cover-spring-promo.webp", "sourceOriginal": "https://i1.sndcdn.com/artworks-yew747yJIQwrJUrV-W9riRg-t500x500.png"}};
+/* Song-specific artwork. Append after all existing game modules and COVER_ARTWORK manifest.
+   Presentation metadata only: no prices, scoring, or release identifiers are changed. */
+(function(){
+'use strict';
+const keys=['minimal','art','promo'];
+const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const valid=v=>Number.isInteger(v)&&v>=0&&v<3;
+const safe=v=>typeof v==='string'&&(/^(https:\/\/|\.\/|[a-zA-Z0-9_-]+\/|[a-zA-Z0-9_-]+\.(?:webp|png|jpg|jpeg)$)/.test(v))&&!/[<>"'\s]/.test(v)?v:'';
+function entry(song){return song&&window.COVER_ARTWORK?.[song.id]||{};}
+function original(song){return safe(entry(song).original)||song?.cover||'';}
+function artwork(song,index){const e=entry(song);return valid(index)?safe(e[keys[index]])||original(song):original(song);}
+function s1Index(){return covers.findIndex(c=>c[0]===state.cover?.[0]);}
+function historyFor(song){return [...(career.history||[]),...(career.season2Releases||[])].find(h=>(h.songId===song?.id)||(!h.songId&&h.song===song?.name));}
+function historyIndex(h){return valid(h?.coverVariant)?h.coverVariant:valid(h?.choices?.cover)?h.choices.cover:null;}
+let contextualIndex=null,contextualActive=false;
+function displayIndex(song,cls){
+ if(contextualActive)return contextualIndex;
+ if(cls==='fc-cover-image'||cls==='cover-history-image')return historyIndex(historyFor(song));
+ if(['s2-small-cover','release-result-cover','premiere-art-cover'].includes(cls)&&season2Draft?.id===song?.id&&valid(season2Draft.cover))return season2Draft.cover;
+ if(['office-cover','release-thumb','release-result-cover','premiere-art-cover'].includes(cls)&&state.song?.id===song?.id&&valid(s1Index()))return s1Index();
+ if(['release-result-cover','premiere-art-cover'].includes(cls))return historyIndex(historyFor(song));
+ return null;
+}
+// Per-image finite queue: variant -> local original -> verified remote original.
+// Removing each URL before trying it prevents retry loops even when every asset fails.
+window.coverArtworkFallback=function(img){
+ let remaining=[];try{remaining=JSON.parse(img.getAttribute('data-cover-fallbacks')||'[]');}catch(e){}
+ const next=remaining.shift();
+ img.setAttribute('data-cover-fallbacks',JSON.stringify(remaining));
+ if(next){img.src=next;return;}
+ img.removeAttribute('onerror');img.classList.add('cover-image-unavailable');img.alt='Обложка временно недоступна';
+};
+function image(song,cls,index,alt=''){
+ const src=artwork(song,index);
+ const fallbacks=[original(song),safe(entry(song).sourceOriginal)].filter((url,i,all)=>url&&url!==src&&all.indexOf(url)===i);
+ return src?`<img class="${esc(cls)}" src="${esc(src)}" alt="${esc(alt)}" loading="lazy" decoding="async" data-cover-fallbacks="${esc(JSON.stringify(fallbacks))}" onerror="coverArtworkFallback(this)">`:'';
+}
+// Canonical song objects always carry the site original, including legacy renderers
+// that access .cover directly. Never assign a chosen variant to these objects.
+function syncOriginals(){
+ for(const song of [...songs,...season2Songs]){const src=safe(entry(song).original);if(src)song.cover=src;}
+ if(state.song){const src=safe(entry(state.song).original);if(src)state.song.cover=src;}
+}
+syncOriginals();
+const oldLoad=loadCareer;
+loadCareer=function(){const r=oldLoad.apply(this,arguments);syncOriginals();return r;};
+const oldMoment=releaseMomentHTML;
+releaseMomentHTML=function(song){const args=[...arguments];args[0]={...song,cover:artwork(song,displayIndex(song,'release-result-cover'))};return oldMoment.apply(this,args);};
+const oldSongCover=songCover;
+songCover=function(song,cls='song-cover'){
+ if(!song)return oldSongCover(song,cls);
+ return image(song,cls,displayIndex(song,cls));
+};
+function decorate(song,selected,season){
+ const screen=document.getElementById('screen'),grid=screen?.querySelector('.production-grid');if(!grid)return;
+ const buttons=[...grid.querySelectorAll('.production-option')];if(buttons.length!==3)return;
+ grid.classList.add('cover-choice-grid');
+ buttons.forEach((button,i)=>{
+  button.classList.add('cover-art-option');
+  button.setAttribute('aria-label',`${covers[i][0]} — ${song.name}${selected===i?', выбрано':''}`);
+  const art=button.querySelector('.production-art');
+  if(art){art.className='cover-choice-art';art.innerHTML=image(song,'cover-choice-image',i,`${song.name}: ${covers[i][0]}`);}
+ });
+ const note=[...screen.querySelectorAll('.production-footnote')].find(e=>/обложка песни в каталоге|Иконки обозначают/.test(e.textContent));
+ if(note)note.textContent='Выбранная обложка появится на премьере и в истории твоего релиза. В каталоге остаётся оригинальная обложка с сайта.';
+ const intro=screen.querySelector('.production-intro');
+ if(intro)intro.textContent=`Три оформления песни «${song.name}». Выбери образ для своего релиза.`;
+}
+const oldStageCover=stageCover;
+stageCover=function(){const r=oldStageCover.apply(this,arguments);if(state.song)decorate(state.song,s1Index(),1);return r;};
+const oldS2Step=season2ProductionStep;
+season2ProductionStep=function(step){const r=oldS2Step.apply(this,arguments);if(season2Draft&&season2DraftStep===4){const song=season2SongById(season2Draft.id);if(song)decorate(song,season2Draft.cover,2);}return r;};
+// Record the selected category only when a new S1 history row was actually created.
+const oldCalculate=calculateRelease;
+calculateRelease=function(){const before=new Set(career.history||[]),song=state.song,index=s1Index();const r=oldCalculate.apply(this,arguments);let changed=false;if(valid(index))for(const h of career.history||[])if(!before.has(h)&&h.songId===song?.id){h.coverVariant=index;changed=true;}if(changed)saveCareer();return r;};
+// S2 already stores its choices in each result. Scope artwork to that exact result,
+// never to a newer draft for the same song or a different archived release.
+const oldS2Result=s2ResultHTML;
+s2ResultHTML=function(h,song){const prev=contextualIndex,wasActive=contextualActive;contextualIndex=historyIndex(h);contextualActive=true;try{return oldS2Result.apply(this,arguments);}finally{contextualIndex=prev;contextualActive=wasActive;}};
+const oldHistory=historyScreen;
+historyScreen=function(){const r=oldHistory.apply(this,arguments);const rows=document.querySelectorAll('.history-ledger tbody tr');rows.forEach((row,i)=>{const h=career.history?.[i],song=h&&(songs.find(s=>s.id===h.songId)||songs.find(s=>s.name===h.song)),cell=row.querySelector('[data-label="Песня"]');if(song&&cell&&!cell.querySelector('.cover-history-image')){cell.classList.add('cover-history-cell');cell.insertAdjacentHTML('afterbegin',image(song,'cover-history-image',historyIndex(h),`Обложка релиза «${song.name}»`));}});return r;};
+// Route table stores function references; update them to keep reload/resume visual parity.
+if(typeof resumeScreens==='object'){resumeScreens.stageCover=stageCover;resumeScreens.season2ProductionStep=season2ProductionStep;resumeScreens.historyScreen=historyScreen;}
+window.coverArtworkAPI={artwork,original,historyIndex,displayIndex,decorate,keys};
+})();
+</script>
