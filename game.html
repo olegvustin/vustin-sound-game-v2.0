@@ -1372,7 +1372,7 @@ function finishReleaseShow(id,skipped=false){
  session.done=true;activeReleaseShow=null;clearReleaseShowTasks(session);
  if(skipped)stopRealPreview();
  showReleaseResult(session.result);
- if(skipped){const title=document.querySelector('#screen .section-title');if(title&&title.focus){title.setAttribute('tabindex','-1');title.focus({preventScroll:false})}}
+ if(skipped){const title=document.querySelector('#screen .section-title');if(title&&title.focus){title.setAttribute('tabindex','-1');title.focus({preventScroll:true})}}
 }
 function skipReleaseShow(id){finishReleaseShow(id,true)}
 function runReleaseShow(result){
@@ -3929,36 +3929,48 @@ button[data-industry-release]:disabled{opacity:.38!important;cursor:not-allowed!
 </script>
 
 
-<script>
-/* v12.5 — automatic iframe height bridge */
+<script id="producer-layout-bridge-v2">
+/* Measure the flow container, never clipped artwork, SVG nodes or fixed overlays. */
 (function(){
-  let last=0, timer=null;
+  if(parent!==window)document.documentElement.classList.add('producer-embedded');
+  const app=document.querySelector('body > .app');
+  if(!app)return;
+  const nonce=new URLSearchParams(location.hash.slice(1)).get('load_session');
+  let last=0, timer=0, navigation=0, reset=false;
+  addEventListener('message',function(e){
+    if(e.source!==parent||parent===window||!['https://vustinsound.com','https://www.vustinsound.com'].includes(e.origin)||
+       !e.data||e.data.type!=='vustin-producer-viewport'||e.data.version!==2||!nonce||e.data.nonce!==nonce)return;
+    const top=Number(e.data.top),height=Number(e.data.height);
+    if(!Number.isFinite(top)||!Number.isFinite(height)||top<0||top>50000||height<80||height>10000)return;
+    document.documentElement.style.setProperty('--producer-viewport-top',Math.round(top)+'px');
+    document.documentElement.style.setProperty('--producer-viewport-height',Math.round(height)+'px');
+  });
   function sendHeight(){
-    const de=document.documentElement, b=document.body;
-    let bottom=0;
-    document.querySelectorAll('body *').forEach(function(el){
-      const cs=getComputedStyle(el);
-      if(cs.position==='fixed' || cs.display==='none') return;
-      const r=el.getBoundingClientRect();
-      if(Number.isFinite(r.bottom)) bottom=Math.max(bottom,r.bottom);
-    });
-    const h=Math.ceil(bottom + window.scrollY + 18);
-    if(Math.abs(h-last)>2){
-      last=h;
-      parent.postMessage({type:'vustin-producer-height',height:h},'*');
+    timer=0;
+    const rect=app.getBoundingClientRect();
+    const height=Math.ceil(rect.bottom+window.scrollY);
+    if(!Number.isFinite(height)||height<=0)return;
+    if(Math.abs(height-last)>1||reset){
+      last=height;
+      if(parent!==window)parent.postMessage({type:'vustin-producer-height',version:2,nonce:nonce,
+        height:height,navigation:navigation,resetScroll:reset},'*');
+      reset=false;
     }
   }
-  function queue(){
-    clearTimeout(timer);
-    timer=setTimeout(sendHeight,40);
-  }
-  addEventListener('load',()=>{sendHeight();setTimeout(sendHeight,250);setTimeout(sendHeight,900)});
-  addEventListener('resize',queue);
-  if(window.ResizeObserver){
-    new ResizeObserver(queue).observe(document.documentElement);
-    if(document.body)new ResizeObserver(queue).observe(document.body);
-  }
-  new MutationObserver(queue).observe(document.documentElement,{subtree:true,childList:true,attributes:true});
+  function queue(){if(!timer)timer=requestAnimationFrame(sendHeight)}
+  addEventListener('vustin:screen-change',function(){
+    navigation++;reset=true;
+    // Host scrolling is handled separately, after the new frame height is applied.
+    window.scrollTo({top:0,left:0,behavior:'instant'});
+    const screen=document.getElementById('screen');if(screen)screen.scrollTop=0;
+    queue();
+  });
+  addEventListener('load',queue);addEventListener('resize',queue);
+  if(window.ResizeObserver)new ResizeObserver(queue).observe(app);
+  new MutationObserver(queue).observe(app,{subtree:true,childList:true,attributes:true,characterData:true});
+  app.addEventListener('load',queue,true);
+  if(document.fonts&&document.fonts.ready)document.fonts.ready.then(queue);
+  queue();
 })();
 </script>
 
@@ -4066,7 +4078,7 @@ document.addEventListener('play', function(event) {
   if(same&&context.key){
    const selected=[...screen.querySelectorAll('[data-ux-key]')].find(el=>el.getAttribute('data-ux-key')===context.key);
    if(selected)selected.focus({preventScroll:true});
-  }else if(!same&&title){title.focus({preventScroll:false})}
+  }else if(!same&&title){title.focus({preventScroll:true})}
  }
  const render=shell;
  shell=function(k,t,body){
@@ -5697,3 +5709,49 @@ season2ReviewProduction=function(){const result=s2FinanceReviewBase.apply(this,a
 @media(max-width:360px){#screen .s2-effect-grid{grid-template-columns:1fr;gap:10px}#screen .s2-effect-grid>div{display:grid;grid-template-columns:88px minmax(0,1fr);gap:10px;align-items:start}#screen .s2-effect-grid span{margin-top:0}}
 
 </style>
+
+<style id="producer-flow-spacing-v2">
+/* Embedded page owns its footer spacing. No legacy reserve for a removed fixed bar. */
+html{scroll-behavior:auto!important}
+html.producer-embedded,html.producer-embedded body{overflow-anchor:none}
+html.producer-embedded body > .app{padding-bottom:12px!important}
+html.producer-embedded .reward-notice[open]{position:fixed;top:calc(var(--producer-viewport-top,0px) + 12px);bottom:auto;margin:0 auto;max-height:calc(var(--producer-viewport-height,100dvh) - 24px)}
+@media(max-width:640px){
+ html.producer-embedded #screen .nav{position:static!important;left:auto!important;right:auto!important;bottom:auto!important;width:auto!important;margin:16px 0 0!important}
+}
+</style>
+<script id="producer-screen-navigation-v2">
+(function(){
+  let key=null, scheduled=0;
+  function changed(next){
+    if(next===key)return;
+    key=next;
+    if(scheduled)cancelAnimationFrame(scheduled);
+    scheduled=requestAnimationFrame(function(){scheduled=0;dispatchEvent(new Event('vustin:screen-change'))});
+  }
+  const previousShell=shell;
+  shell=function(k,t,body){const result=previousShell.apply(this,arguments);changed(String(k)+'|'+String(t));return result};
+  const previousShow=runReleaseShow;
+  runReleaseShow=function(result){const value=previousShow.apply(this,arguments);changed('release-show');return value};
+  const previousDismiss=rewardNoticeDismiss;
+  rewardNoticeDismiss=function(next){
+    const before=rewardNoticeDialog,result=previousDismiss.apply(this,arguments);
+    if(before&&next){
+      if(scheduled)cancelAnimationFrame(scheduled);
+      scheduled=requestAnimationFrame(function(){scheduled=0;dispatchEvent(new Event('vustin:screen-change'))});
+    }
+    return result;
+  };
+  const previousNotice=rewardNoticeShow;
+  rewardNoticeShow=function(){
+    const before=rewardNoticeDialog,result=previousNotice.apply(this,arguments);
+    if(rewardNoticeDialog&&rewardNoticeDialog!==before){
+      if(scheduled)cancelAnimationFrame(scheduled);
+      scheduled=requestAnimationFrame(function(){scheduled=0;dispatchEvent(new Event('vustin:screen-change'))});
+    }
+    return result;
+  };
+  const previousResult=showReleaseResult;
+  showReleaseResult=function(result){const value=previousResult.apply(this,arguments);changed('release-result');return value};
+})();
+</script>
