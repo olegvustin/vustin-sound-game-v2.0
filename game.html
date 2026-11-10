@@ -4325,6 +4325,37 @@ async function rewardSummaryBlob(){
  return new Promise((resolve,reject)=>canvas.toBlob(b=>b?resolve(b):reject(Error('canvas')),'image/png'));
 }
 // Prepared files belong to the visible button only; no persistence or background sharing.
+// Link sharing never claims to send the image or a saved career.
+const REWARD_GAME_LINK='https://vustinsound.com/game';
+function rewardOfferLinkFallback(button){
+ if(!button?.isConnected)return;
+ const host=button.closest('.reward-notice-content, .vinyl-reward, .reward-summary, .fc-prize, .s2-label-card');
+ if(!host||host.querySelector('.reward-link-fallback'))return;
+ const ref=career,box=document.createElement('section');box.className='reward-link-fallback';box.setAttribute('aria-label','Другой способ поделиться');
+ const note=document.createElement('p');note.textContent='Здесь можно поделиться ссылкой на игру. Сам стикер или карточку прикрепи отдельно из сохранённого PNG.';
+ const actions=document.createElement('div');actions.className='reward-link-actions';
+ const status=document.createElement('p');status.setAttribute('role','status');status.setAttribute('aria-live','polite');
+ const manual=document.createElement('input');manual.type='text';manual.readOnly=true;manual.value=REWARD_GAME_LINK;manual.hidden=true;manual.setAttribute('aria-label','Ссылка на игру для копирования');
+ const current=()=>box.isConnected&&career===ref;
+ const payload={title:'VUSTIN SOUND · Продюсер',text:'Попробуй стать музыкальным продюсером в игре VUSTIN SOUND.',url:REWARD_GAME_LINK};
+ let supported=false;try{supported=!!navigator.share&&(!navigator.canShare||navigator.canShare(payload));}catch(e){}
+ if(supported){
+  const send=document.createElement('button');send.type='button';send.className='btn alt';send.textContent='Поделиться ссылкой';
+  send.onclick=async()=>{if(send.disabled||!current())return;send.disabled=true;
+   try{await navigator.share(payload);if(current())status.textContent='Ссылка передана выбранному приложению. Изображение прикрепи отдельно.';}
+   catch(e){if(current())status.textContent=e?.name==='AbortError'?'Отправка ссылки отменена.':'Не удалось отправить ссылку. Используй «Скопировать ссылку».';}
+   finally{send.disabled=false;}
+  };actions.append(send);
+ }
+ const copy=document.createElement('button');copy.type='button';copy.className='btn alt';copy.textContent='Скопировать ссылку';
+ copy.onclick=async()=>{if(copy.disabled||!current())return;copy.disabled=true;
+  try{if(!navigator.clipboard?.writeText)throw Error('clipboard');await navigator.clipboard.writeText(REWARD_GAME_LINK);if(current())status.textContent='Ссылка на игру скопирована. Изображение прикрепи отдельно.';}
+  catch(e){if(current()){manual.hidden=false;manual.focus({preventScroll:true});manual.select();status.textContent='Выдели и скопируй ссылку вручную. Изображение прикрепи отдельно.';}}
+  finally{copy.disabled=false;}
+ };
+ actions.append(copy);box.append(note,actions,manual,status);const next=host.querySelector('[data-continue]');if(next)host.insertBefore(box,next);else host.append(box);
+}
+
 const rewardPreparedShares = new WeakMap();
 async function rewardExport(id,share,button){
  const origin=button?.closest('.reward-notice');const reportRewardExport=text=>{if(origin){const status=origin.querySelector('[data-status]');if(origin.isConnected&&status)status.textContent=text;}else{const el=document.getElementById('reward-status');if(el)el.textContent=text;}};
@@ -4342,7 +4373,7 @@ async function rewardExport(id,share,button){
    // This call must precede every await: it runs in the second explicit click.
    try{await navigator.share({files:[prepared.file],title:prepared.title});if(!isCurrent())return;reset();reportRewardExport('Изображение передано выбранному приложению.');}
    catch(e){if(!isCurrent())return;if(e.name==='AbortError'){reportRewardExport('Отправка отменена. Можно попробовать ещё раз.');return;}
-    rewardDownload(prepared.file,prepared.name);reset();reportRewardExport('Системная отправка недоступна. PNG подготовлен для сохранения и ручной публикации.');}
+    rewardDownload(prepared.file,prepared.name);rewardOfferLinkFallback(button);reset();reportRewardExport('Системная отправка недоступна. PNG подготовлен для сохранения и ручной публикации.');}
    return;
   }
   reset();reportRewardExport('Подготавливаю изображение…');
@@ -4358,7 +4389,7 @@ async function rewardExport(id,share,button){
    button.textContent='Отправить стикер';if(id==='summary')button.textContent='Отправить карточку';
    reportRewardExport('Изображение готово. Нажми «'+button.textContent+'», чтобы выбрать приложение.');return;
   }
-  rewardDownload(blob,name);reportRewardExport(share?'Системная отправка недоступна. PNG подготовлен для сохранения и ручной публикации.':'Изображение подготовлено для сохранения.');
+  rewardDownload(blob,name);if(share)rewardOfferLinkFallback(button);reportRewardExport(share?'Системная отправка недоступна. PNG подготовлен для сохранения и ручной публикации.':'Изображение подготовлено для сохранения.');
  }catch(e){if(!isCurrent())return;reportRewardExport('Не удалось подготовить изображение. Проверь соединение и попробуй ещё раз.');}finally{if(button)button.disabled=false;}
 }
 
@@ -5428,14 +5459,14 @@ window.s2LabelCardExport=async function(share,button){
  try{
   if(share&&entry&&entry.ref===ref&&entry.key===key){
    try{await navigator.share({files:[entry.file],title:'Мой лейбл · VUSTIN SOUND'});if(!current())return;reset();report(button,'Карточка передана выбранному приложению.');}
-   catch(e){if(!current())return;if(e?.name==='AbortError'){report(button,'Отправка отменена. Карточка готова, можно попробовать снова.');return;}rewardDownload(entry.file,'VUSTIN_SOUND_my_label.png');reset();report(button,'Системная отправка недоступна. PNG подготовлен для сохранения и ручной публикации.');}
+   catch(e){if(!current())return;if(e?.name==='AbortError'){report(button,'Отправка отменена. Карточка готова, можно попробовать снова.');return;}rewardDownload(entry.file,'VUSTIN_SOUND_my_label.png');rewardOfferLinkFallback(button);reset();report(button,'Системная отправка недоступна. PNG подготовлен для сохранения и ручной публикации.');}
    return;
   }
   reset();report(button,'Готовлю карточку…');const blob=await blobFor(data);if(!current())return;
   const file=typeof File==='function'?new File([blob],'VUSTIN_SOUND_my_label.png',{type:'image/png'}):null;
   let can=false;try{can=!!(share&&file&&navigator.share&&navigator.canShare?.({files:[file]}));}catch(e){}
   if(can){prepared.set(button,{ref,key,file});button.textContent='Отправить карточку';report(button,'Карточка готова. Нажми «Отправить карточку», чтобы выбрать приложение.');return;}
-  rewardDownload(blob,'VUSTIN_SOUND_my_label.png');report(button,share?'Системная отправка недоступна. PNG подготовлен для сохранения и ручной публикации.':'Карточка подготовлена для сохранения.');
+  rewardDownload(blob,'VUSTIN_SOUND_my_label.png');if(share)rewardOfferLinkFallback(button);report(button,share?'Системная отправка недоступна. PNG подготовлен для сохранения и ручной публикации.':'Карточка подготовлена для сохранения.');
  }catch(e){if(current())report(button,'Не удалось создать карточку. Попробуй ещё раз или используй другой браузер.');}finally{button.disabled=false;}
 };
 function insert(){
@@ -6092,3 +6123,12 @@ for(const [name,season] of [['seasonFinale',1],['season2Finale',2]]){const prev=
 })();
 
 </script>
+
+<style id="reward-link-fallback">.reward-link-fallback{width:100%;min-width:0;box-sizing:border-box;margin-top:12px;padding:12px;border:1px solid currentColor;border-radius:12px;color:inherit;text-align:left;grid-column:1/-1}
+.reward-link-fallback p{font-size:13px!important;line-height:1.45!important;margin:0 0 8px!important;color:inherit!important;overflow-wrap:anywhere}
+.reward-link-fallback p[role="status"]:empty{display:none}
+.reward-link-actions{display:flex;flex-wrap:wrap;gap:8px}
+.reward-link-actions .btn{flex:1 1 150px!important;min-width:0!important;min-height:44px!important;white-space:normal!important;font-size:13px!important}
+.reward-link-fallback input{display:block;width:100%;min-width:0;box-sizing:border-box;margin:8px 0;padding:10px;border-radius:8px;background:#fff;color:#12364d;font-size:14px}
+.reward-link-fallback input[hidden]{display:none}
+</style>
