@@ -2111,6 +2111,15 @@ function takeDistributorAdvance(index){
  career.cash+=option.amount;career.advanceDebt=option.repay;
  saveCareer();resetRelease();market();
 }
+// S2-only production rates. In-flight older drafts retain their original quote.
+const S2_BALANCED_PRICES={studios:[600,1200,2300],arrs:[0,750,1500],covers:[300,500,900],team:[550,600,700,550,600],promos:[2500,650,850,1700,1150,1200,400,550,600]};
+function s2PriceTable(kind){
+ const original=({studios,arrs,covers,team,promos})[kind];
+ if(season2Draft?.balanceVersion!==2)return original;
+ const column=kind==='team'?2:1;
+ return original.map((row,i)=>row.map((value,k)=>k===column?S2_BALANCED_PRICES[kind][i]:value));
+}
+
 // SEASON 2 · инфраструктура и проекты лейбла.
 const season2Assets=[
  {key:'mastering',icon:'🎛️',name:'Мастеринг-центр',costs:[6000,12500,23000],desc:'Повышает качество каталога; проект ремастеринга возвращает песни слушателям.'},
@@ -2217,15 +2226,15 @@ function season2ReleaseForecast(song,plan){
   if(energetic&&d.promo.some(i=>[1,6].includes(i)))reach+=7;
   if(!energetic&&d.promo.some(i=>[2,7,4,8].includes(i)))reach+=7;
   const trend=career.trend;
-  if(trend&&typeof trend.boost==='number'&&d.promo.some(i=>promos[i]&&promos[i][2]===trend.key))reach+=Math.max(-10,Math.min(10,Math.round(trend.boost/2)));
+  if(trend&&typeof trend.boost==='number'&&d.promo.some(i=>s2PriceTable('promos')[i]&&s2PriceTable('promos')[i][2]===trend.key))reach+=Math.max(-10,Math.min(10,Math.round(trend.boost/2)));
   if(d.goal===0)reach+=12;
   if(d.goal===1)listenerMultiplier=1.22;
   if(d.goal===2)incomeMultiplier=1.12;
   if(d.goal===3)reputationBonus=2;
  }
- const streams=Math.max(0,Math.round(3000+quality*75+reach*115+(career.listeners||0)*.11));
+ const streams=Math.max(0,Math.round(3000+quality*75+reach*115+(career.listeners||0)*.11+(d?.balanceVersion===2?Math.max(0,quality-95)*230:0)));
  // High-end production gets meaningful upside, not a guaranteed return.
- const premium=Math.min(1,Math.max(0,((Number(plan.cost)||0)-3500)/9500));
+ const premium=Math.min(1,Math.max(0,((Number(plan.cost)||0)-(d?.balanceVersion===2?2500:3500))/(d?.balanceVersion===2?6500:9500)));
  const income=Math.round(streams*(.12+digital*.015)*incomeMultiplier);
 
  const listeners=Math.round(streams*(.065+academy*.004)*listenerMultiplier);
@@ -2313,7 +2322,7 @@ function season2StartProduction(id){
  const song=season2SongById(id);
  if(!song||!season2CatalogSongs().some(x=>x.id===id)||season2Released(id)||season2Week()>12)return season2SongCatalog();
  season2SelectedSong=id;
- season2Draft={id,goal:null,team:[],studio:null,arr:null,cover:null,promo:[]};
+ season2Draft={id,balanceVersion:2,goal:null,team:[],studio:null,arr:null,cover:null,promo:[]};
  season2DraftStep=0;
  season2ProductionStep(0);
 }
@@ -2332,19 +2341,19 @@ function season2ToggleChoice(key,index){
 }
 function season2PromoPrice(i){
  const video=[0,1,6].includes(i);
- const base=promos[i][1];
+ const base=s2PriceTable('promos')[i][1];
  const marketingDiscount=[0,.10,.18][career.marketingLvl]||0;
  const videoDiscount=video?([0,.12,.22][career.videoLvl]||0):0;
  return Math.round(base*(1-marketingDiscount-videoDiscount));
 }
 function season2DraftPlan(){
  const d=season2Draft;
- const teamCost=d.team.reduce((sum,i)=>sum+discountPrice(team[i][2],'team'),0);
- const recording=d.studio===null?0:discountPrice(studios[d.studio][1],'studio');
- const arrangement=d.arr===null?0:arrs[d.arr][1];
- const artwork=d.cover===null?0:covers[d.cover][1];
+ const teamCost=d.team.reduce((sum,i)=>sum+discountPrice(s2PriceTable('team')[i][2],'team'),0);
+ const recording=d.studio===null?0:discountPrice(s2PriceTable('studios')[d.studio][1],'studio');
+ const arrangement=d.arr===null?0:s2PriceTable('arrs')[d.arr][1];
+ const artwork=d.cover===null?0:s2PriceTable('covers')[d.cover][1];
  const promotion=d.promo.reduce((sum,i)=>sum+season2PromoPrice(i),0);
- const quality=(d.studio===null?0:studios[d.studio][2])+(d.arr===null?0:arrs[d.arr][2]);
+ const quality=(d.studio===null?0:s2PriceTable('studios')[d.studio][2])+(d.arr===null?0:s2PriceTable('arrs')[d.arr][2]);
  const reach=d.promo.reduce((sum,i)=>sum+([19,11,13,15,12,14,7,9,8][i]||7),0);
  return {name:'Индивидуальный релиз',cost:teamCost+recording+arrangement+artwork+promotion,quality,reach,desc:'Команда, запись, аранжировка, обложка и продвижение',draft:d};
 }
@@ -2362,11 +2371,11 @@ function season2ProductionStep(step){
  if(!song)return season2SongCatalog();
  const stages=[
   {title:'Цель релиза',hint:'Определи стратегию продвижения',key:'goal',items:goals.map(g=>['marketing',g[1],null,g[2]])},
-  {title:'Команда',hint:'Выбери до двух специалистов',key:'team',items:team.map(t=>[t[0],t[1].replace(/^\S+\s/,''),discountPrice(t[2],'team'),t[3]])},
-  {title:'Запись',hint:'Выбери студию',key:'studio',items:studios.map((t,i)=>[['studio-home','studio-pro','studio-top'][i],t[0],discountPrice(t[1],'studio'),'Качество: +'+t[2]])},
-  {title:'Аранжировка',hint:'Определи звучание песни',key:'arr',items:arrs.map((t,i)=>[['arr-original','arr-modern','arr-bold'][i],t[0],t[1],'Эффект: +'+t[2]])},
-  {title:'Обложка',hint:'Выбери оформление релиза',key:'cover',items:covers.map((t,i)=>[['minimal','art','bright'][i],t[0],t[1],['Типографика и простой символ','Иллюстрация, фотография или метафора','Контрастный образ для рекламы'][i]])},
-  {title:'Продвижение',hint:'Выбери до двух каналов',key:'promo',items:promos.map((t,i)=>[['video','smm','playlist','radio','pr','target','smm','playlist','pr'][i],t[0],season2PromoPrice(i),['Музыкальное видео для релиза','Короткие вертикальные ролики','Музыкальные подборки','Знакомство с эфирной аудиторией','Публикации и история проекта','Рекламная кампания','Небольшой формат коротких роликов','Тематические музыкальные подборки','Публикации в локальных медиа'][i]])}
+  {title:'Команда',hint:'Выбери до двух специалистов',key:'team',items:s2PriceTable('team').map(t=>[t[0],t[1].replace(/^\S+\s/,''),discountPrice(t[2],'team'),t[3]])},
+  {title:'Запись',hint:'Выбери студию',key:'studio',items:s2PriceTable('studios').map((t,i)=>[['studio-home','studio-pro','studio-top'][i],t[0],discountPrice(t[1],'studio'),'Качество: +'+t[2]])},
+  {title:'Аранжировка',hint:'Определи звучание песни',key:'arr',items:s2PriceTable('arrs').map((t,i)=>[['arr-original','arr-modern','arr-bold'][i],t[0],t[1],'Эффект: +'+t[2]])},
+  {title:'Обложка',hint:'Выбери оформление релиза',key:'cover',items:s2PriceTable('covers').map((t,i)=>[['minimal','art','bright'][i],t[0],t[1],['Типографика и простой символ','Иллюстрация, фотография или метафора','Контрастный образ для рекламы'][i]])},
+  {title:'Продвижение',hint:'Выбери до двух каналов',key:'promo',items:s2PriceTable('promos').map((t,i)=>[['video','smm','playlist','radio','pr','target','smm','playlist','pr'][i],t[0],season2PromoPrice(i),['Музыкальное видео для релиза','Короткие вертикальные ролики','Музыкальные подборки','Знакомство с эфирной аудиторией','Публикации и история проекта','Рекламная кампания','Небольшой формат коротких роликов','Тематические музыкальные подборки','Публикации в локальных медиа'][i]])}
  ];
  if(step>=stages.length)return season2ReviewProduction();
  const st=stages[step],selected=st.key==='goal'?d.goal!==null:
@@ -2384,7 +2393,7 @@ function season2ReviewProduction(){
  season2DraftStep=6;
  if(!season2Draft||season2Draft.goal===null||season2Draft.studio===null||season2Draft.arr===null||season2Draft.cover===null)return season2ProductionStep(0);
  const d=season2Draft,song=season2SongById(d.id),plan=season2DraftPlan(),f=season2ReleaseForecast(song,plan);
- const summary=[['marketing','Цель',goals[d.goal][1]],['sound','Команда',d.team.length?d.team.map(i=>team[i][1]).join(', '):'Без специалистов'],['studio','Запись',studios[d.studio][0]],['arr','Аранжировка',arrs[d.arr][0]],['art','Обложка',covers[d.cover][0]],['pr','Продвижение',d.promo.length?d.promo.map(i=>promos[i][0]).join(', '):'Без дополнительного продвижения']];
+ const summary=[['marketing','Цель',goals[d.goal][1]],['sound','Команда',d.team.length?d.team.map(i=>s2PriceTable('team')[i][1]).join(', '):'Без специалистов'],['studio','Запись',s2PriceTable('studios')[d.studio][0]],['arr','Аранжировка',s2PriceTable('arrs')[d.arr][0]],['art','Обложка',s2PriceTable('covers')[d.cover][0]],['pr','Продвижение',d.promo.length?d.promo.map(i=>s2PriceTable('promos')[i][0]).join(', '):'Без дополнительного продвижения']];
  shell('Сезон 2 · Перед премьерой','Проверь релиз',
  `<div class="production-screen s2-production"><p class="production-intro"><b>${song.name}</b> · Проверь решения перед выпуском.</p><dl class="s2-summary">${summary.map(([icon,name,value])=>`<div><dt><span aria-hidden="true">${productionIcon(icon)}</span>${name}</dt><dd>${value}</dd></div>`).join('')}</dl>
  <section class="s2-forecast" aria-label="Предварительный расчёт"><div class="production-budget s2-budget"><div><span>Затраты при выпуске</span><b>${fmt(f.cost)} VS₽</b></div><div><span>Содержание за неделю</span><b>${fmt(f.operating)} VS₽</b></div><div><span>Остаток после обоих расходов</span><b>${fmt(career.cash-f.cost-f.operating)} VS₽</b></div></div><p class="production-footnote">Суммы предварительные. Оплата только при нажатии «Выпустить песню». Скидки инфраструктуры учтены.</p>
@@ -5001,9 +5010,9 @@ season2ProductionStep=function(step){
  if(step>=6)return season2Dilemma();season2DraftStep=Math.max(0,Math.min(5,Number(step)||0));
  const d=season2Draft,st=season2DraftStep,song=season2SongById(d.id);let body,title,kicker,next,back,enabled=true;
  if(st===0){title='Какова цель этого релиза?';kicker='Продюсерская стратегия';body=`<section class="finance-screen goal-decisions"><div class="finance-grid goal-grid">${goals.map((g,i)=>`<button class="finance-option goal-option ${d.goal===i?'is-selected':''}" aria-pressed="${d.goal===i}" onclick="season2ToggleChoice('goal',${i})"><span class="finance-art">${financeDecisionIcon(g[0])}</span><span class="finance-copy"><b>${g[1].replace(/^\S+\s/,'')}</b><span>${g[2]}</span><span class="finance-selection">${d.goal===i?'Выбрано':'Выбрать цель'}</span></span></button>`).join('')}</div></section>`;next='season2ProductionStep(1)';back='season2SongCatalog()';enabled=d.goal!==null;}
- else if(st===1){title='Выбери до двух специалистов';kicker='Команда релиза';body=`<p class="production-intro">Команда на один релиз. <b>Выбрано ${d.team.length} из 2</b>. Можно продолжить без специалистов.</p>${s2Budget()}<div class="production-grid production-team">${team.map((t,i)=>season2VisualCard(t[0],t[1].replace(/^\S+\s/,''),discountPrice(t[2],'team'),t[3],d.team.includes(i),'team',i)).join('')}</div>`;next='season2Analysis()';back='season2ProductionStep(0)';}
- else if(st===2||st===3){const recording=st===2,opts=recording?studios:arrs,key=recording?'studio':'arr';title=recording?'Запись':'Аранжировка';kicker=recording?'Шаг 2 из 6':'Шаг 3 из 6';body=`<p class="production-intro">Выбери один вариант для релиза.</p><div class="production-grid">${opts.map((t,i)=>season2VisualCard((recording?['studio-home','studio-pro','studio-top']:['arr-original','arr-modern','arr-bold'])[i],t[0],recording?discountPrice(t[1],'studio'):t[1],`Качество записи: +${t[2]}`,d[key]===i,key,i)).join('')}</div>${s2Budget()}`;next=`season2ProductionStep(${st+1})`;back=st===2?'season2Analysis()':'season2ProductionStep(2)';enabled=d[key]!==null;}
- else if(st===4){title='Обложка';kicker='Шаг 4 из 6';body=`<p class="production-intro">Выбери визуальную стратегию для песни.</p><div class="production-grid">${covers.map((t,i)=>season2VisualCard(['minimal','art','bright'][i],t[0],t[1],['Простой узнаваемый образ · +2 к охвату','Авторская история · +5 к охвату','Яркая подача · +7 к охвату; ещё +5 с клипом или роликами'][i],d.cover===i,'cover',i)).join('')}</div><p class="production-footnote">Оригинальная обложка песни в каталоге не меняется.</p>${s2Budget()}`;next='season2ProductionStep(5)';back='season2ProductionStep(3)';enabled=d.cover!==null;}
+ else if(st===1){title='Выбери до двух специалистов';kicker='Команда релиза';body=`<p class="production-intro">Команда на один релиз. <b>Выбрано ${d.team.length} из 2</b>. Можно продолжить без специалистов.</p>${s2Budget()}<div class="production-grid production-team">${s2PriceTable('team').map((t,i)=>season2VisualCard(t[0],t[1].replace(/^\S+\s/,''),discountPrice(t[2],'team'),t[3],d.team.includes(i),'team',i)).join('')}</div>`;next='season2Analysis()';back='season2ProductionStep(0)';}
+ else if(st===2||st===3){const recording=st===2,opts=recording?s2PriceTable('studios'):s2PriceTable('arrs'),key=recording?'studio':'arr';title=recording?'Запись':'Аранжировка';kicker=recording?'Шаг 2 из 6':'Шаг 3 из 6';body=`<p class="production-intro">Выбери один вариант для релиза.</p><div class="production-grid">${opts.map((t,i)=>season2VisualCard((recording?['studio-home','studio-pro','studio-top']:['arr-original','arr-modern','arr-bold'])[i],t[0],recording?discountPrice(t[1],'studio'):t[1],`Качество записи: +${t[2]}`,d[key]===i,key,i)).join('')}</div>${s2Budget()}`;next=`season2ProductionStep(${st+1})`;back=st===2?'season2Analysis()':'season2ProductionStep(2)';enabled=d[key]!==null;}
+ else if(st===4){title='Обложка';kicker='Шаг 4 из 6';body=`<p class="production-intro">Выбери визуальную стратегию для песни.</p><div class="production-grid">${s2PriceTable('covers').map((t,i)=>season2VisualCard(['minimal','art','bright'][i],t[0],t[1],['Простой узнаваемый образ · +2 к охвату','Авторская история · +5 к охвату','Яркая подача · +7 к охвату; ещё +5 с клипом или роликами'][i],d.cover===i,'cover',i)).join('')}</div><p class="production-footnote">Оригинальная обложка песни в каталоге не меняется.</p>${s2Budget()}`;next='season2ProductionStep(5)';back='season2ProductionStep(3)';enabled=d.cover!==null;}
  else{return season2Promotion();}
  s2Shell(kicker,title,`<div class="production-screen s2-unified">${s2SongHeading()}${body}${s2Nav(back,next,'Продолжить',enabled)}</div>`);s2SaveScene('production');
 };
@@ -5016,7 +5025,7 @@ function s2PromoFit(i){const s=season2SongById(season2Draft.id),energetic=/ро�
 function season2Promotion(){
  if(!s2DraftReady())return season2Office();season2DraftStep=5;const d=season2Draft,t=s2MarketTrend();
  const groups=[['video','Клип','История песни в кадре',[0]],['shorts','Короткие видео','Знакомство с новой аудиторией',[1,6]],['playlist','Плейлисты','Песня в музыкальных подборках',[2,7]],['radio','Радио','Выход в эфир',[3]],['pr','PR и медиа','История проекта',[4,8]],['target','Таргет','Рекламная кампания',[5]]];
- s2Shell('Шаг 5 из 6','Продвижение',`<section class="promotion-screen s2-unified">${s2SongHeading()}<p class="promotion-intro">Выбери до двух каналов. <b>Выбрано ${d.promo.length} из 2</b>. Можно выпустить песню без дополнительной рекламы.</p><details class="promotion-trend"><summary>Рынок: ${t.name}</summary><p>${t.advice}</p></details><div class="promotion-grid">${groups.map(([key,title,desc,ids])=>`<section class="promotion-category"><header><span class="promotion-icon">${promotionIcon(key)}</span><div><h3>${title}</h3><p>${desc}</p></div></header><div class="promotion-options">${ids.map(i=>`<button class="promotion-option ${d.promo.includes(i)?'is-selected':''}" aria-pressed="${d.promo.includes(i)}" onclick="season2ToggleChoice('promo',${i})"><span class="promotion-check" aria-hidden="true">${d.promo.includes(i)?'✓':''}</span><span class="promotion-option-name">${promos[i][0]}<small>${s2PromoFit(i)?'Подходит характеру песни':'Другой путь к аудитории'}${promos[i][2]===t.key?(t.boost>0?' · рынок помогает':' · рынок сдерживает'):''}</small></span><strong>${fmt(season2PromoPrice(i))} VS₽</strong></button>`).join('')}</div><details><summary>Подробнее</summary>${ids.map(i=>`<p>${s2PromoDescriptions[i]}</p>`).join('')}</details></section>`).join('')}</div>${s2Budget()}${s2Nav('season2ProductionStep(4)','season2Dilemma()')}</section>`);s2SaveScene('production');
+ s2Shell('Шаг 5 из 6','Продвижение',`<section class="promotion-screen s2-unified">${s2SongHeading()}<p class="promotion-intro">Выбери до двух каналов. <b>Выбрано ${d.promo.length} из 2</b>. Можно выпустить песню без дополнительной рекламы.</p><details class="promotion-trend"><summary>Рынок: ${t.name}</summary><p>${t.advice}</p></details><div class="promotion-grid">${groups.map(([key,title,desc,ids])=>`<section class="promotion-category"><header><span class="promotion-icon">${promotionIcon(key)}</span><div><h3>${title}</h3><p>${desc}</p></div></header><div class="promotion-options">${ids.map(i=>`<button class="promotion-option ${d.promo.includes(i)?'is-selected':''}" aria-pressed="${d.promo.includes(i)}" onclick="season2ToggleChoice('promo',${i})"><span class="promotion-check" aria-hidden="true">${d.promo.includes(i)?'✓':''}</span><span class="promotion-option-name">${s2PriceTable('promos')[i][0]}<small>${s2PromoFit(i)?'Подходит характеру песни':'Другой путь к аудитории'}${s2PriceTable('promos')[i][2]===t.key?(t.boost>0?' · рынок помогает':' · рынок сдерживает'):''}</small></span><strong>${fmt(season2PromoPrice(i))} VS₽</strong></button>`).join('')}</div><details><summary>Подробнее</summary>${ids.map(i=>`<p>${s2PromoDescriptions[i]}</p>`).join('')}</details></section>`).join('')}</div>${s2Budget()}${s2Nav('season2ProductionStep(4)','season2Dilemma()')}</section>`);s2SaveScene('production');
 }
 function s2DilemmaData(){const week=season2Draft?.week||season2Week();return week%2?{title:'Ещё один дубль?',text:'Команда предлагает доработать запись перед премьерой.',yes:'Доработать звук',cost:600,quality:6,reach:0,effect:'+6 к качеству',no:'Оставить текущую запись'}:{title:'Рассказать историю песни?',text:'Небольшое интервью поможет представить песню новой аудитории.',yes:'Подготовить интервью',cost:450,quality:0,reach:8,effect:'+8 к охвату',no:'Сосредоточиться на музыке'}}
 function s2EventData(){
@@ -5046,7 +5055,7 @@ function s2ContributionHTML(song,plan){
 season2ReviewProduction=function(){
  if(!s2DraftReady())return season2Office();if(!['goal','studio','arr','cover'].every(k=>season2Draft[k]!==null))return season2ProductionStep(0);if(!['yes','no'].includes(season2Draft.dilemma))return season2Dilemma();if(!['yes','no'].includes(season2Draft.industry))return season2IndustryEvent();
  season2DraftStep=6;const d=season2Draft,song=season2SongById(d.id),plan=season2DraftPlan(),f=season2ReleaseForecast(song,plan),op=season2OperatingCost(),ready=career.cash>=f.cost+op+150;
- const summary=[['Цель',goals[d.goal][1].replace(/^\S+\s/,'')],['Команда',d.team.length?d.team.map(i=>team[i][1].replace(/^\S+\s/,'')).join(', '):'Без специалистов'],['Запись',studios[d.studio][0]],['Аранжировка',arrs[d.arr][0]],['Обложка',covers[d.cover][0]],['Продвижение',d.promo.length?d.promo.map(i=>promos[i][0]).join(', '):'Без рекламы'],['Решение',d.dilemma==='yes'?s2DilemmaData().yes:s2DilemmaData().no],['Событие',d.industry==='yes'?s2EventData().yes:s2EventData().no]];
+ const summary=[['Цель',goals[d.goal][1].replace(/^\S+\s/,'')],['Команда',d.team.length?d.team.map(i=>s2PriceTable('team')[i][1].replace(/^\S+\s/,'')).join(', '):'Без специалистов'],['Запись',s2PriceTable('studios')[d.studio][0]],['Аранжировка',s2PriceTable('arrs')[d.arr][0]],['Обложка',s2PriceTable('covers')[d.cover][0]],['Продвижение',d.promo.length?d.promo.map(i=>s2PriceTable('promos')[i][0]).join(', '):'Без рекламы'],['Решение',d.dilemma==='yes'?s2DilemmaData().yes:s2DilemmaData().no],['Событие',d.industry==='yes'?s2EventData().yes:s2EventData().no]];
  s2Shell('Шаг 6 из 6','Подтвердить выпуск',`<section class="s2-unified s2-review">${s2SongHeading()}<div class="s2-review-hero"><span class="finance-art">${financeDecisionIcon('hit')}</span><div><span class="kicker">ВСЁ ГОТОВО К ПРЕМЬЕРЕ</span><h3>Выпускаем «${song.name}»?</h3><p>Один релиз · одна игровая неделя</p></div></div><div class="production-budget s2-budget"><div><span>Релиз</span><b>${fmt(f.cost)} VS₽</b></div><div><span>Содержание</span><b>${fmt(op)} VS₽</b></div><div><span>Останется до доходов</span><b>${fmt(career.cash-f.cost-op)} VS₽</b></div></div><p class="s2-inline-note">Для выпуска нужно оставить 150 VS₽ резерва. Он не списывается.</p>${s2ContributionHTML(song,plan)}<details class="s2-help"><summary>Решения и прогноз</summary><dl class="s2-summary">${summary.map(([k,v])=>`<div><dt>${k}</dt><dd>${v}</dd></div>`).join('')}</dl><div class="s2-estimates"><div><span>Базовый прогноз прослушиваний</span><b>${fmt(f.streams)}</b></div><div><span>Базовый прогноз выручки</span><b>${fmt(f.income)} VS₽</b></div></div><p>Фактический результат зависит от случайного отклика аудитории. Дорогой релиз повышает шанс прорыва, но не гарантирует окупаемость. Мастеринг и медиа могут смягчить провал, не уменьшая вероятность этой ветки.</p></details>${!ready?`<p class="s2-risk" role="status">Не хватает ${fmt(f.cost+op+150-career.cash)} VS₽ с учётом резерва. Можно вернуться и сократить смету.</p>`:''}${!ready?'<button class="btn alt" onclick="s2CancelDraftScreen()">Отменить подготовку и вернуться в кабинет</button>':''}${s2Nav('season2IndustryEvent()',`season2PublishSong('${song.id}',-1)`,'Выпустить песню',ready)}</section>`);s2SaveScene('review');
 };
 function s2ResultHTML(h,song){
@@ -5422,3 +5431,269 @@ rewardSummaryBlob=async function(){if(!available())throw Error('locked');return 
 
 </script></body>
 </html>
+
+<style>
+#screen .s2-purchase-reserve{font-size:12px;line-height:1.45;color:#c9dfeb;margin:10px 0;overflow-wrap:break-word}
+#screen .s2-sell-level{margin-top:10px;width:100%;white-space:normal}
+#screen .s2-recovery-notice{padding:14px 16px;margin:14px 0;border:1px solid #d5ae6d;border-radius:14px;background:#2f2c26;color:#fff4df}
+#screen .s2-recovery-notice p{margin:8px 0 0;font-size:14px;line-height:1.5}
+#screen .s2-recovery-confirm{max-width:640px;margin:auto;padding:18px;border:1px solid #557e94;border-radius:16px;background:#12364d;color:#f4fbff}
+#screen .s2-recovery-confirm h3{font-size:20px;line-height:1.3;overflow-wrap:break-word}
+#screen .s2-recovery-confirm p{font-size:15px;line-height:1.55}
+#screen .s2-recovery-confirm .nav{gap:12px;flex-wrap:wrap}
+#screen .s2-recovery-confirm .btn{white-space:normal}
+
+</style>
+
+<script>
+// S2 safe purchases and reversible infrastructure recovery. Append after current mechanics.
+(function(){
+ const REFUND_RATE=.70;
+ let salePending=null,saleSerial=0;
+ function careerActive(){return season2Ready()&&season2Week()<=12;}
+ function lowestReleaseCost(){
+  const available=season2CatalogSongs().filter(s=>!season2Released(s.id));
+  if(!available.length)return 0;
+  const old=season2Draft,week=season2Week();
+  let result=Infinity;
+  try{
+   const selected=available.find(s=>s.id===old?.id)||available[0];
+   // No team or promotion are valid choices. Enumerate paid recording/art choices and both decisions.
+   for(let st=0;st<studios.length;st++)for(let ar=0;ar<arrs.length;ar++)for(let co=0;co<covers.length;co++)for(const a of ['yes','no'])for(const b of ['yes','no']){
+    season2Draft={id:selected.id,week,balanceVersion:2,goal:2,team:[],studio:st,arr:ar,cover:co,promo:[],dilemma:a,industry:b,strategyVersion:2,strategyScene:{dilemma:(week-1)%6,industry:(week+Math.floor((week-1)/6))%6}};
+    const f=season2ReleaseForecast(selected,season2DraftPlan());
+    if(Number.isFinite(f.cost)&&f.cost>=0)result=Math.min(result,f.cost);
+   }
+  }finally{season2Draft=old;}
+  return Number.isFinite(result)?Math.ceil(result):Infinity;
+ }
+ window.s2RecoveryFloor=function(){const release=lowestReleaseCost(),operating=season2OperatingCost();return {release,operating,reserve:150,total:release+operating+150};};
+ window.s2AssetPurchaseQuote=function(key){
+  const a=season2Assets.find(x=>x.key===key),level=a?season2Level(key):3;
+  if(!a||level>=3)return null;
+  const old=career.season2Infra,cost=a.costs[level];let floor;
+  try{career.season2Infra={...(old||{}),[key]:level+1};floor=s2RecoveryFloor();}finally{career.season2Infra=old;}
+  const remaining=career.cash-cost;
+  return {key,level,cost,remaining,...floor,allowed:careerActive()&&remaining>=floor.total};
+ };
+ const buyBase=buySeason2Asset;
+ buySeason2Asset=function(key){
+  const q=s2AssetPurchaseQuote(key);if(!q||!careerActive())return;
+  if(!q.allowed){gameFeel('СОХРАНИ БЮДЖЕТ РЕЛИЗА',`После покупки нужно оставить ${fmt(q.total)} VS₽: ${fmt(q.release)} на экономный релиз, ${fmt(q.operating)} на содержание и 150 резерва.`);season2Infrastructure();return;}
+  salePending=null;return buyBase(key);
+ };
+ function invalidSale(){salePending=null;season2Infrastructure();}
+ window.s2RequestAssetSale=function(key){
+  const a=season2Assets.find(x=>x.key===key),level=a?season2Level(key):0;if(!a||!level||!careerActive())return;
+  const refund=Math.floor(a.costs[level-1]*REFUND_RATE),token=++saleSerial;
+  salePending={token,key,level,refund,week:season2Week(),cash:career.cash,career};
+  s2Shell('Восстановить бюджет','Продать уровень объекта?',`<section class="s2-recovery-confirm" data-sale-token="${token}"><span class="finance-art">${infraBrandIcon(key)}</span><h3>${a.name}: уровень ${level} → ${level-1}</h3><p>Вернёшь <b>${fmt(refund)} VS₽</b>, 70% цены этого уровня. На счету будет <b>${fmt(career.cash+refund)} VS₽</b>.</p><p>Бонусы и содержание этого уровня перестанут действовать. Уже полученные награды и результаты релизов сохранятся. Продажа не тратит игровую неделю.</p><p>Это частичный возврат вложений, не доход от работы лейбла.</p><nav class="nav"><button class="btn alt" onclick="s2CancelAssetSale()">Оставить объект</button><button class="btn" onclick="s2ConfirmAssetSale(${token})">Продать за ${fmt(refund)} VS₽</button></nav></section>`);
+ };
+ window.s2CancelAssetSale=function(){salePending=null;season2Infrastructure();};
+ window.s2ConfirmAssetSale=function(token){
+  const p=salePending;if(!p||p.token!==token)return;
+  if(!document.querySelector('.s2-recovery-confirm[data-sale-token="'+token+'"]')){salePending=null;return;}
+  if(!careerActive()||p.career!==career||p.week!==season2Week()||p.cash!==career.cash||season2Level(p.key)!==p.level)return invalidSale();
+  salePending=null;career.season2Infra={...(career.season2Infra||{}),[p.key]:p.level-1};career.cash+=p.refund;
+  career.season2AssetSales=Array.isArray(career.season2AssetSales)?career.season2AssetSales:[];
+  career.season2AssetSales.push({week:p.week,key:p.key,fromLevel:p.level,refund:p.refund});
+  saveCareer();season2Infrastructure();
+ };
+ function decorate(){
+  const host=document.querySelector('#screen[data-season="2"] .infra-compact');if(!host)return;
+  const ended=!careerActive(),floor=s2RecoveryFloor();
+  for(const card of host.querySelectorAll('.infra-item:not(.infra-project)')){
+   const buy=[...card.querySelectorAll('button[onclick]')].find(b=>/buySeason2Asset/.test(b.getAttribute('onclick')||''));
+   if(!buy)continue;const match=(buy.getAttribute('onclick')||'').match(/buySeason2Asset\(["']([^"']+)["']\)/),key=match?.[1],a=season2Assets.find(x=>x.key===key);if(!a)continue;
+   const q=s2AssetPurchaseQuote(key),body=card.querySelector('.s2-fold-body')||card;
+   if(q&&!ended){
+    buy.disabled=!q.allowed;
+    const note=document.createElement('p');note.className='s2-purchase-reserve';
+    note.textContent=q.allowed?`После покупки: ${fmt(q.remaining)} VS₽. Сохраняем ${fmt(q.total)} VS₽ на экономный релиз, содержание и резерв.`:`Для безопасной покупки не хватает ${fmt(Math.max(0,q.cost+q.total-career.cash))} VS₽. Нужно сохранить ${fmt(q.total)} VS₽ на экономный релиз, содержание и резерв.`;
+    body.appendChild(note);
+   }
+   const level=season2Level(key);if(level&&!ended){
+    const b=document.createElement('button');b.type='button';b.className='btn alt s2-sell-level';b.textContent=`Продать уровень · вернуть ${fmt(Math.floor(a.costs[level-1]*REFUND_RATE))} VS₽`;b.addEventListener('click',()=>s2RequestAssetSale(key));body.appendChild(b);
+   }
+  }
+  if(!ended&&career.cash<floor.total){
+   const panel=document.createElement('section');panel.className='s2-recovery-notice';panel.setAttribute('role','status');
+   const hasAssets=season2Assets.some(a=>season2Level(a.key)>0);
+   panel.innerHTML=`<strong>Сначала восстанови бюджет</strong><p>Для экономного релиза, содержания и резерва нужно ${fmt(floor.total)} VS₽. Сейчас не хватает ${fmt(Math.max(0,floor.total-career.cash))} VS₽.</p><p>${hasAssets?'Можно продать последний уровень любого объекта за 70% его цены. Раскрой карточку объекта ниже.':'Сократи смету релиза. Пропуск недели не гарантирует накопление: сначала сравни доход каталога и объектов с содержанием.'}</p>`;
+   const overview=host.querySelector('.infra-overview');overview?overview.after(panel):host.prepend(panel);
+  }
+ }
+ const infraBase=season2Infrastructure;season2Infrastructure=function(){salePending=null;const out=infraBase.apply(this,arguments);decorate();return out;};
+ if(typeof resumeScreens==='object')resumeScreens.season2Infrastructure=season2Infrastructure;
+})();
+
+</script>
+
+<style>
+#screen .s2-weekly-report{margin:14px 0;padding:14px 16px;border:1px solid #557e94;border-radius:14px;background:#12364d;color:#f3fafc;min-width:0}
+#screen .s2-weekly-report summary{display:flex;align-items:center;justify-content:space-between;gap:12px;cursor:pointer;font-size:16px;font-weight:700;list-style:none}
+#screen .s2-weekly-report summary strong{white-space:nowrap;color:#fff}
+#screen .s2-weekly-net{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px;margin:14px 0}
+#screen .s2-weekly-net span{font-size:12px;color:#c9dce5}
+#screen .s2-weekly-net b{display:block;margin-top:4px;font-size:17px;color:#fff}
+#screen .s2-weekly-report dl{margin:0;padding:0}
+#screen .s2-weekly-report dl>div{display:flex;justify-content:space-between;gap:14px;padding:7px 0;border-bottom:1px solid #ffffff20;font-size:13px;line-height:1.4}
+#screen .s2-weekly-report dd{margin:0;white-space:nowrap}
+#screen .s2-weekly-report p{font-size:13px;line-height:1.5;color:#e4eff4;margin:12px 0 0}
+#screen .s2-weekly-report .s2-weekly-note{font-size:12px;color:#c9dce5}
+@media(max-width:400px){#screen .s2-weekly-report{padding:12px}#screen .s2-weekly-report summary{font-size:14px;flex-wrap:wrap}#screen .s2-weekly-report dl>div{font-size:12px;gap:8px}}
+
+</style>
+
+<script>
+/* Audited weekly ledger. Records actual completed transactions; never pays twice. */
+let s2WeeklyCapture=null;
+function s2WeeklyFinite(n){return typeof n==='number'&&Number.isFinite(n)}
+function s2WeeklySum(items,key){return items.reduce((n,x)=>n+(s2WeeklyFinite(x?.[key])?x[key]:0),0)}
+for(const name of ['season2CatalogWeek','season2NewCatalogWeek','season2PassiveWeek','season2DigitalIncome','season2ChargeOperatingCost']){
+ const base=window[name];
+ window[name]=function(){const result=base.apply(this,arguments);if(s2WeeklyCapture)(s2WeeklyCapture[name]||(s2WeeklyCapture[name]=[])).push(result);return result};
+}
+function s2WeeklyFromRelease(h){
+ const r=h?.weekReport;if(!r||!['oldCatalogIncome','newCatalogIncome','passiveIncome','digital','operating','debtPaid','cashDelta'].every(k=>s2WeeklyFinite(r[k])))return null;
+ return {version:1,week:h.week,kind:'release',title:h.song||'Релиз',releaseIncome:h.income||0,releaseCost:h.cost||0,projectIncome:0,projectCost:0,...r,recurringIncome:r.oldCatalogIncome+r.newCatalogIncome+r.passiveIncome+r.digital};
+}
+function s2WeeklyRows(){
+ const byWeek=new Map();
+ for(const h of career.season2Releases||[]){const r=s2WeeklyFromRelease(h);if(r&&Number.isInteger(r.week)&&r.week>=1&&r.week<=12)byWeek.set(r.week,r)}
+ for(const r of career.season2WeekReports||[])if(r?.version===1&&Number.isInteger(r.week)&&r.week>=1&&r.week<=12)byWeek.set(r.week,r);
+ return [...byWeek.values()].sort((a,b)=>a.week-b.week);
+}
+function s2WeeklyHTML(r,open=false){
+ if(!r)return '';const income=(r.releaseIncome||0)+(r.projectIncome||0)+r.recurringIncome,cost=(r.releaseCost||0)+(r.projectCost||0)+r.operating;
+ return `<details class="s2-weekly-report" ${open?'open':''}><summary><span>Итог недели ${r.week}</span><strong>${r.cashDelta>=0?'+':''}${fmt(r.cashDelta)} VS₽</strong></summary><div class="s2-weekly-net"><span>Поступления за ход<b>+${fmt(income)} VS₽</b></span><span>Расходы за ход<b>−${fmt(cost)} VS₽</b></span>${r.debtPaid?`<span>Погашение аванса<b>−${fmt(r.debtPaid)} VS₽</b></span>`:''}</div><dl><div><dt>Премьера / разовый проект</dt><dd>+${fmt((r.releaseIncome||0)+(r.projectIncome||0))} VS₽</dd></div><div><dt>Старый и новый каталог</dt><dd>+${fmt(r.oldCatalogIncome+r.newCatalogIncome)} VS₽</dd></div><div><dt>Объекты и дистрибуция</dt><dd>+${fmt(r.passiveIncome+r.digital)} VS₽</dd></div><div><dt>Подготовка релиза / проекта</dt><dd>−${fmt((r.releaseCost||0)+(r.projectCost||0))} VS₽</dd></div><div><dt>Содержание лейбла</dt><dd>−${fmt(r.operating)} VS₽</dd></div></dl><p>Регулярный доход: ${fmt(r.recurringIncome)} VS₽. ${r.recurringIncome>=r.operating?'Он покрыл содержание этой недели.':'До покрытия содержания не хватило '+fmt(r.operating-r.recurringIncome)+' VS₽.'} Доход премьеры и разового проекта в эту проверку не входит.</p><p class="s2-weekly-note">Показаны фактические операции при завершении недели. Покупки, продажа объектов и параллельные проекты до этого хода сюда не включены. Резерв 150 VS₽ не является расходом.</p></details>`;
+}
+function s2WeeklyMount(){
+ const root=document.getElementById('screen');if(!root)return;
+ const host=root.querySelector('.s2-office')||root.querySelector('.infra-compact')||root.querySelector('.s2-finale');if(!host)return;
+ host.querySelector('.s2-weekly-report')?.remove();const rows=s2WeeklyRows();if(rows.length){const box=document.createElement('div');box.innerHTML=s2WeeklyHTML(rows[rows.length-1]);host.insertBefore(box.firstElementChild,host.querySelector('.s2-objective-panel')?.nextSibling||host.firstChild)}
+ const week=season2Week();for(const el of host.querySelectorAll('[onclick]')){let action=el.getAttribute('onclick');action=action.replace(/season2WaitWeek\(\)/g,`season2WaitWeek(${week})`).replace(/runSeason2Project\((['"])([^'"]+)\1\)/g,(_,q,key)=>`runSeason2Project(${q}${key}${q},${week})`);el.setAttribute('onclick',action)}
+}
+function s2WeeklyComplete(base,kind,args,expectedWeek){
+ const week=season2Week();if(expectedWeek!==undefined&&expectedWeek!==week)return;
+ if(s2WeeklyCapture)return base.apply(this,args); // Only the outer completion owns the ledger.
+ const beforeCash=career.cash,beforeDebt=career.advanceDebt||0,capture={};s2WeeklyCapture=capture;let result;
+ try{result=base.apply(this,args)}finally{s2WeeklyCapture=null}
+ if(season2Week()!==week+1)return result;
+ const old=s2WeeklySum(capture.season2CatalogWeek||[],'income'),fresh=s2WeeklySum(capture.season2NewCatalogWeek||[],'income'),passive=s2WeeklySum(capture.season2PassiveWeek||[],'income'),digital=(capture.season2DigitalIncome||[]).find(s2WeeklyFinite)||0,operating=(capture.season2ChargeOperatingCost||[]).filter(s2WeeklyFinite).reduce((a,b)=>a+b,0);
+ const release=kind==='release'?(career.season2Releases||[]).find(h=>h.week===week):null;
+ const project=kind==='project'?[...(career.season2History||[])].reverse().find(h=>h.week===week&&!h.parallel&&h.key!=='wait'):null;
+ const r={version:1,week,kind,releaseIncome:release?.income||0,releaseCost:release?.cost||0,projectIncome:project?.income||0,projectCost:project?.cost||0,oldCatalogIncome:old,newCatalogIncome:fresh,passiveIncome:passive,digital,operating,debtPaid:Math.max(0,beforeDebt-(career.advanceDebt||0)),recurringIncome:old+fresh+passive+digital,cashBefore:beforeCash,cashAfter:career.cash,cashDelta:career.cash-beforeCash};
+ if(!Array.isArray(career.season2WeekReports))career.season2WeekReports=[];career.season2WeekReports=career.season2WeekReports.filter(x=>x.week!==week);career.season2WeekReports.push(r);saveCareer();s2WeeklyMount();s2MountObjective();return result;
+}
+const s2WeeklyPublishBase=season2PublishSong;
+season2PublishSong=function(){return s2WeeklyComplete(s2WeeklyPublishBase,'release',arguments)};
+const s2WeeklyWaitBase=season2WaitWeek;
+season2WaitWeek=function(expectedWeek){return s2WeeklyComplete(s2WeeklyWaitBase,'wait',arguments,expectedWeek)};
+const s2WeeklyProjectBase=runSeason2Project;
+runSeason2Project=function(key,expectedWeek){return s2WeeklyComplete(s2WeeklyProjectBase,'project',arguments,expectedWeek)};
+const s2WeeklyResultBase=s2ResultHTML;
+s2ResultHTML=function(h,song){const html=s2WeeklyResultBase(h,song),report=s2WeeklyHTML(s2WeeklyFromRelease(h),true);return report?html.replace('<div class="nav premiere-actions">',report+'<div class="nav premiere-actions">'):html};
+for(const name of ['season2Office','season2Infrastructure','season2Finale']){const base=window[name];window[name]=function(){const result=base.apply(this,arguments);s2WeeklyMount();return result}}
+// Broader recurring-income challenge. Legacy achievements remain valid.
+const s2WeeklyObjectiveBase=s2ObjectiveMetric;
+const labelObjective=S2_OBJECTIVES.find(x=>x.id==='label');
+labelObjective.detail='В трёх завершённых неделях регулярный доход каталога, объектов и дистрибуции покрыл содержание лейбла. Учитываются недели релизов, проектов и ожидания. Премьеры, разовые проекты и покупка объектов в эту проверку не входят.';
+labelObjective.short='Регулярный доход покрывает содержание';
+s2ObjectiveMetric=function(id){if(id!=='label')return s2WeeklyObjectiveBase(id);const legacy=s2WeeklyObjectiveBase(id),count=s2WeeklyRows().filter(r=>s2WeeklyFinite(r.recurringIncome)&&s2WeeklyFinite(r.operating)&&r.operating>0&&r.recurringIncome>=r.operating).length;return Math.max(legacy,count)};
+const s2WeeklyObjectiveHTMLBase=s2ObjectiveHTML;
+s2ObjectiveHTML=function(){return s2WeeklyObjectiveHTMLBase().replace('У части старых релизов нет подробного недельного отчёта. Они не учитываются в этой цели: прошлые доходы не восстанавливаются предположительно.','У части прежних недель нет полного отчёта. Их доходы не восстанавливаются предположительно; уже достигнутый результат по прежним правилам сохраняется.')};
+
+</script>
+
+<script>
+// Price/risk guidance for S2; does not change settlement.
+function s2MeanReleaseFactor(f){const p=f.premium||0,c=.035+.19*p;return c*(2.25+1.9*p)+.27*(Math.max(.19,f.risk.downside-.12*p)+.135)+.47*.935+(.26-c)*(1.33+.24*p)}
+const s2FinanceReviewBase=season2ReviewProduction;
+season2ReviewProduction=function(){const result=s2FinanceReviewBase.apply(this,arguments);const host=document.querySelector('.s2-review');if(!host||!season2Draft)return result;const f=season2ReleaseForecast(season2SongById(season2Draft.id),season2DraftPlan()),expected=Math.round(f.income*s2MeanReleaseFactor(f));const box=document.createElement('details');box.className='s2-help s2-finance-risk';box.innerHTML=`<summary>Цена и риск этой премьеры</summary><p>Шанс прорыва: ${Math.round((.035+.19*(f.premium||0))*1000)/10}%. Вероятность ветки провала: 27%. Остальные исходы — умеренный результат или успех.</p><p>Средняя выручка при большом числе одинаковых запусков: около ${fmt(expected)} VS₽. После затрат на релиз: ${season2Signed(expected-f.cost)} VS₽. Содержание, долг и будущий каталог здесь не включены.</p><p>Это статистический ориентир, не обещание дохода отдельной премьеры. Среднее может быть выше обычного результата из-за редких прорывов.</p>${season2Draft.balanceVersion===2?'<p>Для новых релизов второго сезона действуют обновлённые цены. Более качественная запись сильнее влияет на прогноз прослушиваний.</p>':'<p>Этот релиз был начат до обновления: его прежние цены и расчёт сохранены.</p>'}`;host.insertBefore(box,host.querySelector('.s2-flow-nav'));return result};
+
+</script>
+
+<style>
+/* Mobile-only layout; desktop source controls and overview remain unchanged. */
+#screen[data-season="2"] .s2-infra-mobile-nav,#screen[data-season="2"] .s2-infra-focused-help{display:none}
+@media(max-width:600px){
+ #screen[data-season="2"] .s2-infra-focus{display:flex;flex-direction:column;gap:12px;padding-bottom:0!important}
+ #screen[data-season="2"] .s2-infra-focus>.infra-overview{order:0;margin:0!important;padding:12px!important}
+ #screen[data-season="2"] .s2-infra-focus>.infra-overview>.s2-infra-overview-help,
+ #screen[data-season="2"] .s2-infra-focus>.infra-overview>h2,
+ #screen[data-season="2"] .s2-infra-focus>.infra-overview>.infra-weekly>div:first-child,
+ #screen[data-season="2"] .s2-infra-focus>.s2-quick-actions,
+ #screen[data-season="2"] .s2-infra-focus>.s2-infra-dock,
+ #screen[data-season="2"] .s2-infra-focus>.infra-primary{display:none!important}
+ #screen[data-season="2"] .s2-infra-focus .infra-weekly{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:8px!important;margin:8px 0 0!important}
+ #screen[data-season="2"] .s2-infra-focus .infra-weekly>div:last-child{grid-column:auto!important}
+ #screen[data-season="2"] .s2-infra-focus .infra-weekly>div{padding:8px!important}
+ #screen[data-season="2"] .s2-infra-focus .infra-weekly span{font-size:11px;line-height:1.3}
+ #screen[data-season="2"] .s2-infra-focus .infra-weekly b{font-size:16px;line-height:1.4}
+ #screen[data-season="2"] .s2-infra-focus>.s2-infra-mobile-nav{order:1;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin:0!important}
+ #screen[data-season="2"] .s2-infra-mobile-nav .btn{min-width:0!important;width:100%!important;margin:0!important;padding:10px 8px!important;min-height:44px;line-height:1.25;font-size:12px!important;white-space:normal!important}
+ #screen[data-season="2"] .s2-infra-focus>.s2-infra-objects{order:2}
+ #screen[data-season="2"] .s2-infra-focus>.s2-infra-projects{order:3}
+ #screen[data-season="2"] .s2-infra-focus>.s2-infra-explainer{order:4}
+ #screen[data-season="2"] .s2-infra-focus>.s2-infra-focused-help{display:block;order:5;margin:0!important;padding:12px;border:1px solid #416078;border-radius:12px}
+ #screen[data-season="2"] .s2-infra-focus>.s2-infra-last{order:6}
+ #screen[data-season="2"] .s2-infra-focus>.infra-actions{order:7}
+ #screen[data-season="2"] .s2-infra-focus>.infra-section{margin:0!important}
+ #screen[data-season="2"] .s2-infra-focus .s2-compact-summary{padding:10px 12px;gap:4px 8px;min-height:62px}
+ #screen[data-season="2"] .s2-infra-focus .s2-compact-summary>.price{font-size:13px}
+ #screen[data-season="2"] .s2-infra-focus .infra-item-head svg{width:32px;height:32px}
+ #screen[data-season="2"] .s2-infra-mobile-nav .btn:focus-visible{outline:3px solid #f2d69e;outline-offset:2px}
+}
+/* The custom branded chevron replaces the base details pseudo-marker. */
+#screen[data-season="2"] .s2-infra-focus .s2-compact-summary::after{display:none!important;content:none!important}
+#screen[data-season="2"] .s2-infra-focus .s2-compact-summary>.vs-disclosure-icon{display:none!important}
+
+</style>
+
+<script>
+/* Presentation-only. Append after all S2 render wrappers, at the document end. */
+(function(){
+ function compactInfrastructure(){
+  const host=document.querySelector('#screen[data-season="2"] .s2-compact-infra');
+  if(!host||host.classList.contains('s2-infra-focus'))return;
+  host.classList.add('s2-infra-focus');
+  const primary=host.querySelector(':scope > .infra-primary');
+  const dock=host.querySelector(':scope > .s2-infra-dock');
+  const overview=host.querySelector(':scope > .infra-overview');
+  const sections=[...host.querySelectorAll(':scope > .infra-section')];
+  sections.forEach(section=>{
+   if(section.querySelector('.infra-project'))section.classList.add('s2-infra-projects');
+   else if(section.querySelector('.infra-item'))section.classList.add('s2-infra-objects');
+   else if(section.querySelector('summary')?.textContent.trim()==='Последнее событие')section.classList.add('s2-infra-last');
+   else section.classList.add('s2-infra-explainer');
+  });
+  // Real controls retain their original semantics; only their compact proxy is added.
+  const nav=document.createElement('nav');nav.className='s2-infra-mobile-nav';nav.setAttribute('aria-label','Навигация инфраструктуры');
+  for(const source of [dock?.querySelector('button'),primary?.querySelector('button')]){
+   if(!source)continue;
+   // Avoid two identical Continue controls when an unfinished release exists.
+   if([...nav.children].some(b=>b.textContent.replace(/→/g,'').trim()===source.textContent.replace(/→/g,'').trim()))continue;
+   const b=document.createElement('button');b.type='button';b.className='btn alt';b.textContent=source.textContent;b.disabled=source.disabled;
+   b.addEventListener('click',()=>source.click());nav.appendChild(b);
+  }
+  if(nav.children.length===1){
+   const back=document.createElement('button');back.type='button';back.className='btn alt';back.textContent='Мой лейбл';back.addEventListener('click',()=>season2Office());nav.prepend(back);
+  }
+  if(overview)overview.after(nav);else host.prepend(nav);
+  // Help remains accessible but follows the objects, rather than occupying the first screen.
+  const help=overview?.querySelector('.s2-infra-overview-help');
+  if(help){const copy=help.cloneNode(true);copy.classList.add('s2-infra-focused-help');copy.open=false;host.appendChild(copy);}
+ }
+ const previous=season2Infrastructure;
+ season2Infrastructure=function(...args){const result=previous.apply(this,args);compactInfrastructure();return result;};
+ if(typeof resumeScreens==='object'&&resumeScreens.season2Infrastructure)resumeScreens.season2Infrastructure=season2Infrastructure;
+})();
+
+</script>
+
+<style>
+/* Narrow confirmation/result metrics: preserve words and space between labels. */
+@media(max-width:360px){#screen .s2-effect-grid{grid-template-columns:1fr;gap:10px}#screen .s2-effect-grid>div{display:grid;grid-template-columns:88px minmax(0,1fr);gap:10px;align-items:start}#screen .s2-effect-grid span{margin-top:0}}
+
+</style>
