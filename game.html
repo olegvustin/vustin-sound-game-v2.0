@@ -461,7 +461,101 @@ body .premiere-stage .stream-counter{font-size:clamp(40px,7vw,64px)!important}
 #producerStatusToast:empty{padding:0;border:0;box-shadow:none}
 
 </style>
-</head>
+<style>
+.s2-strategy-scene .finance-copy{min-width:0}.s2-strategy-scene .finance-copy strong{display:block;font-size:1rem;margin:5px 0}.s2-personal-review{margin:18px 0}.s2-personal-review h3{margin-bottom:10px}.s2-review-random,.s2-review-next{padding:14px;border:1px solid rgba(217,180,104,.24);border-radius:16px;background:rgba(255,255,255,.035);font-size:14px;line-height:1.55}.s2-review-next p{margin:6px 0 0}.s2-strategy-recap p{line-height:1.5}@media(max-width:600px){.s2-strategy-scene .s2-decisions{grid-template-columns:1fr}.s2-strategy-scene .finance-option{padding:14px;min-height:0}.s2-strategy-scene .finance-art{width:42px;height:42px}.s2-review-random,.s2-review-next{padding:12px}}
+
+.s2-objective-panel{margin:0 0 18px;padding:16px 18px;background:linear-gradient(120deg,#f1ece4,#fffaf4);border:1px solid #d9cdbb;border-radius:18px;color:#30251e;min-width:0}
+.s2-objective-panel h3{margin:5px 0 6px;font-size:20px}.s2-objective-panel p{font-size:13px;line-height:1.5;margin:7px 0}.s2-objective-heading{display:flex;flex-direction:column;gap:5px}.s2-objective-heading strong{font-size:18px}.s2-objective-panel.is-achieved{border-color:#758f75;background:linear-gradient(120deg,#edf4e9,#fffaf4)}
+.s2-objective-progress{display:flex;align-items:center;gap:14px;margin-top:10px}.s2-objective-progress progress{appearance:none;height:7px;flex:1;width:50%;border:0;border-radius:8px;overflow:hidden;background:#dcd3c6;accent-color:#8c5c34}.s2-objective-progress progress::-webkit-progress-bar{background:#dcd3c6}.s2-objective-progress progress::-webkit-progress-value{background:#8c5c34;border-radius:8px}.s2-objective-progress progress::-moz-progress-bar{background:#8c5c34}.s2-objective-progress span{font-size:12px;line-height:1.4;overflow-wrap:normal}
+.s2-objective-picker{margin-top:10px}.s2-objective-picker summary{font-size:13px;cursor:pointer;min-height:28px;line-height:28px}.s2-objective-options{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin:12px 0 6px}.s2-objective-choice{display:flex;align-items:flex-start;gap:9px;min-width:0;padding:12px;background:#fffaf3;border:1px solid #d7c8b4;border-radius:13px;color:inherit;text-align:left;cursor:pointer;font:inherit}.s2-objective-choice>span:last-child{min-width:0}.s2-objective-choice strong{display:block;font-size:14px;line-height:1.35}.s2-objective-choice span span{display:block;font-size:12px;line-height:1.5;margin-top:5px}.s2-objective-icon{display:block;flex:0 0 30px;width:30px;height:30px}.s2-objective-icon svg{width:100%;height:100%}.s2-objective-choice:hover{border-color:#8c5c34;background:#f4eadb}.s2-objective-choice:focus-visible,.s2-objective-picker summary:focus-visible{outline:3px solid #8c5c34;outline-offset:3px}.s2-objective-note{color:#62584c}
+@media(max-width:600px){.s2-objective-panel{padding:13px 14px;border-radius:15px}.s2-objective-options{grid-template-columns:1fr}.s2-objective-progress{align-items:stretch;flex-direction:column;gap:7px}.s2-objective-progress progress{width:100%;flex:none}.s2-objective-heading strong{font-size:17px}}
+/* Light objective card must not inherit the dark office's pale text. */
+#screen[data-season="2"] .s2-objective-panel,
+#screen[data-season="2"] .s2-objective-panel h3,
+#screen[data-season="2"] .s2-objective-panel p,
+#screen[data-season="2"] .s2-objective-panel strong,
+#screen[data-season="2"] .s2-objective-panel summary,
+#screen[data-season="2"] .s2-objective-panel .s2-objective-progress span,
+#screen[data-season="2"] .s2-objective-panel .s2-objective-choice{color:#30251e}
+#screen[data-season="2"] .s2-objective-panel .kicker{color:#73502c}
+#screen[data-season="2"] .s2-objective-panel .s2-objective-note,
+#screen[data-season="2"] .s2-objective-panel .s2-objective-choice span span{color:#514438}
+
+/* Compact disclosures inherit the game's SVG icon system. Scope strictly to S2. */
+#screen[data-season="2"] .s2-compact-summary{display:grid;grid-template-columns:minmax(0,1fr) auto 18px;align-items:center;gap:10px;list-style:none;cursor:pointer;min-height:64px;min-width:0;padding:14px}
+#screen[data-season="2"] .s2-compact-summary::-webkit-details-marker{display:none}
+#screen[data-season="2"] .s2-compact-summary:focus-visible{outline:3px solid #f2d69e;outline-offset:-3px;border-radius:12px}
+#screen[data-season="2"] .s2-compact-summary>header{margin:0!important;min-width:0;border:0!important;padding:0!important}
+#screen[data-season="2"] .s2-compact-summary h3{font-size:17px;line-height:1.25;margin:0;overflow-wrap:break-word;word-break:normal;hyphens:none}
+#screen[data-season="2"] .s2-compact-summary header p{display:none}
+#screen[data-season="2"] .s2-fold-chevron{width:18px;height:18px;display:block;color:#b9dfeb}
+#screen[data-season="2"] .s2-fold-chevron svg{display:block;width:18px;height:18px;transition:transform .18s ease}
+#screen[data-season="2"] details[open]>.s2-compact-summary .s2-fold-chevron svg{transform:rotate(180deg)}
+#screen[data-season="2"] .s2-fold-badge{font-size:11px;color:#f2d69e;max-width:80px;line-height:1.3;text-align:right}
+#screen[data-season="2"] .s2-fold-body{padding:0 14px 14px;min-width:0}
+#screen[data-season="2"] .s2-compact-promotion .promotion-category,#screen[data-season="2"] .s2-compact-infra .infra-item{padding:0!important;min-width:0;overflow:hidden}
+#screen[data-season="2"] .s2-compact-infra .s2-compact-summary{grid-template-columns:minmax(0,1fr) 18px}
+#screen[data-season="2"] .s2-compact-infra .s2-compact-summary>.price{grid-column:1;grid-row:2;margin:0;font-size:14px;line-height:1.2}
+#screen[data-season="2"] .s2-compact-infra .s2-fold-chevron{grid-column:2;grid-row:1/3}
+#screen[data-season="2"] .s2-compact-infra .s2-compact-summary .kicker{font-size:10px;letter-spacing:.5px}
+#screen[data-season="2"] .s2-infra-overview-help{margin-top:12px;font-size:13px}
+#screen[data-season="2"] .s2-infra-overview-help summary{cursor:pointer;font-weight:700;color:#d9edf4}
+#screen[data-season="2"] .s2-repeat-team{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin:12px 0}
+#screen[data-season="2"] .s2-repeat-team .btn{font-size:12px;margin:0;min-height:44px}
+#screen[data-season="2"] .s2-repeat-status{font-size:12px;color:#bdd7e6;line-height:1.4;margin:0;flex:1;min-width:180px}
+#screen[data-season="2"] .s2-compact-dock,#screen[data-season="2"] .s2-infra-dock{position:sticky;bottom:0;z-index:45;background:#12354a;border:1px solid #668fa0;border-radius:14px;box-shadow:0 -6px 22px #051c2860;padding:12px;margin-top:16px;display:flex;gap:14px;align-items:center;min-width:0}
+#screen[data-season="2"] .s2-dock-meta{display:grid;gap:3px;flex:1;min-width:0;font-size:12px;color:#d2e4ed}
+#screen[data-season="2"] .s2-dock-meta strong{color:#f2d69e;font-size:15px;line-height:1.25}
+#screen[data-season="2"] .s2-dock-meta small{font-size:10px;line-height:1.25}
+#screen[data-season="2"] .s2-compact-dock .s2-flow-nav{margin:0!important;gap:8px;flex:none}
+#screen[data-season="2"] .s2-compact-dock .btn,#screen[data-season="2"] .s2-infra-dock .btn{min-height:44px;font-size:12px;margin:0;padding:10px 14px;white-space:normal}
+#screen[data-season="2"] .s2-infra-dock{justify-content:space-between;font-size:13px}
+@media(max-width:600px){
+ #screen[data-season="2"] .s2-compact-promotion .promotion-grid,#screen[data-season="2"] .s2-compact-infra .infra-grid{grid-template-columns:minmax(0,1fr)!important;gap:8px!important}
+ #screen[data-season="2"] .s2-compact-summary{padding:11px 12px;min-height:62px;gap:8px}
+ #screen[data-season="2"] .s2-compact-summary h3{font-size:15px}
+ #screen[data-season="2"] .s2-fold-body{padding:0 12px 12px}
+ #screen[data-season="2"] .s2-compact-infra .infra-weekly{gap:8px}
+ #screen[data-season="2"] .s2-compact-infra .infra-overview h2{font-size:21px}
+ #screen[data-season="2"] .s2-compact-infra .infra-item-head svg{width:38px;height:38px}
+ #screen[data-season="2"] .s2-compact-promotion .promotion-icon{width:38px;height:38px;flex:none}
+ #screen[data-season="2"] .s2-has-dock{padding-bottom:122px!important}
+ #screen[data-season="2"] .s2-compact-dock,#screen[data-season="2"] .s2-infra-dock{position:fixed;bottom:0;left:0;right:0;z-index:45;border-radius:14px 14px 0 0;margin:0;padding:9px 12px calc(9px + env(safe-area-inset-bottom,0px));gap:8px;box-sizing:border-box;max-width:100vw;}
+ #screen[data-season="2"] .s2-compact-dock{display:grid;grid-template-columns:minmax(0,1fr)}
+ #screen[data-season="2"] .s2-dock-meta{grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:2px 6px}
+ #screen[data-season="2"] .s2-dock-meta strong{font-size:13px}
+ #screen[data-season="2"] .s2-dock-meta small{grid-column:1/-1;font-size:10px}
+ #screen[data-season="2"] .s2-compact-dock .s2-flow-nav{display:grid!important;grid-template-columns:minmax(0,1fr) minmax(0,1.6fr);width:100%;gap:8px}
+ #screen[data-season="2"] .s2-compact-dock .btn{width:100%!important;min-width:0!important;font-size:12px;line-height:1.2;min-height:42px;padding:9px 10px!important}
+ #screen[data-season="2"] .s2-infra-dock>span{min-width:0;flex:1;line-height:1.3;font-size:11px}
+ #screen[data-season="2"] .s2-infra-dock>.btn{width:auto!important;max-width:62%;font-size:12px;line-height:1.3}
+ #screen[data-season="2"] .s2-compact-promotion .s2-budget,#screen[data-season="2"] .s2-compact-team .s2-budget{display:none!important}
+ #screen[data-season="2"] .s2-repeat-team{gap:7px}
+ #screen[data-season="2"] .s2-repeat-status{min-width:0;flex-basis:100%}
+}
+@media(prefers-reduced-motion:reduce){#screen[data-season="2"] .s2-fold-chevron svg{transition:none}}
+/* A tall auto-sized host iframe cannot pin controls to the outer page viewport.
+   Keep honest inline controls at both ends instead of a misleading fixed dock. */
+#screen[data-season="2"] .s2-quick-actions{display:none}
+@media(max-width:600px){
+ #screen[data-season="2"] .s2-embedded.s2-has-dock{padding-bottom:0!important}
+ #screen[data-season="2"] .s2-embedded>.s2-compact-dock,#screen[data-season="2"] .s2-embedded>.s2-infra-dock{position:static;max-width:100%;border-radius:14px;margin-top:16px;padding:12px}
+ #screen[data-season="2"] .s2-quick-actions{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:8px;padding:10px;border:1px solid #668fa0;border-radius:12px;background:#143c51;margin:10px 0 12px;min-width:0}
+ #screen[data-season="2"] .s2-quick-actions>.s2-dock-meta{display:grid;grid-template-columns:minmax(0,1fr);gap:3px;font-size:11px}
+ #screen[data-season="2"] .s2-quick-actions>.s2-dock-meta small{grid-column:auto;font-size:9px}
+ #screen[data-season="2"] .s2-quick-actions>.s2-dock-meta strong{font-size:12px}
+ #screen[data-season="2"] .s2-quick-actions>.btn{min-width:0!important;width:auto!important;max-width:120px;min-height:44px;font-size:11px;line-height:1.3;padding:10px!important;margin:0!important;white-space:normal!important}
+ #screen[data-season="2"] .s2-quick-actions>span{font-size:12px;line-height:1.3;min-width:0}
+}
+
+#screen .s2-label-card{margin:18px 0;padding:20px;border:1px solid #527f91;border-radius:18px;background:linear-gradient(130deg,#16475d,#0c3047);min-width:0;color:#f1f8fb}
+#screen .s2-label-card-heading{display:flex;gap:14px;align-items:center}#screen .s2-label-card-heading>div{min-width:0}#screen .s2-label-card h3{margin:4px 0 6px;font-size:21px;line-height:1.25}#screen .s2-label-card p{font-size:14px;line-height:1.5;margin:0;color:#c9e1eb}
+#screen .s2-label-disc{width:64px;height:64px;flex:0 0 64px;border:2px solid #527f91;border-radius:50%;background:repeating-radial-gradient(circle,#102a3b 0 3px,#061725 4px 6px);position:relative}#screen .s2-label-disc:after{content:'VS';position:absolute;inset:17px;display:grid;place-items:center;background:#d8b773;border-radius:50%;font:800 12px Arial;color:#082d47}
+#screen .s2-label-preview{margin:14px 0}#screen .s2-label-preview summary{font-size:15px;cursor:pointer;min-height:44px;display:flex;align-items:center;gap:10px;color:#e6c68c;font-weight:700}#screen .s2-label-preview summary:before{content:'+';font:700 22px Arial}#screen .s2-label-preview[open] summary:before{content:'−'}#screen .s2-label-preview summary:focus-visible{outline:3px solid #e6c68c;outline-offset:3px}
+#screen .s2-label-preview canvas{width:100%;max-width:380px;height:auto;display:block;margin:8px auto 18px;border-radius:12px}#screen .s2-label-card .reward-actions{margin-top:10px}#screen .s2-label-card .s2-label-status{min-height:1.5em;margin-top:10px;font-size:13px}
+@media(max-width:480px){#screen .s2-label-card{padding:15px}#screen .s2-label-card h3{font-size:19px}#screen .s2-label-disc{width:50px;height:50px;flex-basis:50px}#screen .s2-label-disc:after{inset:12px}#screen .s2-label-card .kicker{font-size:10px;letter-spacing:.06em}#screen .s2-label-card .reward-actions{display:grid;grid-template-columns:1fr;gap:8px}}
+
+</style></head>
 <body class="vs-blue">
 <div id="vustin-producer-native">
 </div>
@@ -5023,5 +5117,308 @@ rewardsScreen=function(){
 };
 
 </script>
-</body>
+<script>
+// v19: reversible, versioned season-two strategies and evidence-based release review.
+const S2_STRATEGY_SCENES={
+ dilemma:[
+  ['Кому расскажем о песне?','Выбери ширину знакомства или глубину связи с аудиторией.',
+   ['На широкую аудиторию',450,0,12,-.08,0,0,'Охват +12 · новые слушатели −8%'],
+   ['Для своих слушателей',450,0,0,.18,0,0,'Новые слушатели +18% · без бонуса охвата']],
+  ['Премьера или долгая жизнь?','Один бюджет, два горизонта: эффект сегодня или каталог следующих недель.',
+   ['Громкий старт',500,0,13,0,0,-.15,'Охват +13 · будущие прослушивания каталога −15%'],
+   ['Долгая история',500,0,-3,0,0,.35,'Охват −3 · будущие прослушивания каталога +35%']],
+  ['Запись для кого?','Можно отточить студийное звучание или сохранить живую близость.',
+   ['Студийная точность',400,9,0,0,0,0,'Качество +9'],
+   ['Живая сессия',400,3,0,.13,0,0,'Качество +3 · новые слушатели +13%']],
+  ['Открыть песню всем?','Больше новых слушателей или больший доход с каждого прослушивания.',
+   ['Доступное знакомство',300,0,4,.16,-.08,0,'Охват +4 · слушатели +16% · доход премьеры −8%'],
+   ['Специальный релиз',300,0,0,-.08,.18,0,'Доход премьеры +18% · новые слушатели −8%']],
+  ['Рассказать историю или показать звук?','Выбирай под характер песни, а не только под цену.',
+   ['История автора',350,0,5,.08,0,0,'Охват +5 · новые слушатели +8%'],
+   ['Репетиция в кадре',350,6,4,0,0,0,'Качество +6 · охват +4']],
+  ['Вложиться сейчас или оставить запас?','Дополнительная работа не обязательна: деньги могут пригодиться лейблу.',
+   ['Доработать премьеру',650,5,8,0,0,0,'Качество +5 · охват +8'],
+   ['Сохранить бюджет',0,0,0,0,0,0,'Без дополнительных расходов и бонусов']]
+ ],
+ industry:[
+  ['Приглашение музыкального медиа','Редактор предлагает два формата знакомства с проектом.',
+   ['Короткая новость',300,0,10,0,0,0,'Охват +10'],
+   ['Большое интервью',300,0,3,.14,0,0,'Охват +3 · новые слушатели +14%']],
+  ['Фестиваль открывает двери','Главная сцена даёт охват, камерная встреча помогает найти своих.',
+   ['Большая сцена',600,0,14,-.06,0,0,'Охват +14 · новые слушатели −6%'],
+   ['Камерная встреча',350,0,3,.18,0,0,'Охват +3 · новые слушатели +18%']],
+  ['Плейлист на выбор','Яркая ротация сегодня или небольшая подборка надолго.',
+   ['Премьера недели',350,0,11,0,0,-.10,'Охват +11 · будущие прослушивания каталога −10%'],
+   ['Подборка вне времени',350,0,2,0,0,.25,'Охват +2 · будущие прослушивания каталога +25%']],
+  ['Партнёр предлагает поддержку','Продвижение можно разделить с партнёром или полностью оставить за собой.',
+   ['Партнёрская премьера',0,0,11,0,-.12,0,'Охват +11 · доход премьеры −12%'],
+   ['Независимый выпуск',350,0,4,0,0,0,'Охват +4 · доход без партнёрской доли']],
+  ['Слушатели просят продолжение','Реакцию можно превратить в знакомство с аудиторией или жизнь каталога.',
+   ['Ответить в эфире',250,0,2,.12,0,0,'Охват +2 · новые слушатели +12%'],
+   ['Подготовить историю песни',250,0,0,0,0,.25,'Будущие прослушивания каталога +25%']],
+  ['Свободное окно у студии','Не каждая возможность должна превращаться в покупку.',
+   ['Записать ещё один дубль',450,8,0,0,0,0,'Качество +8'],
+   ['Оставить текущую версию',0,0,0,0,0,0,'Без дополнительных расходов и бонусов']]
+ ]
+};
+function s2StrategyIndex(key,d=season2Draft){if(!d)return 0;const stored=d.strategyScene?.[key];return Number.isInteger(stored)&&stored>=0&&stored<6?stored:Math.max(0,((Number(d.week)||season2Week())-1)%6)}
+function s2StrategyData(key,d=season2Draft){const raw=S2_STRATEGY_SCENES[key][s2StrategyIndex(key,d)];return {title:raw[0],text:raw[1],options:raw.slice(2).map((x,i)=>({value:i?'no':'yes',title:x[0],cost:x[1],quality:x[2],reach:x[3],listeners:x[4],income:x[5],catalog:x[6],effect:x[7]}))}}
+function s2StrategyChosen(key,d=season2Draft){if(!d||d.strategyVersion!==2)return null;return s2StrategyData(key,d).options.find(x=>x.value===d[key])||null}
+const strategyStartBase=season2StartProduction;
+season2StartProduction=function(id){const old=season2Draft;const result=strategyStartBase(id);if(season2Draft&&season2Draft!==old){season2Draft.strategyVersion=2;season2Draft.week=season2Week();season2Draft.strategyScene={dilemma:(season2Week()-1)%6,industry:(season2Week()+Math.floor((season2Week()-1)/6))%6};saveCareer()}return result};
+const strategyBonusBase=s2DecisionBonus;
+s2DecisionBonus=function(){if(season2Draft?.strategyVersion!==2)return strategyBonusBase();return ['dilemma','industry'].reduce((sum,k)=>{const x=s2StrategyChosen(k);if(x){sum.cost+=x.cost;sum.quality+=x.quality;sum.reach+=x.reach}return sum},{cost:0,quality:0,reach:0})};
+const strategySceneBase=s2DecisionScreen;
+s2DecisionScreen=function(key){if(season2Draft?.strategyVersion!==2)return strategySceneBase(key);if(!s2DraftReady())return season2Office();const data=s2StrategyData(key),isD=key==='dilemma',selected=season2Draft[key];s2Shell(isD?'Продюсерское решение':'Событие индустрии',data.title,`<section class="s2-unified s2-strategy-scene">${s2SongHeading()}<div class="decision-context">${s2SceneArt(isD?'dilemma':'industry')}<div><span class="kicker">ДВА ПУТИ ДЛЯ ТВОЕГО РЕЛИЗА</span><p>${data.text}</p></div></div><div class="finance-grid s2-decisions">${data.options.map(x=>`<button class="finance-option ${selected===x.value?'is-selected':''}" aria-pressed="${selected===x.value}" onclick="s2ChooseDecision('${key}','${x.value}')"><span class="finance-art">${financeDecisionIcon(x.value==='yes'?'hit':'profit')}</span><span class="finance-copy"><b>${x.title}</b><strong>${fmt(x.cost)} VS₽</strong><span>${x.effect}</span><span class="finance-selection">${selected===x.value?'Выбрано':'Выбрать'}</span></span></button>`).join('')}</div><p class="production-footnote">Бонусы относятся к игровому прогнозу и не гарантируют успех. Проценты двух решений складываются. Эффект каталога действует со следующей недели. До выпуска выбор можно изменить бесплатно.</p>${s2Nav(isD?'season2ProductionStep(5)':'season2Dilemma()',isD?'season2IndustryEvent()':'season2ReviewProduction()',isD?'Продолжить':'К премьере',['yes','no'].includes(selected))}</section>`);s2SaveScene(isD?'dilemma':'event')};
+const strategyForecastBase=season2ReleaseForecast;
+season2ReleaseForecast=function(song,plan){const f=strategyForecastBase(song,plan),d=plan.draft;if(d?.strategyVersion!==2)return f;const chosen=['dilemma','industry'].map(k=>s2StrategyChosen(k,d)).filter(Boolean);const sum=key=>chosen.reduce((n,x)=>n+x[key],0);f.listeners=Math.round(f.listeners*Math.max(.2,1+sum('listeners')));f.income=Math.round(f.income*Math.max(.2,1+sum('income')));f.catalogMultiplier=Math.max(.4,1+sum('catalog'));f.strategyEvidence={version:2,choices:chosen.map(x=>({title:x.title,cost:x.cost,effect:x.effect})),forecast:{streams:f.streams,income:f.income,listeners:f.listeners},catalogMultiplier:f.catalogMultiplier};return f};
+// Existing release records without this field retain exactly the old catalogue formula.
+season2NewCatalogWeek=function(){let streams=0,income=0,listeners=0;(career.season2Releases||[]).forEach(h=>{const age=Math.max(1,season2Week()-h.week),decay=Math.max(.12,Math.pow(.84,age));const mult=h.strategyEvidence?.version===2&&Number.isFinite(h.catalogMultiplier)?Math.max(.4,Math.min(2,h.catalogMultiplier)):1;const st=Math.round(h.streams*.055*decay*(.8+Math.random()*.4)*mult),inc=Math.round(st*(.12+season2Level('digital')*.015)),lis=Math.round(st*.004);h.catalogStreams=(h.catalogStreams||0)+st;h.catalogIncome=(h.catalogIncome||0)+inc;streams+=st;income+=inc;listeners+=lis});career.catalogStreams=(career.catalogStreams||0)+streams;career.catalogIncome=(career.catalogIncome||0)+income;const debtPaid=season2CreditIncome(income);career.listeners+=listeners;return {streams,income,listeners,debtPaid}};
+const strategyReviewBase=season2ReviewProduction;
+season2ReviewProduction=function(){strategyReviewBase();if(season2Draft?.strategyVersion!==2||season2Draft.flowStage!=='review')return;const rows=document.querySelectorAll('.s2-summary>div');for(const row of rows){const label=row.querySelector('dt')?.textContent,key=label==='Решение'?'dilemma':label==='Событие'?'industry':null;const chosen=key&&s2StrategyChosen(key);if(chosen)row.querySelector('dd').textContent=chosen.title+' · '+chosen.effect}const review=document.querySelector('.s2-review');if(review&&!review.querySelector('.s2-strategy-recap')){const box=document.createElement('details');box.className='s2-help s2-strategy-recap';const f=season2ReleaseForecast(season2SongById(season2Draft.id),season2DraftPlan());box.innerHTML=`<summary>Выбранная стратегия</summary>${f.strategyEvidence.choices.map(x=>`<p><b>${x.title}</b> · ${fmt(x.cost)} VS₽<br>${x.effect}</p>`).join('')}<p>Будущие прослушивания этой песни в каталоге: ${Math.round(f.catalogMultiplier*100)}% от обычного расчёта. Доход каталога зависит от числа оставшихся недель.</p>`;review.insertBefore(box,review.querySelector('.s2-flow-nav'))}};
+function s2PersonalReview(h,song){const ev=h.strategyEvidence;if(!ev||ev.version!==2)return '<details class="s2-help s2-personal-review"><summary>Разбор решений</summary><p>Этот релиз выпущен до обновления. Точный прогноз и выбранные стратегии не сохранялись, поэтому ретроспективный разбор не придумываем.</p></details>';const d=h.choices||{},help=[],costs=[],next=[];for(const x of ev.choices)help.push(`${x.title}: ${x.effect}.`);if(d.cover===2&&(d.promo||[]).some(i=>[0,1,6].includes(i)))help.push('Яркая обложка и видео дали связке +5 к охвату в расчёте.');if((d.team||[]).includes(2)&&(d.promo||[]).includes(0))help.push('Режиссёр усилил клип: +12 к охвату в расчёте.');if((d.team||[]).includes(3)&&(d.promo||[]).some(i=>[1,6].includes(i)))help.push('SMM-специалист усилил короткие видео: +10 к охвату в расчёте.');const spent=ev.choices.reduce((n,x)=>n+x.cost,0);costs.push(`На два дополнительных решения заложено ${fmt(spent)} VS₽ до общей скидки инфраструктуры.`);if(h.income<h.cost)costs.push(`Премьера ещё не вернула ${fmt(h.cost-h.income)} VS₽ затрат на релиз. Будущие поступления каталога считаются отдельно.`);else costs.push(`Доход премьеры превысил затраты на релиз на ${fmt(h.income-h.cost)} VS₽. Содержание лейбла показано отдельно.`);const energetic=/рок|рэп|танц|поп/i.test(song.genre),fits=(d.promo||[]).some(i=>(energetic?[1,6]:[2,7,4,8]).includes(i));if((d.promo||[]).length&&!fits)next.push('В этом плане не было жанрового бонуса канала. Для следующей песни сравни подсказки продвижения, а не только цены.');if(h.catalogMultiplier>1)next.push('Ты выбрал долгую жизнь песни. Смотри её доход каталога в следующие недели, а не только прибыль премьеры.');if(!next.length)next.push(h.income<h.cost?'В следующем релизе сравни более экономный план: дорогая кампания не гарантирует окупаемость.':'Сохрани удачную команду, но подбери продвижение под следующую песню.');const forecast=ev.forecast.streams,ratio=forecast>0?h.streams/forecast:0;const random=`Базовый прогноз: ${fmt(forecast)} прослушиваний. Фактический отклик: ${fmt(h.streams)} (${Math.round(ratio*100)}% от прогноза). Случайный отклик применился ко всему плану; это не доказательство успеха или ошибки отдельного решения.`;return `<section class="s2-personal-review"><h3>Твой продюсерский разбор</h3><p class="s2-review-random">${random}</p><details class="s2-help"><summary>Что усилило план</summary>${help.map(x=>`<p>${x}</p>`).join('')}<p>Здесь указаны изменения формулы, а не измеренный вклад каждого решения в случайный итог.</p></details><details class="s2-help"><summary>Цена решений</summary>${costs.map(x=>`<p>${x}</p>`).join('')}</details><div class="s2-review-next"><span class="kicker">ЧТО ПОПРОБОВАТЬ ДАЛЬШЕ</span>${next.map(x=>`<p>${x}</p>`).join('')}</div></section>`}
+const strategyResultBase=s2ResultHTML;
+s2ResultHTML=function(h,song){let html=strategyResultBase(h,song);const marker='<div class="release-next-tip">';const start=html.indexOf(marker),end=html.indexOf('<div class="nav premiere-actions">',start);if(start>=0&&end>start)html=html.slice(0,start)+s2PersonalReview(h,song)+html.slice(end);return html};
+
+/* Season two objectives: descriptive challenges, never economic modifiers. */
+const S2_OBJECTIVES = Object.freeze([
+ {id:'hit',title:'Найти свой хит',target:40000,unit:'прослушиваний',detail:'Один релиз второго сезона набрал 40 000 игровых прослушиваний на премьере.',short:'Самая громкая премьера',icon:'hit'},
+ {id:'label',title:'Лейбл на самоокупаемости',target:3,unit:'недели',detail:'В трёх релизных неделях доход объектов и дистрибуции покрыл содержание лейбла. Покупка объектов и затраты на песни считаются отдельно.',short:'Доход объектов покрывает содержание',icon:'profit'},
+ {id:'audience',title:'Собрать свою аудиторию',target:10000,unit:'новых слушателей',detail:'Релизы второго сезона привлекли суммарно 10 000 новых игровых слушателей. Это прирост аудитории, а не измерение её преданности.',short:'Новые слушатели релизов',icon:'fans'}
+]);
+function s2ObjectiveNumber(n){return typeof n==='number'&&Number.isFinite(n)&&n>=0?n:0}
+function s2ObjectiveMetric(id){
+ const rows=Array.isArray(career.season2Releases)?career.season2Releases:[];
+ if(id==='hit')return rows.reduce((n,h)=>Math.max(n,s2ObjectiveNumber(h&&h.streams)),0);
+ if(id==='audience')return rows.reduce((n,h)=>n+s2ObjectiveNumber(h&&h.listeners),0);
+ if(id==='label')return rows.filter(h=>{const r=h&&h.weekReport;return r&&['passiveIncome','digital','operating'].every(k=>typeof r[k]==='number'&&Number.isFinite(r[k])&&r[k]>=0)&&r.operating>0&&r.passiveIncome+r.digital>=r.operating}).length;
+ return 0;
+}
+function s2ObjectiveSummary(){
+ const id=career.season2Objective&&career.season2Objective.id,goal=S2_OBJECTIVES.find(x=>x.id===id);if(!goal)return null;
+ const value=s2ObjectiveMetric(goal.id),achieved=value>=goal.target;
+ return {id:goal.id,title:goal.title,value,target:goal.target,unit:goal.unit,achieved,progressText:`${fmt(value)} / ${fmt(goal.target)} ${goal.unit}`,detail:goal.detail};
+}
+function s2ObjectiveOptions(){return S2_OBJECTIVES.map(g=>`<button type="button" class="s2-objective-choice" onclick="s2ChooseObjective('${g.id}')"><span class="s2-objective-icon" aria-hidden="true">${financeDecisionIcon(g.icon)}</span><span><strong>${g.title}</strong><span>${g.detail}</span></span></button>`).join('')}
+function s2ChooseObjective(id){
+ if(!season2Ready()||!S2_OBJECTIVES.some(x=>x.id===id))return;
+ career.season2Objective={id,version:1,chosenAtWeek:season2Week()};saveCareer();s2MountObjective();
+}
+function s2ObjectiveHTML(){
+ const goal=s2ObjectiveSummary(),ended=season2Week()>12;
+ if(!goal)return `<section class="s2-objective-panel" aria-label="Цель второго сезона"><span class="kicker">ТВОЙ КУРС НА СЕЗОН</span><h3>${ended?'Какой путь стал твоим?':'Чего добьётся твой лейбл?'}</h3><p>Выбери личную цель. Она не меняет расчёты и не мешает выпускать песни.</p><details class="s2-objective-picker"><summary>Выбрать цель</summary><div class="s2-objective-options">${s2ObjectiveOptions()}</div><p class="s2-objective-note">Учитываются уже сохранённые результаты второго сезона. Цель можно сменить. Стикеры выдаются по своим условиям.</p></details></section>`;
+ const legacy=goal.id==='label'&&(career.season2Releases||[]).some(h=>!h.weekReport||!['passiveIncome','digital','operating'].every(k=>typeof h.weekReport[k]==='number'&&Number.isFinite(h.weekReport[k])&&h.weekReport[k]>=0));
+ return `<section class="s2-objective-panel ${goal.achieved?'is-achieved':''}" aria-label="Цель второго сезона"><div class="s2-objective-heading"><span class="kicker">${goal.achieved?'ЦЕЛЬ ДОСТИГНУТА':ended?'ИТОГ ТВОЕЙ ЦЕЛИ':'ТВОЯ ЦЕЛЬ СЕЗОНА'}</span><strong>${goal.title}</strong></div><div class="s2-objective-progress"><progress max="${goal.target}" value="${Math.min(goal.value,goal.target)}" aria-label="${goal.title}"></progress><span>${goal.progressText}</span></div><details class="s2-objective-picker"><summary>Как считается${ended?'':' · сменить цель'}</summary><p>${goal.detail}</p>${legacy?'<p class="s2-objective-note">У части старых релизов нет подробного недельного отчёта. Они не учитываются в этой цели: прошлые доходы не восстанавливаются предположительно.</p>':''}<p class="s2-objective-note">Это личный ориентир, не условие завершения сезона и не новая награда.</p>${ended?'':`<div class="s2-objective-options">${s2ObjectiveOptions()}</div>`}</details></section>`;
+}
+function s2MountObjective(){
+ if(!season2Ready())return;const screen=document.getElementById('screen');if(!screen)return;
+ const host=screen.querySelector('.s2-office')||screen.querySelector('.s2-finale');if(!host)return;
+ const old=host.querySelector('.s2-objective-panel');if(old)old.remove();
+ host.insertAdjacentHTML('afterbegin',s2ObjectiveHTML());
+}
+const s2ObjectiveOffice=season2Office;
+season2Office=function(){const out=s2ObjectiveOffice.apply(this,arguments);s2MountObjective();return out};
+const s2ObjectiveFinale=season2Finale;
+season2Finale=function(){const out=s2ObjectiveFinale.apply(this,arguments);s2MountObjective();return out};
+
+// Presentation-only S2 enhancements. Append after the season-two mechanics.
+(function(){
+ const openState=new Map();
+ const mobile=()=>typeof matchMedia==='function'&&matchMedia('(max-width: 600px)').matches;
+ function remember(){document.querySelectorAll('#screen [data-s2-disclosure]').forEach(d=>openState.set(d.dataset.s2Disclosure,d.open));}
+ function fold(card,key,header,extra){
+  if(!header||card.querySelector(':scope > .s2-compact-fold'))return;
+  const details=document.createElement('details');details.className='s2-compact-fold';details.dataset.s2Disclosure=key;
+  details.open=openState.has(key)?openState.get(key):!mobile();
+  const summary=document.createElement('summary');summary.className='s2-compact-summary';
+  summary.appendChild(header);if(extra)summary.appendChild(extra);
+  const chevron=document.createElement('span');chevron.className='s2-fold-chevron';chevron.setAttribute('aria-hidden','true');
+  chevron.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m7 10 5 5 5-5"/></svg>';summary.appendChild(chevron);
+  details.appendChild(summary);const body=document.createElement('div');body.className='s2-fold-body';
+  while(card.firstChild)body.appendChild(card.firstChild);details.appendChild(body);card.appendChild(details);
+  details.addEventListener('toggle',()=>{if(details.isConnected)openState.set(key,details.open)});
+ }
+ function embedded(){try{return window.parent!==window}catch(e){return true}}
+ function quickActions(host,bar,button){
+  if(!embedded()||!button)return;host.classList.add('s2-embedded');
+  const quick=document.createElement('div');quick.className='s2-quick-actions';
+  const meta=bar.querySelector('.s2-dock-meta')||bar.querySelector('span');if(meta)quick.appendChild(meta.cloneNode(true));
+  const go=document.createElement('button');go.type='button';go.className='btn';go.textContent=button.textContent;go.disabled=button.disabled;go.addEventListener('click',()=>button.click());quick.appendChild(go);
+  const heading=host.querySelector(':scope > .s2-song-strip')||host.querySelector(':scope > .infra-overview');if(heading)heading.after(quick);else host.prepend(quick);
+ }
+ function dock(host,count,nav){
+  if(!host||!nav||host.querySelector('.s2-compact-dock'))return;
+  const bar=document.createElement('aside');bar.className='s2-compact-dock';bar.setAttribute('aria-label','План релиза и переход');
+  const meta=document.createElement('div');meta.className='s2-dock-meta';
+  const label=document.createElement('span');label.textContent=count;label.setAttribute('aria-live','polite');meta.appendChild(label);
+  if(season2Draft&&typeof season2DraftPlan==='function'){
+   const song=season2SongById(season2Draft.id),plan=season2DraftPlan(),f=season2ReleaseForecast(song,plan);
+   const budget=document.createElement('strong');budget.textContent='Релиз: '+fmt(f.cost)+' VS₽';meta.appendChild(budget);
+   const reserve=document.createElement('small');reserve.textContent='Содержание и резерв: '+fmt(season2RequiredReserve())+' VS₽';meta.appendChild(reserve);
+  }
+  bar.appendChild(meta);bar.appendChild(nav);host.appendChild(bar);host.classList.add('s2-has-dock');quickActions(host,bar,nav.querySelector('button:last-child'));
+ }
+ function promo(){
+  const host=document.querySelector('#screen[data-season="2"] .promotion-screen');if(!host)return;
+  host.classList.add('s2-compact-promotion');
+  host.querySelectorAll('.promotion-category').forEach((card,i)=>{
+   const head=card.querySelector(':scope > header'),selected=card.querySelectorAll('.promotion-option.is-selected').length;
+   const badge=document.createElement('span');badge.className='s2-fold-badge';badge.textContent=selected?'Выбрано: '+selected:'Выбрать';
+   fold(card,'promo-'+i,head,badge);
+  });
+  dock(host,'Каналов: '+season2Draft.promo.length+' из 2',host.querySelector(':scope > .s2-flow-nav'));
+ }
+ function lastTeam(){
+  const releases=Array.isArray(career.season2Releases)?career.season2Releases:[];
+  // Only the immediately preceding release counts; do not invent a team for legacy saves.
+  const previous=releases[releases.length-1];if(!previous||!Array.isArray(previous.choices?.team))return null;
+  return [...new Set(previous.choices.team.filter(i=>Number.isInteger(i)&&i>=0&&i<team.length))].slice(0,2);
+ }
+ window.s2ReuseLastTeam=function(){
+  if(!s2DraftReady()||season2DraftStep!==1)return;
+  const previous=lastTeam();if(previous===null)return;
+  season2Draft.team=previous.slice();saveCareer();season2ProductionStep(1);
+  const status=document.querySelector('.s2-repeat-status');if(status)status.textContent='Команда перенесена. Можно изменить выбор. Деньги ещё не списаны.';
+ };
+ function teamView(){
+  const host=document.querySelector('#screen[data-season="2"] .production-screen');
+  if(!host||season2DraftStep!==1||!host.querySelector('.production-team'))return;
+  host.classList.add('s2-compact-team');const previous=lastTeam();
+  if(previous!==null){
+   const box=document.createElement('div');box.className='s2-repeat-team';
+   const b=document.createElement('button');b.className='btn alt';b.type='button';b.textContent=previous.length?'Взять команду прошлого релиза':'Повторить прошлый выбор: без команды';b.addEventListener('click',window.s2ReuseLastTeam);box.appendChild(b);
+   const status=document.createElement('p');status.className='s2-repeat-status';status.setAttribute('role','status');status.textContent='Выбор можно изменить до выпуска. Оплата только при релизе.';box.appendChild(status);
+   host.querySelector('.production-team').before(box);
+  }
+  dock(host,'Специалистов: '+season2Draft.team.length+' из 2',host.querySelector(':scope > .s2-flow-nav'));
+ }
+ function infra(){
+  const host=document.querySelector('#screen[data-season="2"] .infra-compact');if(!host)return;
+  host.classList.add('s2-compact-infra');
+  host.querySelectorAll('.infra-item').forEach((card,i)=>{
+   const head=card.querySelector(':scope > .infra-item-head'),price=card.querySelector(':scope > .price');
+   fold(card,'infra-'+i,head,price);
+  });
+  // Keep all factual costs visible in the expandable body; no forecast/economy mutation.
+  const overview=host.querySelector('.infra-overview');if(overview){
+   const paragraphs=[...overview.querySelectorAll(':scope > p')];if(paragraphs.length){
+    const details=document.createElement('details');details.className='s2-infra-overview-help';const summary=document.createElement('summary');summary.textContent='Как помогают объекты';details.appendChild(summary);paragraphs.forEach(p=>details.appendChild(p));overview.appendChild(details);
+   }
+  }
+  const bar=document.createElement('nav');bar.className='s2-infra-dock';bar.setAttribute('aria-label','Навигация лейбла');
+  const meta=document.createElement('span');meta.textContent='На счету: '+fmt(career.cash)+' VS₽';bar.appendChild(meta);
+  const b=document.createElement('button');b.type='button';b.className='btn';
+  const ended=season2Week()>12;b.textContent=ended?'К итогам сезона':season2Draft?'Продолжить релиз':'Мой лейбл';
+  b.addEventListener('click',()=>ended?season2Finale():season2Draft?season2ResumeProduction():season2Office());bar.appendChild(b);host.appendChild(bar);host.classList.add('s2-has-dock');quickActions(host,bar,b);
+ }
+ const prevPromo=season2Promotion;season2Promotion=function(...a){remember();const r=prevPromo.apply(this,a);promo();return r};
+ const prevStep=season2ProductionStep;season2ProductionStep=function(...a){remember();const r=prevStep.apply(this,a);teamView();return r};
+ const prevInfra=season2Infrastructure;season2Infrastructure=function(...a){remember();const r=prevInfra.apply(this,a);infra();return r};
+ // Choice changes re-render the screen. Preserve both disclosure state and position.
+ const prevToggle=season2ToggleChoice;season2ToggleChoice=function(key,index){
+  const root=document.querySelector('#screen[data-season="2"]'),keep=root&&(key==='promo'||key==='team');
+  const x=window.scrollX||0,y=window.scrollY||0;remember();const r=prevToggle.apply(this,arguments);
+  if(keep)requestAnimationFrame(()=>{window.scrollTo(x,y);const buttons=[...document.querySelectorAll('#screen button[onclick]')];const b=buttons.find(el=>(el.getAttribute('onclick')||'').includes("season2ToggleChoice('"+key+"',"+index+")"));if(b&&b.closest('details')?.open!==false)b.focus({preventScroll:true})});
+  return r;
+ };
+ // Resume dispatch registry holds function objects rather than their names.
+ if(typeof resumeScreens==='object'){
+  if(resumeScreens.season2ProductionStep)resumeScreens.season2ProductionStep=season2ProductionStep;
+  if(resumeScreens.season2Infrastructure)resumeScreens.season2Infrastructure=season2Infrastructure;
+ }
+ window.s2CompactLastTeam=lastTeam;
+})();
+
+/* Personal label cover. Cosmetic only; no save migration or remote upload. */
+(function(){
+'use strict';
+const prepared=new WeakMap();
+const number=v=>Number.isFinite(Number(v))?Math.max(0,Math.round(Number(v))):0;
+const text=v=>String(v??'').replace(/[\u0000-\u001f]/g,' ').trim();
+function available(){return typeof career==='object'&&career&&Number(career.releases)>=10&&Number(career.season2Week)>12;}
+function snapshot(){
+ const rows=(Array.isArray(career.season2Releases)?career.season2Releases:[]).filter(x=>x&&typeof x==='object');
+ const best=rows.reduce((a,x)=>!a||number(x.streams)>number(a.streams)?x:a,null);
+ const unlocked=career.rewards?.unlocked||{};
+ const seasonRewards=VINYL_REWARDS.filter(x=>x.season===2||x.id==='dance');
+ const goal=typeof s2ObjectiveSummary==='function'?s2ObjectiveSummary():null;
+ return {version:1,objective:goal?{title:text(goal.title),progress:text(goal.progressText),achieved:goal.achieved===true}:null,releases:rows.length,streams:rows.reduce((n,x)=>n+number(x.streams),0),best:best?text(best.song||season2SongById(best.songId)?.name||'Релиз без названия'):null,bestStreams:best?number(best.streams):0,stickers:seasonRewards.filter(x=>unlocked[x.id]===true).length,stickerTotal:seasonRewards.length,levels:season2Assets.reduce((n,x)=>n+Math.max(0,Math.min(3,number(career.season2Infra?.[x.key]))),0)};
+}
+function lines(ctx,value,width,maxLines){
+ // Break at words, then at graphemes for unusually long words. Bound output vertically.
+ const chars=typeof Intl?.Segmenter==='function'?Array.from(new Intl.Segmenter('ru',{granularity:'grapheme'}).segment(text(value)),x=>x.segment):Array.from(text(value));
+ const result=[];let line='',lastSpace=-1;
+ for(let i=0;i<chars.length;i++){
+  const ch=chars[i];if(ctx.measureText(line+ch).width>width&&line){
+   if(lastSpace>0){const tail=line.slice(lastSpace+1);result.push(line.slice(0,lastSpace));line=tail+ch;}else{result.push(line);line=ch;}
+   lastSpace=line.lastIndexOf(' ');
+  }else{line+=ch;if(ch===' ')lastSpace=line.length-1;}
+ }
+ if(line)result.push(line.trim());
+ if(result.length>maxLines){result.length=maxLines;let end=result[maxLines-1];while(end&&ctx.measureText(end+'…').width>width)end=end.slice(0,-1);result[maxLines-1]=end.trimEnd()+'…';}
+ return result;
+}
+function canvasFor(data){
+ const c=document.createElement('canvas');c.width=1080;c.height=1350;const g=c.getContext('2d');if(!g)throw Error('canvas');
+ const font=(weight,size)=>{g.font=weight+' '+size+'px Arial, sans-serif';};
+ const rounded=(x,y,w,h,r,fill)=>{g.beginPath();g.moveTo(x+r,y);g.lineTo(x+w-r,y);g.quadraticCurveTo(x+w,y,x+w,y+r);g.lineTo(x+w,y+h-r);g.quadraticCurveTo(x+w,y+h,x+w-r,y+h);g.lineTo(x+r,y+h);g.quadraticCurveTo(x,y+h,x,y+h-r);g.lineTo(x,y+r);g.quadraticCurveTo(x,y,x+r,y);g.closePath();g.fillStyle=fill;g.fill();};
+ g.fillStyle='#082d47';g.fillRect(0,0,1080,1350);
+ const bg=g.createLinearGradient(0,0,1080,1350);bg.addColorStop(0,'#16485f');bg.addColorStop(1,'#061e30');rounded(28,28,1024,1294,30,bg);
+ g.strokeStyle='#467387';g.lineWidth=2;g.strokeRect(52,52,976,1246);
+ font('bold',25);g.fillStyle='#d7b46e';g.fillText('VUSTIN SOUND',76,101);g.textAlign='right';font('normal',22);g.fillStyle='#c9e1eb';g.fillText('ИГРА «ПРОДЮСЕР»',1004,101);g.textAlign='left';
+ font('bold',66);g.fillStyle='#ffffff';g.fillText('МОЙ ЛЕЙБЛ',76,190);font('normal',27);g.fillStyle='#bed9e7';g.fillText('Второй сезон. Моя виниловая история.',76,236);
+ // Original code-drawn vinyl; export needs no image fetch or cross-origin canvas.
+ const cx=540,cy=459,r=178;g.beginPath();g.arc(cx,cy,r,0,Math.PI*2);g.fillStyle='#061018';g.fill();
+ for(let rr=80;rr<r;rr+=9){g.beginPath();g.arc(cx,cy,rr,0,Math.PI*2);g.strokeStyle=rr%2?'#264350':'#172e3b';g.lineWidth=2;g.stroke();}
+ g.beginPath();g.arc(cx,cy,74,0,Math.PI*2);g.fillStyle='#d8b773';g.fill();g.textAlign='center';font('bold',38);g.fillStyle='#082d47';g.fillText('VS',cx,cy+4);font('bold',16);g.fillText('СЕЗОН 02',cx,cy+31);g.beginPath();g.arc(cx,cy-26,5,0,Math.PI*2);g.fillStyle='#082d47';g.fill();
+ g.textAlign='left';font('bold',21);g.fillStyle='#d7b46e';g.fillText(data.best?'МОЯ САМАЯ ГРОМКАЯ ПРЕМЬЕРА':'МОЙ ПУТЬ В МУЗЫКЕ',76,689);
+ font('bold',42);g.fillStyle='#ffffff';const title=lines(g,data.best||'Развивал лейбл без новых релизов',920,2);title.forEach((s,i)=>g.fillText(s,76,746+i*50));
+ font('normal',25);g.fillStyle='#bed9e7';g.fillText(data.best?fmt(data.bestStreams)+' игровых прослушиваний на премьере':'В этом сезоне новых релизов не было',76,837);
+ const stats=[[fmt(data.releases)+'/10','релизов сезона'],[fmt(data.streams),'прослушиваний премьер'],[data.stickers+'/'+data.stickerTotal,'стикеров сезона'],[data.levels+'/18','уровней инфраструктуры']];
+ stats.forEach(([value,label],i)=>{const x=76+(i%2)*472,y=882+Math.floor(i/2)*127;rounded(x,y,456,111,16,'#16475d');font('bold',38);g.fillStyle='#ffffff';g.fillText(value,x+22,y+47);font('normal',21);g.fillStyle='#bed9e7';g.fillText(label,x+22,y+82);});
+ if(data.objective){font('bold',22);g.fillStyle='#d7b46e';const goalLine=(data.objective.achieved?'ЦЕЛЬ ДОСТИГНУТА: ':'МОЯ ЦЕЛЬ: ')+data.objective.title+' · '+data.objective.progress;g.fillText(lines(g,goalLine,920,1)[0]||'',76,1164);}
+ font('normal',22);g.fillStyle='#c9e1eb';g.fillText('Игровые результаты, не реальные показатели песен.',76,1199);font('bold',29);g.fillStyle='#d7b46e';g.fillText('vustinsound.com/game',76,1254);
+ c.setAttribute('role','img');c.setAttribute('aria-label','Карточка лейбла: '+(data.best||'без новых релизов')+'. '+data.releases+' релизов, '+data.stickers+' стикеров второго сезона.');return c;
+}
+function blobFor(data){const c=canvasFor(data);return new Promise((resolve,reject)=>c.toBlob(b=>b?resolve(b):reject(Error('canvas')),'image/png'));}
+function report(button,message){const el=button?.closest('.s2-label-card')?.querySelector('[data-card-status]');if(el)el.textContent=message;}
+window.s2LabelCardData=snapshot;
+window.s2LabelCardCanvas=canvasFor;
+window.s2LabelCardLines=lines;
+window.s2LabelCardPreview=function(details){
+ if(!details.open||!available())return;const host=details.querySelector('[data-card-preview]');if(!host)return;
+ try{const data=snapshot(),key=JSON.stringify(data);if(host.dataset.key===key)return;host.replaceChildren(canvasFor(data));host.dataset.key=key;}catch(e){host.textContent='Предпросмотр недоступен в этом браузере. Попробуй сохранить карточку.';}
+};
+window.s2LabelCardExport=async function(share,button){
+ if(!available()||!button?.isConnected||button.disabled)return;
+ const ref=career,data=snapshot(),key=JSON.stringify(data),entry=prepared.get(button);
+ const current=()=>button.isConnected&&career===ref&&available()&&JSON.stringify(snapshot())===key;
+ const reset=()=>{prepared.delete(button);button.textContent=share?'Поделиться карточкой':'Сохранить PNG';};
+ button.disabled=true;
+ try{
+  if(share&&entry&&entry.ref===ref&&entry.key===key){
+   try{await navigator.share({files:[entry.file],title:'Мой лейбл · VUSTIN SOUND'});if(!current())return;reset();report(button,'Карточка передана выбранному приложению.');}
+   catch(e){if(!current())return;if(e?.name==='AbortError'){report(button,'Отправка отменена. Карточка готова, можно попробовать снова.');return;}rewardDownload(entry.file,'VUSTIN_SOUND_my_label.png');reset();report(button,'Системная отправка недоступна. PNG подготовлен для сохранения и ручной публикации.');}
+   return;
+  }
+  reset();report(button,'Готовлю карточку…');const blob=await blobFor(data);if(!current())return;
+  const file=typeof File==='function'?new File([blob],'VUSTIN_SOUND_my_label.png',{type:'image/png'}):null;
+  let can=false;try{can=!!(share&&file&&navigator.share&&navigator.canShare?.({files:[file]}));}catch(e){}
+  if(can){prepared.set(button,{ref,key,file});button.textContent='Отправить карточку';report(button,'Карточка готова. Нажми «Отправить карточку», чтобы выбрать приложение.');return;}
+  rewardDownload(blob,'VUSTIN_SOUND_my_label.png');report(button,share?'Системная отправка недоступна. PNG подготовлен для сохранения и ручной публикации.':'Карточка подготовлена для сохранения.');
+ }catch(e){if(current())report(button,'Не удалось создать карточку. Попробуй ещё раз или используй другой браузер.');}finally{button.disabled=false;}
+};
+function insert(){
+ if(!available())return;const screen=document.getElementById('screen');if(!screen||screen.querySelector('.s2-label-card'))return;
+ const block=document.createElement('section');block.className='s2-label-card';
+ block.innerHTML='<div class="s2-label-card-heading"><span class="s2-label-disc" aria-hidden="true"></span><div><span class="kicker">ТВОЯ ВИНИЛОВАЯ ИСТОРИЯ</span><h3>Карточка моего лейбла</h3><p>Лучшая премьера и достижения сезона на одной обложке.</p></div></div><details class="s2-label-preview" ontoggle="s2LabelCardPreview(this)"><summary>Посмотреть карточку</summary><div data-card-preview></div></details><div class="reward-actions"><button type="button" class="btn" onclick="s2LabelCardExport(false,this)">Сохранить PNG</button><button type="button" class="btn alt" onclick="s2LabelCardExport(true,this)">Поделиться карточкой</button></div><p class="s2-label-status" data-card-status role="status" aria-live="polite"></p>';
+ const old=screen.querySelector('.reward-summary');if(old)old.replaceWith(block);else{const container=screen.querySelector('.s2-finale')||screen;const nav=container.querySelector('nav');container.insertBefore(block,nav||null);}
+}
+const finale=season2Finale;season2Finale=function(){const r=finale.apply(this,arguments);insert();return r;};
+const rewards=rewardsScreen;rewardsScreen=function(){const r=rewards.apply(this,arguments);insert();return r;};
+// Compatibility with any older summary link: use the same new artwork.
+rewardSummaryBlob=async function(){if(!available())throw Error('locked');return blobFor(snapshot());};
+})();
+
+</script></body>
 </html>
