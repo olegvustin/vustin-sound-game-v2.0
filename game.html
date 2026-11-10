@@ -796,12 +796,12 @@ function beginNewGame(){
  if(onboardingSeen())start(); else quickOnboarding();
 }
 function quickOnboarding(){
- shell('ПЕРВЫЙ РЕЛИЗ','Твой первый шаг в музыке',`<div class="quick-start card"><div class="kicker">VUSTIN RECORDS · НАЧНИ С ОДНОЙ ПЕСНИ</div><h3>Послушай. Выбери. Выпусти.</h3><p class="desc">У тебя 10 000 VS₽. Послушай демо настоящих песен VUSTIN SOUND, выбери материал и подготовь релиз.</p><ul class="quick-rules"><li><b>Три ориентира:</b> капитал, слушатели и репутация.</li><li><b>Каждый выбор имеет цену.</b> Сравнивай варианты и оставляй резерв. Дорогой вариант не гарантирует успеха.</li><li><b>После премьеры:</b> увидишь результат и объяснение решений. Карьеру можно продолжить позже.</li></ul><p class="small">В первом сезоне — 10 релизов, затем второй сезон: 12 недель для новых песен и развития лейбла.</p><div class="nav"><button class="btn" onclick="markOnboardingSeen();start()">ПОНЯТНО. НАЧАТЬ →</button><button class="btn alt" onclick="onboarding(1)">ПОЛНАЯ ИНСТРУКЦИЯ</button></div></div>`)
+ shell('ПЕРВЫЙ РЕЛИЗ','Твой первый шаг в музыке',`<div class="quick-start card"><div class="kicker">VUSTIN RECORDS · НАЧНИ С ОДНОЙ ПЕСНИ</div><h3>Послушай. Выбери. Выпусти.</h3><p class="desc">У тебя 10 000 VS₽. Послушай демо настоящих песен VUSTIN SOUND, выбери материал и подготовь релиз.</p><ul class="quick-rules"><li><b>Три ориентира:</b> капитал, слушатели и репутация.</li><li><b>Каждый выбор имеет цену.</b> Сравнивай варианты и оставляй резерв. Дорогой вариант не гарантирует успеха.</li><li><b>После премьеры:</b> увидишь результат и объяснение решений. Карьеру можно продолжить позже.</li></ul><p class="small">В первом сезоне — 10 релизов, затем второй сезон: ещё десять песен и развитие лейбла без ограничения по времени.</p><div class="nav"><button class="btn" onclick="markOnboardingSeen();start()">ПОНЯТНО. НАЧАТЬ →</button><button class="btn alt" onclick="onboarding(1)">ПОЛНАЯ ИНСТРУКЦИЯ</button></div></div>`)
 }
 function onboarding(step,manual=false){
  step=Math.max(1,Math.min(3,Number(step)||1));
  const pages=[
- {title:'Построй свой лейбл',lead:'От первой песни до собственного каталога VUSTIN SOUND.',art:'one',items:[['₽','10 000 VS₽ на старте','Следи за капиталом и оставляй резерв.'],['♫','10 релизов в первом сезоне','Выбирай песни и находи свою аудиторию.'],['☆','Расти как продюсер','Цели: 50 000 слушателей и 40 репутации.']],tip:'После 10 релизов откроется второй сезон: 12 недель для новых песен и развития лейбла.'},
+ {title:'Построй свой лейбл',lead:'От первой песни до собственного каталога VUSTIN SOUND.',art:'one',items:[['₽','10 000 VS₽ на старте','Следи за капиталом и оставляй резерв.'],['♫','10 релизов в первом сезоне','Выбирай песни и находи свою аудиторию.'],['☆','Расти как продюсер','Цели: 50 000 слушателей и 40 репутации.']],tip:'После 10 релизов откроется второй сезон: ещё десять песен и развитие лейбла без ограничения по времени.'},
  {title:'Послушай. Выбери. Выпусти.',lead:'Подбирай решения под характер песни, а не под самую высокую цену.',art:'two',items:[['♪','Послушай песню','Полная запись играет в плеере сайта.'],['◎','Подготовь релиз','Выбери материал, студию и аранжировку.'],['→','Найди слушателей','Реши, сколько вложить в продвижение.']],tip:'Дороже ≠ лучше. То, что подходит одной песне, может не сработать с другой.'},
  {title:'Каждый релиз — риск',lead:'Прибыль не гарантирована. Сравнивай вложения и результат.',art:'three',items:[['₽','Береги бюджет','Релиз может принести прибыль или убыток.'],['♫','Смотри на результат','После премьеры увидишь прослушивания, доход и новых слушателей.'],['☆','Учись на решениях','Разбирай итоги и учитывай характер следующей песни.']],tip:'Карьеру можно продолжить позже. Деньги и прогресс сохраняются между релизами.'}
  ];
@@ -855,7 +855,7 @@ function marketSignalIcon(key){
 function market(){
  const t=ensureTrend();
  const positive=t.boost>0, negative=t.boost<0, direction=positive?'↗':negative?'↘':'•', confidence=Math.max(1,Math.min(3,(career.marketingLvl||0)+1));
- shell(`Музыкальный рынок · Неделя ${career.week}`,'Что происходит на рынке',
+ shell(`Музыкальный рынок · Релиз ${career.releases+1}`,'Что происходит на рынке',
  `<section class="market-board ${positive?'market-positive':negative?'market-caution':'market-neutral'}" aria-label="Рыночный сигнал для следующего релиза">
  <div class="market-signal"><div class="market-emblem" aria-hidden="true">${marketSignalIcon(t.key)}<span>${direction}</span></div><div class="market-signal-copy"><div class="kicker">СИГНАЛ ДЛЯ РЕЛИЗА №${career.releases+1}</div><h3>${t.name}</h3><p>${t.detail}</p><span class="market-direction">${direction} ${positive?'Благоприятный':negative?'Неблагоприятный':'Нейтральный'} рыночный фактор</span></div></div>
  <div class="market-advice"><span aria-hidden="true">✦</span><div><b>Твой ход</b><p>${t.advice}</p></div></div>
@@ -1326,10 +1326,10 @@ function release(){
   const originalShowRelease=showRelease;
   showRelease=function(streams,loyal,income,partner,score,repGain,notes,profit,producerReview){
    const songName=state.song?state.song.name:'Новый релиз';
-   const body=`<div class='release premiere-result'><div class='premiere-summary'><div class='release-identity'>${songCover(state.song,'release-result-cover')}<div class='release-mini-disc' aria-hidden='true'></div></div><div class='premiere-numbers'><div class='big-number'>${fmt(streams)}</div><div class='desc'>прослушиваний</div><div class='stats release-audience'><div class='stat'><b>+${fmt(loyal)}</b>слушателей</div><div class='stat'><b>${repGain>=0?'+':''}${repGain}</b>репутация</div></div></div></div><div class='card premiere-finance' style='cursor:default;margin-top:12px;text-align:left'><div class='kicker'>ФИНАНСЫ РЕЛИЗА</div><div class='stats'><div class='stat'><b>${fmt(state.spent)}</b>вложено</div><div class='stat'><b>${fmt(income)}</b>доход сейчас</div><div class='stat'><b>${profit>=0?'+':''}${fmt(profit)}</b>результат сейчас</div></div><p class='desc'>Это результат на момент премьеры. Доход каталога в следующие недели может изменить окупаемость.</p>${partner?`<p class='small'>Партнёру выплачено: ${fmt(partner)} VS₽.</p>`:''}</div>
+   const body=`<div class='release premiere-result'><div class='premiere-summary'><div class='release-identity'>${songCover(state.song,'release-result-cover')}<div class='release-mini-disc' aria-hidden='true'></div></div><div class='premiere-numbers'><div class='big-number'>${fmt(streams)}</div><div class='desc'>прослушиваний</div><div class='stats release-audience'><div class='stat'><b>+${fmt(loyal)}</b>слушателей</div><div class='stat'><b>${repGain>=0?'+':''}${repGain}</b>репутация</div></div></div></div><div class='card premiere-finance' style='cursor:default;margin-top:12px;text-align:left'><div class='kicker'>ФИНАНСЫ РЕЛИЗА</div><div class='stats'><div class='stat'><b>${fmt(state.spent)}</b>вложено</div><div class='stat'><b>${fmt(income)}</b>доход сейчас</div><div class='stat'><b>${profit>=0?'+':''}${fmt(profit)}</b>результат сейчас</div></div><p class='desc'>Это результат на момент премьеры. Доход каталога в следующие релизы может изменить окупаемость.</p>${partner?`<p class='small'>Партнёру выплачено: ${fmt(partner)} VS₽.</p>`:''}</div>
    ${producerReview?`<div class='release-next-tip'><span class='kicker'>ЧТО ПОПРОБОВАТЬ ДАЛЬШЕ</span><p>${producerReview.better?.[0]||'Сохрани сильные решения и сравни результат следующего релиза.'}</p></div><details class='card release-details producer-review'><summary>РАЗБОР ПРОДЮСЕРА · все выводы</summary>${reviewHTML(producerReview)}</details>`:''}
    ${(state.dilemmaResult||state.forceResult)?consequenceHTML():''}
-   ${(state.promo.includes(0)||state.promo.includes(2)||state.promo.includes(4))?`<p class='desc' style='text-align:left'>Клип, плейлисты и PR могут продолжать работать после премьеры. Их полный эффект проявится в следующих игровых неделях.</p>`:''}
+   ${(state.promo.includes(0)||state.promo.includes(2)||state.promo.includes(4))?`<p class='desc' style='text-align:left'>Клип, плейлисты и PR могут продолжать работать после премьеры. Их полный эффект проявится при следующих релизах.</p>`:''}
    <details class='card release-details' style='cursor:default;text-align:left;margin-top:16px'><summary>Технические детали релиза</summary><div class='analysis'><div class='note'><b>Release Score</b><div class='small'>${Math.round(score)}/100 · игровая оценка релиза</div></div>${(notes||[]).map(n=>`<div class='note'><b>${n[0]}</b><div class='small'>${n[1]}</div></div>`).join('')}</div></details>
    <div class='nav premiere-actions'>${officialSongLink(state.song.id)}<button class='btn alt' onclick='historyScreen()'>ИСТОРИЯ РЕЛИЗОВ</button><button class='btn' onclick='careerScreen()'>МОЙ ЛЕЙБЛ ${premiereArrow()}</button></div></div>`;
    result={k:'РЕЛИЗ СОСТОЯЛСЯ',t:songName,b:body,streams:Number(streams)||0};
@@ -1445,7 +1445,7 @@ function productionReview(s,promoIdx,score,income,profit){
  if(unused)better.push(`Можно было протестировать ${promos[unused[0]][0]}: исходный потенциал песни здесь ${unused[1]}/100, до учёта команды и рыночных усилений.`);
  if(p.q>=86&&state.studio?.[0]!=='Топ-студия')better.push('Песня чувствительна к качеству записи — более сильная студия могла помочь.');
  if(p.vis>=90&&!promoIdx.includes(0))better.push('У песни очень высокий визуальный потенциал — клип мог стать ключевым активом.');
- if(p.long>=90)better.push('У песни высокий потенциал долгой жизни: полезна стратегия не только на первую неделю.');
+ if(p.long>=90)better.push('У песни высокий потенциал долгой жизни: полезна стратегия не только на премьеру.');
  if(!better.length)better.push('Следующий шаг — сохранить сильные решения и точечно проверить другой канал продвижения.');
  return {good:good.slice(0,3),waste:waste.slice(0,3),better:better.slice(0,3)};
 }
@@ -1577,7 +1577,7 @@ function catalogSummaryHTML(){
   <div class='stat'><b>+${fmt(c.income)}</b>VS₽</div>
   <div class='stat'><b>+${fmt(c.listeners)}</b>слушателей</div>
  </div>
- ${revival?`<p class='desc'>🔥 «${revival.song}» снова подхватили рекомендации: ${fmt(revival.streams)} прослушиваний за неделю.</p>`:
+ ${revival?`<p class='desc'>🔥 «${revival.song}» снова подхватили рекомендации: ${fmt(revival.streams)} прослушиваний после релиза.</p>`:
  `<p class='desc'>Предыдущие релизы продолжают приносить аудиторию и деньги между премьерами.</p>`}
  </div>`;
 }
@@ -1776,7 +1776,7 @@ function calculateRelease(){
  showRelease(streams,loyal,income,partner,score,repGain,notes,profit,producerReview);
 }
 function showRelease(streams,loyal,income,partner,score,repGain,notes,profit,producerReview){shell('Релиз состоялся',state.song.name,`<div class='release'><div class='vinyl'></div><div class='big-number'>${fmt(streams)}</div><div class='desc'>прослушиваний</div><div class='stats'><div class='stat'><b>+${fmt(loyal)}</b>слушателей</div><div class='stat'><b>+${fmt(income)}</b>VS₽ доход</div><div class='stat'><b>+${repGain}</b>репутация</div><div class='stat'><b>${Math.round(score)}</b>Release Score</div></div>${partner?`<p class='small'>Партнёру выплачено: ${fmt(partner)} VS₽.</p>`:''}
-${(state.promo.includes(0)||state.promo.includes(2)||state.promo.includes(4))?`<div class='card' style='cursor:default;margin-top:12px;text-align:left'><div class='kicker'>ОТЛОЖЕННЫЙ ЭФФЕКТ</div><p class='desc'>Клип, плейлисты и PR могут продолжать работать после премьеры. Их полная окупаемость проявится в следующих игровых неделях.</p></div>`:''}
+${(state.promo.includes(0)||state.promo.includes(2)||state.promo.includes(4))?`<div class='card' style='cursor:default;margin-top:12px;text-align:left'><div class='kicker'>ОТЛОЖЕННЫЙ ЭФФЕКТ</div><p class='desc'>Клип, плейлисты и PR могут продолжать работать после премьеры. Их полная окупаемость проявится при следующих релизах.</p></div>`:''}
 <div class='card' style='cursor:default;margin-top:12px;text-align:left'>
  ${releaseMomentHTML(s,streams,income,loyal,profit)}${consequenceHTML()}<div class='kicker'>ФИНАНСЫ РЕЛИЗА</div>
  <div class='stats'>
@@ -1899,7 +1899,7 @@ function infraBrandIcon(key){
 }
 
 function developmentScreen(){
- const finished=season2Ready()&&season2Week()>12;
+ const finished=season2Ready()&&s2SeasonComplete();
  shell('Развитие лейбла','Инвестируй в постоянные активы',
  `<section class='infra-compact infra-development'>${finished?`<p class='desc'>Карьера завершена. Инфраструктура доступна только для просмотра.</p>`:''}<p class='desc'>Эти улучшения остаются с лейблом на все будущие релизы. Капитал: <b>${fmt(career.cash)} VS₽</b>.</p>
  <div class='infra-grid'>${upgrades.map(u=>{
@@ -1912,7 +1912,7 @@ function developmentScreen(){
  <div class='nav'><button class='btn alt' onclick='careerScreen()'>← МОЙ ЛЕЙБЛ</button><button class='btn' onclick='${career.releases>=10?'season2Office()':'newRelease()'}'>${career.releases>=10?'ИНФРАСТРУКТУРА СЕЗОНА 2 →':'СЛЕДУЮЩИЙ РЕЛИЗ →'}</button></div></section>`)
 }
 function buyUpgrade(key){
- if(season2Ready()&&season2Week()>12)return;
+ if(season2Ready()&&s2SeasonComplete())return;
  if(!['studioLvl','marketingLvl','videoLvl','teamLvl'].includes(key)||career[key]>=2)return;
  let c=upgradeCost(key); if(c===null||!Number.isFinite(c)||career.cash<c)return;
  career.cash-=c; career[key]++; developmentScreen();
@@ -2105,7 +2105,7 @@ function newRelease(){
  resetRelease();market();
 }
 function takeDistributorAdvance(index){
- if(season2Ready()&&season2Week()>12)return;
+ if(season2Ready()&&s2SeasonComplete())return;
  if(career.advanceDebt>0){toast('Новый аванс доступен только после погашения предыдущего');return}
  const option=advanceOptions[index];if(!option)return advanceScreen();
  career.cash+=option.amount;career.advanceDebt=option.repay;
@@ -2119,6 +2119,15 @@ function s2PriceTable(kind){
  const column=kind==='team'?2:1;
  return original.map((row,i)=>row.map((value,k)=>k===column?S2_BALANCED_PRICES[kind][i]:value));
 }
+
+// Release-completion semantics; legacy turn numbers stay internal for archived ledgers.
+function s2ReleaseCount(){const slots=new Set(season2Songs.map(s=>season2SongSlot(s.id)));return new Set((career.season2Releases||[]).map(h=>season2SongSlot(h.songId)).filter(id=>slots.has(id))).size;}
+function s2SeasonComplete(){return s2ReleaseCount()>=season2Songs.length;}
+function s2RemainingReleases(){return Math.max(0,season2Songs.length-s2ReleaseCount());}
+function s2NextReleaseNumber(){return Math.min(season2Songs.length,s2ReleaseCount()+1);}
+function s2ProjectCount(){const rows=(career.season2History||[]).filter(h=>h&&h.key&&h.key!=='wait');return Math.max(rows.length,Number(career.season2ProjectsDone)||0);}
+function s2ProjectAllowance(){return Math.min(4,1+Math.floor(s2ReleaseCount()/3));}
+function s2ProjectsAvailable(){return !s2SeasonComplete()&&Math.max(0,s2ProjectAllowance()-s2ProjectCount());}
 
 // SEASON 2 · инфраструктура и проекты лейбла.
 const season2Assets=[
@@ -2138,7 +2147,7 @@ const season2Projects=[
 ];
 function season2Ready(){return career.releases>=10}
 function season2Level(key){return Math.max(0,Math.min(3,Number((career.season2Infra||{})[key])||0))}
-function season2Week(){return Math.max(1,Math.min(13,Number(career.season2Week)||1))}
+function season2Week(){return Math.max(1,Number(career.season2Week)||1)}
 function season2Cost(project){return Math.max(100,Math.round(project.base*(1-.06*season2Level('office'))))}
 function season2Forecast(project){
  const l=season2Level(project.key),aud=Math.min(150000,Math.max(0,career.listeners||0)),rep=Math.min(80,Math.max(0,career.rep||0));
@@ -2299,15 +2308,15 @@ function season2DigitalIncome(){
 document.addEventListener('play',function(e){if(e.target&&e.target.tagName==='AUDIO')document.querySelectorAll('audio').forEach(a=>{if(a!==e.target)a.pause()})},true);
 let season2SelectedSong=null;
 let season2SelectedPlan=null;
-function season2SelectSong(id){if(season2Released(id)||season2Week()>12)return;season2SelectedSong=id;season2SongCatalog();}
+function season2SelectSong(id){if(season2Released(id)||s2SeasonComplete())return;season2SelectedSong=id;season2SongCatalog();}
 function season2SelectPlan(i){season2SelectedPlan=i;season2ChooseRelease(season2SelectedSong);}
 function season2SongCatalog(){
  if(!season2Ready())return careerScreen();
  const count=(career.season2Releases||[]).length;
  shell('Сезон 2 · Новые песни','Каталог новых релизов',
  `<div class='card' style='cursor:default'><div class='kicker'>${count}/10 ПЕСЕН ВЫПУЩЕНО · НЕДЕЛЯ ${Math.min(season2Week(),12)}/12</div><p class='desc'>10 новых композиций VUSTIN SOUND. Каждый релиз занимает одну неделю из 12. Инфраструктура снижает расходы и увеличивает результаты.</p><p class='desc'>Капитал: <b>${fmt(career.cash)} VS₽</b> · Слушатели: <b>${fmt(career.listeners)}</b> · Репутация: <b>${career.rep}</b></p></div>
- <div class='grid'>${season2CatalogSongs().map(song=>{let done=season2Released(song.id),active=season2SelectedSong===song.id&&!done;return `<div class='card song-choice-card ${active?'sel':''}' style='${done?'opacity:.62;cursor:default': 'cursor:pointer'}' ${done||season2Week()>12?'':`onclick='season2SelectSong("${song.id}")'`}><div class='kicker'>${done?'✓ РЕЛИЗ СОСТОЯЛСЯ':song.genre}</div>${song.cover?`<img class="season2-cover" src="${song.cover}" alt="Обложка песни ${song.name}" loading="lazy" referrerpolicy="no-referrer" onerror="this.style.display='none'">`:`<div class="season2-cover-placeholder" aria-label="Обложка пока не найдена"><span>VUSTIN SOUND</span><strong>${song.name}</strong><small>Обложка ожидается</small></div>`}<h3>${song.name}</h3><button class='demo-btn' onclick='playSongDemo(event,"${song.id}",this)'>▶ ПОСЛУШАТЬ ПЕСНЮ</button>${GAME_TRACKS[song.id]?'':"<div class='demo-note'>полная запись пока не подключена</div>"}<p class='desc'>Потенциал качества: ${song.p[0]} · Эмоциональность: ${song.p[1]} · Охват: ${song.p[2]}</p>${officialSongLink(song.id)}<div class='song-tags'><span class='tag'>${song.genre}</span></div></div>`}).join('')}</div>
- <div class='nav'>${season2Week()>12?`<button class='btn' onclick='season2Finale()'>ИТОГИ СЕЗОНА →</button>`:''}<button class='btn alt' onclick='season2Infrastructure(true)'>← ИНФРАСТРУКТУРА</button><button class='btn alt' ${season2Week()<=12?'':'disabled'} onclick='season2WaitWeek()'>ПРОПУСТИТЬ НЕДЕЛЮ</button><button class='btn' ${season2SelectedSong&&!season2Released(season2SelectedSong)&&season2Week()<=12?'':'disabled'} onclick='season2StartProduction(season2SelectedSong)'>ДАЛЕЕ →</button></div>`);
+ <div class='grid'>${season2CatalogSongs().map(song=>{let done=season2Released(song.id),active=season2SelectedSong===song.id&&!done;return `<div class='card song-choice-card ${active?'sel':''}' style='${done?'opacity:.62;cursor:default': 'cursor:pointer'}' ${done||s2SeasonComplete()?'':`onclick='season2SelectSong("${song.id}")'`}><div class='kicker'>${done?'✓ РЕЛИЗ СОСТОЯЛСЯ':song.genre}</div>${song.cover?`<img class="season2-cover" src="${song.cover}" alt="Обложка песни ${song.name}" loading="lazy" referrerpolicy="no-referrer" onerror="this.style.display='none'">`:`<div class="season2-cover-placeholder" aria-label="Обложка пока не найдена"><span>VUSTIN SOUND</span><strong>${song.name}</strong><small>Обложка ожидается</small></div>`}<h3>${song.name}</h3><button class='demo-btn' onclick='playSongDemo(event,"${song.id}",this)'>▶ ПОСЛУШАТЬ ПЕСНЮ</button>${GAME_TRACKS[song.id]?'':"<div class='demo-note'>полная запись пока не подключена</div>"}<p class='desc'>Потенциал качества: ${song.p[0]} · Эмоциональность: ${song.p[1]} · Охват: ${song.p[2]}</p>${officialSongLink(song.id)}<div class='song-tags'><span class='tag'>${song.genre}</span></div></div>`}).join('')}</div>
+ <div class='nav'>${s2SeasonComplete()?`<button class='btn' onclick='season2Finale()'>ИТОГИ СЕЗОНА →</button>`:''}<button class='btn alt' onclick='season2Infrastructure(true)'>← ИНФРАСТРУКТУРА</button><button class='btn alt' ${!s2SeasonComplete()?'':'disabled'} onclick='season2WaitWeek()'>ПРОПУСТИТЬ НЕДЕЛЮ</button><button class='btn' ${season2SelectedSong&&!season2Released(season2SelectedSong)&&!s2SeasonComplete()?'':'disabled'} onclick='season2StartProduction(season2SelectedSong)'>ДАЛЕЕ →</button></div>`);
 }
 
 // v16.7: unified multi-step production workflow for season two.
@@ -2320,7 +2329,7 @@ function season2ResumeProduction(){
 }
 function season2StartProduction(id){
  const song=season2SongById(id);
- if(!song||!season2CatalogSongs().some(x=>x.id===id)||season2Released(id)||season2Week()>12)return season2SongCatalog();
+ if(!song||!season2CatalogSongs().some(x=>x.id===id)||season2Released(id)||s2SeasonComplete())return season2SongCatalog();
  season2SelectedSong=id;
  season2Draft={id,balanceVersion:2,goal:null,team:[],studio:null,arr:null,cover:null,promo:[]};
  season2DraftStep=0;
@@ -2396,7 +2405,7 @@ function season2ReviewProduction(){
  const summary=[['marketing','Цель',goals[d.goal][1]],['sound','Команда',d.team.length?d.team.map(i=>s2PriceTable('team')[i][1]).join(', '):'Без специалистов'],['studio','Запись',s2PriceTable('studios')[d.studio][0]],['arr','Аранжировка',s2PriceTable('arrs')[d.arr][0]],['art','Обложка',s2PriceTable('covers')[d.cover][0]],['pr','Продвижение',d.promo.length?d.promo.map(i=>s2PriceTable('promos')[i][0]).join(', '):'Без дополнительного продвижения']];
  shell('Сезон 2 · Перед премьерой','Проверь релиз',
  `<div class="production-screen s2-production"><p class="production-intro"><b>${song.name}</b> · Проверь решения перед выпуском.</p><dl class="s2-summary">${summary.map(([icon,name,value])=>`<div><dt><span aria-hidden="true">${productionIcon(icon)}</span>${name}</dt><dd>${value}</dd></div>`).join('')}</dl>
- <section class="s2-forecast" aria-label="Предварительный расчёт"><div class="production-budget s2-budget"><div><span>Затраты при выпуске</span><b>${fmt(f.cost)} VS₽</b></div><div><span>Содержание за неделю</span><b>${fmt(f.operating)} VS₽</b></div><div><span>Остаток после обоих расходов</span><b>${fmt(career.cash-f.cost-f.operating)} VS₽</b></div></div><p class="production-footnote">Суммы предварительные. Оплата только при нажатии «Выпустить песню». Скидки инфраструктуры учтены.</p>
+ <section class="s2-forecast" aria-label="Предварительный расчёт"><div class="production-budget s2-budget"><div><span>Затраты при выпуске</span><b>${fmt(f.cost)} VS₽</b></div><div><span>Содержание после релиза</span><b>${fmt(f.operating)} VS₽</b></div><div><span>Остаток после обоих расходов</span><b>${fmt(career.cash-f.cost-f.operating)} VS₽</b></div></div><p class="production-footnote">Суммы предварительные. Оплата только при нажатии «Выпустить песню». Скидки инфраструктуры учтены.</p>
  <div class="s2-estimates"><div><span>Ожидаемые прослушивания</span><b>${fmt(f.streams)}</b></div><div><span>Ожидаемая выручка</span><b>${fmt(f.income)} VS₽</b></div></div>
  <p class="production-footnote">Прогноз включает влияние команды, обложки, продвижения и цели релиза.</p><p class="s2-risk">Результат не гарантирован. Возможный диапазон прослушиваний: <b>${fmt(Math.round(f.streams*f.risk.downside))}–${fmt(Math.round(f.streams*(1.7+1.1+f.premium*3.1)))}</b>. Премиальное производство повышает шанс прорыва, но увеличивает риск убытка. Инфраструктура уменьшает риск провала.</p>
  ${f.cost+f.operating>career.cash?`<p class="s2-risk" role="status">Нужен резерв на содержание лейбла: не хватает <b>${fmt(f.cost+f.operating-career.cash)} VS₽</b>.</p>`:''}</section>
@@ -2405,7 +2414,7 @@ function season2ReviewProduction(){
 
 function season2ChooseRelease(id){season2StartProduction(id);}
 function season2PublishSong(id,planIndex){
- if(!season2Ready()||season2Week()>12||season2Released(id))return;
+ if(!season2Ready()||s2SeasonComplete()||season2Released(id))return;
  if(planIndex===-1&&(!season2Draft||season2Draft.id!==id||season2Draft.goal===null||season2Draft.studio===null||season2Draft.arr===null||season2Draft.cover===null))return;
  const song=season2SongById(id),plan=planIndex===-1&&season2Draft&&season2Draft.id===id?season2DraftPlan():season2ReleasePlans[planIndex];if(!song||!plan)return;
  const forecast=season2ReleaseForecast(song,plan);
@@ -2428,10 +2437,10 @@ function season2PublishSong(id,planIndex){
  career.season2Last=`${f.outcome}: «${song.name}» — ${fmt(f.streams)} прослушиваний, выручка ${fmt(f.income)} VS₽. Старый каталог: +${fmt(oldCatalog.income)} VS₽, новый: +${fmt(newCatalog.income)} VS₽.`;
  saveCareer();
  shell('Сезон 2 · Премьера состоялась',song.name,
- `<div class='card' style='cursor:default'><div class='kicker'>${plan.name} · НЕДЕЛЯ ${week}</div><div class='stats'><div class='stat'><b>${fmt(f.streams)}</b>прослушиваний</div><div class='stat'><b>${fmt(f.income)}</b>выручка</div><div class='stat'><b>+${fmt(f.listeners)}</b>слушателей</div><div class='stat'><b>+${f.rep}</b>репутация</div></div><p class='desc'>Затраты: ${fmt(f.cost)} VS₽. Содержание лейбла: ${fmt(operating)} VS₽. Дистрибуция: +${fmt(digital)} VS₽. Погашено долга: ${fmt(paid+paidDigital)} VS₽. Текущий капитал: ${fmt(career.cash)} VS₽.</p></div><div class='nav'>${officialSongLink(song.id)}${season2Week()>12?`<button class='btn' onclick='season2Finale()'>ИТОГИ ВТОРОГО СЕЗОНА →</button>`:`<button class='btn' onclick='season2SongCatalog()'>К СЛЕДУЮЩЕЙ ПЕСНЕ →</button>`}<button class='btn alt' onclick='season2Infrastructure()'>ИНФРАСТРУКТУРА</button></div>`);
+ `<div class='card' style='cursor:default'><div class='kicker'>${plan.name} · НЕДЕЛЯ ${week}</div><div class='stats'><div class='stat'><b>${fmt(f.streams)}</b>прослушиваний</div><div class='stat'><b>${fmt(f.income)}</b>выручка</div><div class='stat'><b>+${fmt(f.listeners)}</b>слушателей</div><div class='stat'><b>+${f.rep}</b>репутация</div></div><p class='desc'>Затраты: ${fmt(f.cost)} VS₽. Содержание лейбла: ${fmt(operating)} VS₽. Дистрибуция: +${fmt(digital)} VS₽. Погашено долга: ${fmt(paid+paidDigital)} VS₽. Текущий капитал: ${fmt(career.cash)} VS₽.</p></div><div class='nav'>${officialSongLink(song.id)}${s2SeasonComplete()?`<button class='btn' onclick='season2Finale()'>ИТОГИ ВТОРОГО СЕЗОНА →</button>`:`<button class='btn' onclick='season2SongCatalog()'>К СЛЕДУЮЩЕЙ ПЕСНЕ →</button>`}<button class='btn alt' onclick='season2Infrastructure()'>ИНФРАСТРУКТУРА</button></div>`);
 }
 function season2WaitWeek(){
- if(!season2Ready()||season2Week()>12)return;
+ if(!season2Ready()||s2SeasonComplete())return;
  const week=season2Week();
  const quotedOperating=season2OperatingCost();
  const oldCatalog=season2CatalogWeek(),newCatalog=season2NewCatalogWeek();
@@ -2439,7 +2448,7 @@ function season2WaitWeek(){
  const digital=season2DigitalIncome();const paid=season2CreditIncome(digital);
  const operating=season2ChargeOperatingCost(quotedOperating);
  career.season2Week=week+1;
- career.season2Last=`Неделя ${week}: пауза в производстве. Старый каталог +${fmt(oldCatalog.income)} VS₽, новый каталог +${fmt(newCatalog.income)} VS₽, дистрибуция +${fmt(digital)} VS₽, содержание −${fmt(operating)} VS₽.`;
+ career.season2Last=`Этап ${week}: пауза в производстве. Старый каталог +${fmt(oldCatalog.income)} VS₽, новый каталог +${fmt(newCatalog.income)} VS₽, дистрибуция +${fmt(digital)} VS₽, содержание −${fmt(operating)} VS₽.`;
  if(!Array.isArray(career.season2History))career.season2History=[];
  career.season2History.push({week,key:'wait',cost:0,income:oldCatalog.income+newCatalog.income,digital,operating,debtPaid:paid+oldCatalog.debtPaid+newCatalog.debtPaid});
  saveCareer();season2Infrastructure();
@@ -2484,16 +2493,16 @@ function runSeason2ParallelProject(key){
 }
 function season2AssetPayback(a){
  const lvl=season2Level(a.key);if(lvl>=3)return 'Максимальный уровень';
- const cost=a.costs[lvl],weeks=Math.max(0,13-season2Week());
+ const cost=a.costs[lvl],weeks=s2RemainingReleases();
  const before=season2PassiveForecast(),old=career.season2Infra||{};
  career.season2Infra={...old,[a.key]:lvl+1};
  const after=season2PassiveForecast();career.season2Infra=old;
  const weeklyNet=after.income-before.income-95;
  const cashReturn=weeklyNet*weeks-cost;
  const streams=after.streams-before.streams,listeners=after.listeners-before.listeners;
- const strategic=(streams||listeners)?` · стратегический эффект: +${fmt(streams)} прослушиваний и +${fmt(listeners)} слушателей/нед.`:'';
+ const strategic=(streams||listeners)?` · стратегический эффект: +${fmt(streams)} прослушиваний и +${fmt(listeners)} слушателей/релиз`:'';
  const possible=Math.ceil(Math.max(0,cost)/Math.max(1,weeklyNet));
- return `Инвестиция ${fmt(cost)} VS₽ · ${weeks} нед. до конца · чистый денежный эффект ${weeklyNet>=0?'+':''}${fmt(weeklyNet)} VS₽/нед. · прогноз денежного результата ${cashReturn>=0?'+':''}${fmt(cashReturn)} VS₽${weeklyNet>0?` · окупаемость ${possible} нед.`:''}${strategic}. Дополнительные релизы и проекты не учтены.`;
+ return `Инвестиция ${fmt(cost)} VS₽ · ${weeks} циклов до конца · чистый денежный эффект ${weeklyNet>=0?'+':''}${fmt(weeklyNet)} VS₽/релиз · прогноз денежного результата ${cashReturn>=0?'+':''}${fmt(cashReturn)} VS₽${weeklyNet>0?` · окупаемость ${possible} циклов`:''}${strategic}. Дополнительные релизы и проекты не учтены.`;
 }
 // Verified official catalog links. Unresolved titles deliberately have no song URL.
 const officialSongPages={
@@ -2505,7 +2514,7 @@ function officialSongLink(id){
 }
 function season2Finale(){
  if(!season2Ready())return careerScreen();
- if(season2Week()<=12)return season2Infrastructure();
+ if(!s2SeasonComplete())return season2Infrastructure();
  const releases=Array.isArray(career.season2Releases)?career.season2Releases:[];
  const best=releases.reduce((a,r)=>!a||Number(r.streams)>Number(a.streams)?r:a,null);
  const bestSong=best?season2SongById(best.songId):null;
@@ -2522,17 +2531,17 @@ function season2Finale(){
 
 function season2Infrastructure(showArchive=false){
  if(!season2Ready())return careerScreen();
- if(season2Week()>12&&!showArchive)return season2Finale();
+ if(s2SeasonComplete()&&!showArchive)return season2Finale();
  let total=season2Assets.reduce((sum,a)=>sum+season2Level(a.key),0),week=season2Week();
- let projects=season2Projects.map(p=>{let lvl=season2Level(p.key),f=season2Forecast(p),available=lvl>0&&week<=12&&career.cash>=f.cost+season2RequiredReserve();return `<article class='infra-item infra-project'><header class='infra-item-head'>${infraBrandIcon(p.key)}<div><div class='kicker'>${lvl?'УРОВЕНЬ '+lvl:'НУЖЕН ОБЪЕКТ'}</div><h3>${p.name}</h3></div></header><p class='desc'>${p.desc}</p><p class='desc'>Расходы: <b>${fmt(f.cost)} VS₽</b> · Выручка: <b>${fmt(f.income)} VS₽</b> · Новые слушатели: <b>${fmt(f.listeners)}</b> · Репутация: <b>+${f.rep}</b></p><button class='btn'  ${available?'':'disabled'} onclick='runSeason2Project("${p.key}")'>${week>12?'СЕЗОН ЗАВЕРШЁН':lvl?'ПРОВЕСТИ ПРОЕКТ (1 НЕДЕЛЯ) →':'СНАЧАЛА ПОСТРОЙ ОБЪЕКТ'}</button><button class='btn alt'  ${lvl>0&&season2ParallelAvailable()&&career.cash>=f.cost+season2RequiredReserve()?'':'disabled'} onclick='runSeason2ParallelProject("${p.key}")'>ПАРАЛЛЕЛЬНО (0 НЕДЕЛЬ) →</button></article>`}).join('');
+ let projects=season2Projects.map(p=>{let lvl=season2Level(p.key),f=season2Forecast(p),available=lvl>0&&!s2SeasonComplete()&&career.cash>=f.cost+season2RequiredReserve();return `<article class='infra-item infra-project'><header class='infra-item-head'>${infraBrandIcon(p.key)}<div><div class='kicker'>${lvl?'УРОВЕНЬ '+lvl:'НУЖЕН ОБЪЕКТ'}</div><h3>${p.name}</h3></div></header><p class='desc'>${p.desc}</p><p class='desc'>Расходы: <b>${fmt(f.cost)} VS₽</b> · Выручка: <b>${fmt(f.income)} VS₽</b> · Новые слушатели: <b>${fmt(f.listeners)}</b> · Репутация: <b>+${f.rep}</b></p><button class='btn'  ${available?'':'disabled'} onclick='runSeason2Project("${p.key}")'>${s2SeasonComplete()?'СЕЗОН ЗАВЕРШЁН':lvl?'ПРОВЕСТИ ПРОЕКТ (1 НЕДЕЛЯ) →':'СНАЧАЛА ПОСТРОЙ ОБЪЕКТ'}</button><button class='btn alt'  ${lvl>0&&season2ParallelAvailable()&&career.cash>=f.cost+season2RequiredReserve()?'':'disabled'} onclick='runSeason2ParallelProject("${p.key}")'>ПАРАЛЛЕЛЬНО (0 НЕДЕЛЬ) →</button></article>`}).join('');
  shell('Сезон 2 · Инфраструктура','VUSTIN RECORDS · Выход на большую сцену',
- `<section class='infra-compact'><div class='infra-overview'><div class='kicker'>ВТОРОЙ СЕЗОН · НЕДЕЛЯ ${Math.min(week,12)}/12</div><h2>Построй музыкальную экосистему</h2><p class='desc'>Развивай объекты и запускай проекты. Релиз занимает одну неделю. Один инфраструктурный проект можно выполнить параллельно раз в три недели без расхода недели; остальные проекты занимают неделю. Дистрибуция приносит дополнительный доход от каталога каждую неделю. Все результаты сохраняются.</p><div class='stats'><div class='stat'><b>${fmt(career.cash)}</b>VS₽ капитал</div><div class='stat'><b>${fmt(career.listeners)}</b>слушателей</div><div class='stat'><b>${career.rep}</b>репутация</div><div class='stat'><b>${total}/18</b>уровней объектов</div></div>${career.season2Last?`<p class='desc'><b>Последнее событие:</b> ${career.season2Last}</p>`:''}</div>
- <div class='infra-catalog'><div class='kicker'>НОВЫЕ РЕЛИЗЫ · СЕЗОН 2</div><h3>10 новых песен VUSTIN SOUND</h3><p class='desc'>${(career.season2Releases||[]).length}/10 выпущено. Каждый релиз занимает одну игровую неделю и использует преимущества построенной инфраструктуры.</p><button class='btn' onclick='season2SongCatalog()'>ОТКРЫТЬ КАТАЛОГ ПЕСЕН →</button></div> <div class='infra-economy'><div class='kicker'>ЭКОНОМИКА СЕЗОНА</div><p class='infra-reserve'>Резерв: <b>${fmt(season2RequiredReserve())} VS₽</b> · ${week>12?'Сезон завершён':season2ParallelAvailable()?'Параллельный проект доступен':'Параллельный проект в этом блоке уже использован'}</p><p class='desc'>Содержание лейбла за неделю: <b>${fmt(season2OperatingCost())} VS₽</b>. Доход дистрибуции за каждую завершённую неделю: <b>${fmt(season2DigitalIncome())} VS₽</b>. Параллельный проект доступен один раз в каждом трёхнедельном блоке. Инфраструктура приносит регулярный доход и органический рост; расчёт окупаемости ориентировочный. Проекты имеют прозрачный прогноз без случайного результата. Для выпуска требуется резерв на содержание; при нехватке средств можно пропустить неделю и получить доход каталога. После 12-й недели новые проекты, релизы и покупки инфраструктуры недоступны.</p>${week>12?`<h3>Сезон 2 завершён!</h3><p class='desc'>Проведено проектов: ${career.season2ProjectsDone||0}. Капитал: ${fmt(career.cash)} VS₽.</p>`:''}</div>
- <div class='nav'>${week>12?`<button class='btn' onclick='season2Finale()'>ИТОГИ ВТОРОГО СЕЗОНА →</button>`:''}${season2Draft&&week<=12?`<button class='btn alt' onclick='season2ResumeProduction()'>← ПРОДОЛЖИТЬ РЕЛИЗ</button>`:''}<button class='btn' ${week<=12?'':'disabled'} onclick='season2WaitWeek()'>ПРОПУСТИТЬ НЕДЕЛЮ →</button><button class='btn alt' onclick='seasonFinale()'>← ИТОГИ ПЕРВОГО СЕЗОНА</button><button class='btn alt' onclick='developmentScreen()'>ИНФРАСТРУКТУРА СЕЗОНА 1</button></div><details class='infra-section' open><summary>Объекты <span>Строительство и улучшения · 6 направлений</span></summary><div class='infra-grid'>${season2Assets.map(a=>{let lvl=season2Level(a.key),max=lvl>=3,cost=max?0:a.costs[lvl];return `<article class='infra-item'><header class='infra-item-head'>${infraBrandIcon(a.key)}<div><div class='kicker'>УРОВЕНЬ ${lvl}/3</div><h3>${a.name}</h3></div></header><p class='desc'>${a.desc}</p><p class='desc'>${season2AssetPayback(a)}</p><div class='price'>${max?'МАКСИМАЛЬНЫЙ УРОВЕНЬ':fmt(cost)+' VS₽'}</div><button class='btn'  ${max||week>12||career.cash<cost?'disabled':''} onclick='buySeason2Asset("${a.key}")'>${max?'ПОСТРОЕНО':'УЛУЧШИТЬ ДО '+(lvl+1)+' УРОВНЯ'}</button></article>`}).join('')}</div></details>
+ `<section class='infra-compact'><div class='infra-overview'><div class='kicker'>ВТОРОЙ СЕЗОН · НЕДЕЛЯ ${Math.min(week,12)}/12</div><h2>Построй музыкальную экосистему</h2><p class='desc'>Развивай объекты и запускай проекты. Релиз занимает одну неделю. Один инфраструктурный проект можно выполнить параллельно раз в три недели без расхода недели; остальные проекты занимают неделю. Дистрибуция приносит дополнительный доход от каталога после каждого релиза. Все результаты сохраняются.</p><div class='stats'><div class='stat'><b>${fmt(career.cash)}</b>VS₽ капитал</div><div class='stat'><b>${fmt(career.listeners)}</b>слушателей</div><div class='stat'><b>${career.rep}</b>репутация</div><div class='stat'><b>${total}/18</b>уровней объектов</div></div>${career.season2Last?`<p class='desc'><b>Последнее событие:</b> ${career.season2Last}</p>`:''}</div>
+ <div class='infra-catalog'><div class='kicker'>НОВЫЕ РЕЛИЗЫ · СЕЗОН 2</div><h3>10 новых песен VUSTIN SOUND</h3><p class='desc'>${(career.season2Releases||[]).length}/10 выпущено. Каждый релиз занимает одну игровую неделю и использует преимущества построенной инфраструктуры.</p><button class='btn' onclick='season2SongCatalog()'>ОТКРЫТЬ КАТАЛОГ ПЕСЕН →</button></div> <div class='infra-economy'><div class='kicker'>ЭКОНОМИКА СЕЗОНА</div><p class='infra-reserve'>Резерв: <b>${fmt(season2RequiredReserve())} VS₽</b> · ${s2SeasonComplete()?'Сезон завершён':season2ParallelAvailable()?'Проект доступен':'Параллельный проект в этом блоке уже использован'}</p><p class='desc'>Содержание лейбла после релиза: <b>${fmt(season2OperatingCost())} VS₽</b>. Доход дистрибуции за после каждого релиза: <b>${fmt(season2DigitalIncome())} VS₽</b>. Проект доступен один раз в каждом трёхнедельном блоке. Инфраструктура приносит регулярный доход и органический рост; расчёт окупаемости ориентировочный. Проекты имеют прозрачный прогноз без случайного результата. Для выпуска требуется резерв на содержание; при нехватке средств можно пропустить неделю и получить доход каталога. После 12-й недели новые проекты, релизы и покупки инфраструктуры недоступны.</p>${s2SeasonComplete()?`<h3>Сезон 2 завершён!</h3><p class='desc'>Проведено проектов: ${career.season2ProjectsDone||0}. Капитал: ${fmt(career.cash)} VS₽.</p>`:''}</div>
+ <div class='nav'>${s2SeasonComplete()?`<button class='btn' onclick='season2Finale()'>ИТОГИ ВТОРОГО СЕЗОНА →</button>`:''}${season2Draft&&!s2SeasonComplete()?`<button class='btn alt' onclick='season2ResumeProduction()'>← ПРОДОЛЖИТЬ РЕЛИЗ</button>`:''}<button class='btn' ${!s2SeasonComplete()?'':'disabled'} onclick='season2WaitWeek()'>ПРОПУСТИТЬ НЕДЕЛЮ →</button><button class='btn alt' onclick='seasonFinale()'>← ИТОГИ ПЕРВОГО СЕЗОНА</button><button class='btn alt' onclick='developmentScreen()'>ИНФРАСТРУКТУРА СЕЗОНА 1</button></div><details class='infra-section' open><summary>Объекты <span>Строительство и улучшения · 6 направлений</span></summary><div class='infra-grid'>${season2Assets.map(a=>{let lvl=season2Level(a.key),max=lvl>=3,cost=max?0:a.costs[lvl];return `<article class='infra-item'><header class='infra-item-head'>${infraBrandIcon(a.key)}<div><div class='kicker'>УРОВЕНЬ ${lvl}/3</div><h3>${a.name}</h3></div></header><p class='desc'>${a.desc}</p><p class='desc'>${season2AssetPayback(a)}</p><div class='price'>${max?'МАКСИМАЛЬНЫЙ УРОВЕНЬ':fmt(cost)+' VS₽'}</div><button class='btn'  ${max||s2SeasonComplete()||career.cash<cost?'disabled':''} onclick='buySeason2Asset("${a.key}")'>${max?'ПОСТРОЕНО':'УЛУЧШИТЬ ДО '+(lvl+1)+' УРОВНЯ'}</button></article>`}).join('')}</div></details>
  <details class='infra-section'><summary>Проекты <span>5 направлений · параллельный раз в три недели</span></summary><div class='infra-grid'>${projects}</div></details></section>`);
 }
 function buySeason2Asset(key){
- if(!season2Ready()||season2Week()>12)return;
+ if(!season2Ready()||s2SeasonComplete())return;
  const a=season2Assets.find(x=>x.key===key);if(!a)return;
  const lvl=season2Level(key);if(lvl>=3)return;
  const cost=a.costs[lvl];if(!Number.isFinite(cost)||career.cash<cost){gameFeel('НЕДОСТАТОЧНО СРЕДСТВ','Нужно накопить капитал');return}
@@ -2542,7 +2551,7 @@ function buySeason2Asset(key){
  saveCareer();season2Infrastructure();
 }
 function runSeason2Project(key){
- if(!season2Ready()||season2Week()>12||season2Level(key)<1)return;
+ if(!season2Ready()||s2SeasonComplete()||season2Level(key)<1)return;
  const project=season2Projects.find(p=>p.key===key);if(!project)return;
  const f=season2Forecast(project);if(career.cash<f.cost+season2RequiredReserve()){gameFeel('НЕДОСТАТОЧНО СРЕДСТВ','Нужно накопить капитал');return}
  career.cash-=f.cost;
@@ -2571,7 +2580,7 @@ const resumeScreens={};
 function hasReleaseDraft(){return !!state.song&&!isReleased(state.song.id)}
 function resumeCareer(){
  if(!loadCareer())return saveMenu();
- if(season2Ready()&&season2Week()>12)return season2Finale();
+ if(season2Ready()&&s2SeasonComplete())return season2Finale();
  if(season2Draft)return season2ResumeProduction();
  if(hasReleaseDraft())return resumePaidDraft();
  if(career.releases>=10&&career.season2Week)return season2Infrastructure();
@@ -4241,7 +4250,7 @@ const VINYL_REWARDS=[
  {id:'pride',file:'05_pride.png',title:'Мой первый альбом готов!',rule:'Заверши 10 релизов первого сезона.'},
  {id:'success',file:'01_success.png',title:'Мама, я продюсер!',rule:'Заверши первый сезон с 50 000 слушателей и 40 баллами репутации.'},
  {id:'surprise',file:'06_surprise.png',title:'Вот это поворот!',rule:'Подтверди первое событие индустрии перед релизом.'},
- {id:'dance',file:'04_dance.png',title:'Мой лейбл звучит!',rule:'Заверши 12 недель второго сезона.'},
+ {id:'dance',file:'04_dance.png',title:'Мой лейбл звучит!',rule:'Выпусти все десять песен второго сезона.'},
  {id:'s2_first',season:2,file:'07_second_wind.png',title:'Второе дыхание',rule:'Выпусти первую песню второго сезона.'},
  {id:'s2_build',season:2,file:'08_empire.png',title:'Теперь у меня империя',rule:'Построй первый объект инфраструктуры второго сезона.'},
  {id:'s2_income',season:2,file:'09_passive_income.png',title:'Работает без меня!',rule:'Получи первый регулярный доход от объектов или дистрибуции второго сезона.'},
@@ -4258,7 +4267,7 @@ function rewardsSync(){
  if(career.releases>=10&&!career.season2Week&&!r.s1Final)r.s1Final={listeners:Number(career.listeners)||0,rep:Number(career.rep)||0};
  if(r.s1Final&&r.s1Final.listeners>=50000&&r.s1Final.rep>=40)grant('success');
  if(r.industryConfirmed===true)grant('surprise');
- if(career.releases>=10&&Number(career.season2Week)>12)grant('dance');
+ if(career.releases>=10&&s2SeasonComplete())grant('dance');
  if(career.releases>=10){
   const releases=Array.isArray(career.season2Releases)?career.season2Releases:[];
   const count=new Set(releases.filter(h=>h&&season2SongById(h.songId)).map(h=>season2SongSlot(h.songId))).size;
@@ -4285,7 +4294,7 @@ function rewardsEntry(){
 for(const name of ['careerScreen','seasonFinale','season2Finale']){
  const original=window[name];window[name]=function(...args){const result=original(...args);rewardsSync();rewardsEntry();saveCareer();return result;};
 }
-function rewardsReturn(){if(career.releases>=10&&Number(career.season2Week)>12)return season2Finale();if(career.season2Week)return season2Infrastructure();return careerScreen();}
+function rewardsReturn(){if(career.releases>=10&&s2SeasonComplete())return season2Finale();if(career.season2Week)return season2Infrastructure();return careerScreen();}
 function rewardsScreen(){
  const r=rewardsSync();saveCareer();
  const legacy=career.season2Week&&!r.s1Final;
@@ -4867,14 +4876,14 @@ function season2AssetImpact(a){
  const before=season2PassiveForLevels(beforeLevels),after=season2PassiveForLevels(afterLevels);
  const digital=season2DigitalForLevels(afterLevels)-season2DigitalForLevels(beforeLevels);
  const income=after.income-before.income+digital,upkeep=level<3?95:0,net=income-upkeep;
- const weeks=Math.max(0,13-season2Week());
+ const weeks=s2RemainingReleases();
  return {level,cost,weeks,income,upkeep,net,streams:after.streams-before.streams,listeners:after.listeners-before.listeners,
   seasonNet:net*weeks-cost,payback:net>0?Math.ceil(cost/net):null};
 }
 function season2AssetBenefit(key){
  const benefits={
   mastering:'Качество релиза +4; скидка ещё 4% от исходной сметы релиза. Может смягчить слабый результат.',
-  digital:'Охват +3; выручка за прослушивание +0,015 VS₽. Дополнительный доход каждую неделю.',
+  digital:'Охват +3; выручка за прослушивание +0,015 VS₽. Дополнительный доход после каждого релиза.',
   concert:'Регулярная выручка площадки и концерты. Прямого бонуса новой песне нет.',
   academy:'Качество релиза +2; ещё 4 новых слушателя на каждую 1000 прослушиваний. Мастер-классы для артистов.',
   media:'Охват релиза +5; органический рост аудитории. Может смягчить слабый результат.',
@@ -4892,36 +4901,36 @@ function season2InfraForecastHTML(song,plan){
 function season2InfraActualHTML(entry){
  // Call with the actual transaction values captured during settlement, not a new forecast.
  const passive=entry.passive||{income:0,streams:0,listeners:0},digital=Number(entry.digital)||0,operating=Number(entry.operating)||0;
- return `<section class="s2-infra-contribution" aria-label="Работа инфраструктуры за неделю"><div class="kicker">ЛЕЙБЛ РАБОТАЕТ</div><div class="s2-infra-metrics"><div><span>Доход объектов</span><b>+${fmt(passive.income||0)} VS₽</b></div><div><span>Доход дистрибуции</span><b>+${fmt(digital)} VS₽</b></div><div><span>Органический рост</span><b>+${fmt(passive.listeners||0)} слушателей</b></div><div><span>Содержание всего лейбла</span><b>−${fmt(operating)} VS₽</b></div></div><p class="production-footnote">Дополнительно от объектов: +${fmt(passive.streams||0)} прослушиваний каталога. Здесь показаны фактические начисления этой недели. Доход указан до погашения аванса.</p></section>`;
+ return `<section class="s2-infra-contribution" aria-label="Работа инфраструктуры после релиза"><div class="kicker">ЛЕЙБЛ РАБОТАЕТ</div><div class="s2-infra-metrics"><div><span>Доход объектов</span><b>+${fmt(passive.income||0)} VS₽</b></div><div><span>Доход дистрибуции</span><b>+${fmt(digital)} VS₽</b></div><div><span>Органический рост</span><b>+${fmt(passive.listeners||0)} слушателей</b></div><div><span>Содержание всего лейбла</span><b>−${fmt(operating)} VS₽</b></div></div><p class="production-footnote">Дополнительно от объектов: +${fmt(passive.streams||0)} прослушиваний каталога. Здесь показаны фактические начисления этого расчёта. Доход указан до погашения аванса.</p></section>`;
 }
 
 season2PassiveForecast=function(){return season2PassiveForLevels();};
 season2DigitalIncome=function(){return season2DigitalForLevels();};
 season2AssetPayback=function(a){
  const x=season2AssetImpact(a);if(x.level>=3)return 'Максимальный уровень';
- return `Прямой доход +${fmt(x.income)} VS₽/нед., содержание +${fmt(x.upkeep)} VS₽/нед. Чистый эффект: ${season2Signed(x.net)} VS₽/нед. ${x.weeks} нед. до конца: ${season2Signed(x.seasonNet)} VS₽ с учётом покупки.${x.payback?` Окупаемость при текущей аудитории: ${x.payback} нед.`:''} Бонусы релизов и разовые проекты в окупаемость не включены.`;
+ return `Прямой доход +${fmt(x.income)} VS₽/релиз, содержание +${fmt(x.upkeep)} VS₽/релиз Чистый эффект: ${season2Signed(x.net)} VS₽/релиз ${x.weeks} релизов до завершения: ${season2Signed(x.seasonNet)} VS₽ с учётом покупки.${x.payback?` Окупаемость при текущей аудитории: ${x.payback} циклов`:''} Бонусы релизов и разовые проекты в окупаемость не включены.`;
 };
 season2Infrastructure=function(showArchive=false){
  if(!season2Ready())return careerScreen();
- if(season2Week()>12&&!showArchive)return season2Finale();
- const week=season2Week(),finished=week>12,total=season2Assets.reduce((n,a)=>n+season2Level(a.key),0),passive=season2PassiveForecast(),digital=season2DigitalIncome(),operating=season2OperatingCost();
+ if(s2SeasonComplete()&&!showArchive)return season2Finale();
+ const week=season2Week(),finished=s2SeasonComplete(),total=season2Assets.reduce((n,a)=>n+season2Level(a.key),0),passive=season2PassiveForecast(),digital=season2DigitalIncome(),operating=season2OperatingCost();
  const projectCards=season2Projects.map(p=>{
   const level=season2Level(p.key),f=season2Forecast(p),funded=career.cash>=f.cost+season2RequiredReserve(),available=level>0&&!finished&&funded;
-  return `<article class="infra-item infra-project"><header class="infra-item-head">${infraBrandIcon(p.key)}<div><div class="kicker">${level?'УРОВЕНЬ '+level:'НУЖЕН ОБЪЕКТ'}</div><h3>${p.name}</h3></div></header><p class="desc">${p.desc}</p><div class="infra-upgrade-facts"><span>Затраты<b>${fmt(f.cost)} VS₽</b></span><span>Выручка<b>${fmt(f.income)} VS₽</b></span><span>Новые слушатели<b>+${fmt(f.listeners)}</b></span><span>Репутация<b>+${f.rep}</b></span></div><button class="btn" ${available?'':'disabled'} onclick='runSeason2Project("${p.key}")'>${finished?'Сезон завершён':!level?'Сначала построй объект':!funded?'Нужны деньги и резерв':'Провести · 1 неделя'}</button><button class="btn alt" ${available&&season2ParallelAvailable()?'':'disabled'} onclick='runSeason2ParallelProject("${p.key}")'>Параллельно · без расхода недели</button></article>`;
+  return `<article class="infra-item infra-project"><header class="infra-item-head">${infraBrandIcon(p.key)}<div><div class="kicker">${level?'УРОВЕНЬ '+level:'НУЖЕН ОБЪЕКТ'}</div><h3>${p.name}</h3></div></header><p class="desc">${p.desc}</p><div class="infra-upgrade-facts"><span>Затраты<b>${fmt(f.cost)} VS₽</b></span><span>Выручка<b>${fmt(f.income)} VS₽</b></span><span>Новые слушатели<b>+${fmt(f.listeners)}</b></span><span>Репутация<b>+${f.rep}</b></span></div><button class="btn alt" ${available&&season2ParallelAvailable()?'':'disabled'} onclick='runSeason2ParallelProject("${p.key}")'>Провести проект</button></article>`;
  }).join('');
  const assetCards=season2Assets.map(a=>{
   const x=season2AssetImpact(a),max=x.level>=3;
   const gains=[x.streams?`+${fmt(x.streams)} прослушиваний`:null,x.listeners?`+${fmt(x.listeners)} слушателей`:null].filter(Boolean).join(' · ');
-  return `<article class="infra-item"><header class="infra-item-head">${infraBrandIcon(a.key)}<div><div class="kicker">УРОВЕНЬ ${x.level}/3</div><h3>${a.name}</h3></div></header><p class="desc">${max?'За каждый из трёх уровней: ': 'Следующий уровень: '}${season2AssetBenefit(a.key)}</p>${max?'':`<div class="infra-upgrade-facts"><span>Прямой доход в неделю<b>+${fmt(x.income)} VS₽</b></span><span>Содержание в неделю<b>+95 VS₽</b></span></div>${gains?`<p class="desc">${gains} каждую неделю.</p>`:''}<details><summary>Расчёт окупаемости</summary><p>${season2AssetPayback(a)}</p></details>`}<div class="price">${max?'Максимальный уровень':fmt(x.cost)+' VS₽'}</div><button class="btn" ${max||finished||career.cash<x.cost?'disabled':''} onclick='buySeason2Asset("${a.key}")'>${finished?'Сезон завершён':max?'Все улучшения открыты':x.level?'Улучшить до уровня '+(x.level+1):'Построить объект'}</button></article>`;
+  return `<article class="infra-item"><header class="infra-item-head">${infraBrandIcon(a.key)}<div><div class="kicker">УРОВЕНЬ ${x.level}/3</div><h3>${a.name}</h3></div></header><p class="desc">${max?'За каждый из трёх уровней: ': 'Следующий уровень: '}${season2AssetBenefit(a.key)}</p>${max?'':`<div class="infra-upgrade-facts"><span>Доход после релиза<b>+${fmt(x.income)} VS₽</b></span><span>Содержание после релиза<b>+95 VS₽</b></span></div>${gains?`<p class="desc">${gains} после каждого релиза.</p>`:''}<details><summary>Расчёт окупаемости</summary><p>${season2AssetPayback(a)}</p></details>`}<div class="price">${max?'Максимальный уровень':fmt(x.cost)+' VS₽'}</div><button class="btn" ${max||finished||career.cash<x.cost?'disabled':''} onclick='buySeason2Asset("${a.key}")'>${finished?'Сезон завершён':max?'Все улучшения открыты':x.level?'Улучшить до уровня '+(x.level+1):'Построить объект'}</button></article>`;
  }).join('');
  (typeof s2Shell==='function'?s2Shell:shell)('Сезон 2 · Развитие лейбла','Моя инфраструктура',`<section class="infra-compact">
- <div class="infra-overview"><div class="kicker">${finished?'СЕЗОН ЗАВЕРШЁН':'НЕДЕЛЯ '+week+' ИЗ 12'} · ${total}/18 УРОВНЕЙ ОБЪЕКТОВ</div><h2>Лейбл помогает твоим песням</h2><p class="desc">Объекты усиливают релизы и работают каждую завершённую неделю. Покупка не тратит неделю.</p><div class="infra-weekly"><div><span>На счету</span><b>${fmt(career.cash)} VS₽</b></div><div><span>Доход объектов и дистрибуции / нед.</span><b>+${fmt(passive.income+digital)} VS₽</b></div><div><span>Содержание всего лейбла / нед.</span><b>−${fmt(operating)} VS₽</b></div></div><p class="desc">От объектов еженедельно: +${fmt(passive.streams)} прослушиваний и +${fmt(passive.listeners)} слушателей. Доход релизов и каталога считается отдельно.</p></div>
+ <div class="infra-overview"><div class="kicker">${finished?'СЕЗОН ЗАВЕРШЁН':'ВЫПУЩЕНО '+s2ReleaseCount()+' ИЗ '+season2Songs.length} · ${total}/18 УРОВНЕЙ ОБЪЕКТОВ</div><h2>Лейбл помогает твоим песням</h2><p class="desc">Объекты усиливают релизы. Доход и содержание начисляются после каждой премьеры. Покупка не расходует релизы.</p><div class="infra-weekly"><div><span>На счету</span><b>${fmt(career.cash)} VS₽</b></div><div><span>Доход объектов и дистрибуции / релиз</span><b>+${fmt(passive.income+digital)} VS₽</b></div><div><span>Содержание всего лейбла / релиз</span><b>−${fmt(operating)} VS₽</b></div></div><p class="desc">От объектов после релиза: +${fmt(passive.streams)} прослушиваний и +${fmt(passive.listeners)} слушателей. Доход релизов и каталога считается отдельно.</p></div>
  <div class="infra-catalog infra-primary"><div><div class="kicker">${(career.season2Releases||[]).length}/10 НОВЫХ ПЕСЕН ВЫПУЩЕНО</div><h3>${season2Draft&&!finished?'Твой релиз ждёт продолжения':'Музыка остаётся главным'}</h3><p class="desc">${finished?'Все песни можно послушать после завершения сезона.':'Улучшения не обязательны для выпуска. Продолжай путь к премьере.'}</p></div><button class="btn" onclick='${season2Draft&&!finished?'season2ResumeProduction()':'season2SongCatalog()'}'>${season2Draft&&!finished?'Продолжить релиз':'К песням'} →</button></div>
  ${career.season2Last?`<details class="infra-section"><summary>Последнее событие</summary><p class="desc">${career.season2Last}</p></details>`:''}
  <details class="infra-section" open><summary>Объекты <span>6 направлений развития</span></summary><div class="infra-grid">${assetCards}</div></details>
- <details class="infra-section"><summary>Проекты <span>${finished?'Архив возможностей':season2ParallelAvailable()?'Параллельный проект доступен':'Параллельный проект уже использован'}</span></summary><p class="desc">Один проект в каждом трёхнедельном блоке можно провести без расхода недели. Остальные занимают неделю вместо релиза. Показатели проектов фиксированы, без случайного результата.</p><div class="infra-grid">${projectCards}</div></details>
- <details class="infra-section"><summary>Как работают расходы и бонусы</summary><p class="desc">Перед релизом или проектом нужно оставить ${fmt(season2RequiredReserve())} VS₽: ${fmt(operating)} на содержание и 150 в резерве. Резерв не списывается. Каждый новый уровень добавляет 95 VS₽ к недельному содержанию.</p><p class="desc">Деньги и аудитория от объектов начисляются только при завершении недели. Параллельный проект не запускает эти начисления. Прямые доходы указаны до погашения аванса. При долге выручка сначала идёт на его погашение.</p><p class="desc">Мастеринг и медиапродакшен могут смягчать слабый результат релиза, но не уменьшают вероятность провала. Эффект ограничен формулой и может проявиться только после нескольких улучшений. Окупаемость рассчитана при текущих показателях, без будущего роста, бонусов релизов и разовых проектов.</p><p class="desc">После 12-й недели новые покупки, проекты и релизы недоступны. Просмотр архива не меняет результаты.</p></details>
- <div class="infra-actions">${season2Draft&&!finished?`<button class="btn alt" onclick="s2CancelDraftScreen()">Отменить подготовку релиза</button>`:''}${finished?`<button class="btn" onclick="season2Finale()">Итоги второго сезона →</button>`:`<button class="btn alt" onclick="season2WaitWeek()">Пропустить неделю</button>`}<button class="btn alt" onclick="developmentScreen()">Студия первого сезона</button><button class="btn alt" onclick="seasonFinale()">Итоги первого сезона</button></div></section>`);
+ <details class="infra-section"><summary>Проекты <span>${finished?'Архив возможностей':season2ParallelAvailable()?'Проект доступен':'Следующий проект откроется после новых релизов'}</span></summary><p class="desc">Один проект доступен сразу; ещё по одному открывается после третьего, шестого и девятого релизов. Проекты не заменяют песни и не начисляют повторно доход каталога. Показатели проектов фиксированы.</p><div class="infra-grid">${projectCards}</div></details>
+ <details class="infra-section"><summary>Как работают расходы и бонусы</summary><p class="desc">Перед релизом или проектом нужно оставить ${fmt(season2RequiredReserve())} VS₽: ${fmt(operating)} на содержание и 150 в резерве. Резерв не списывается. Каждый новый уровень добавляет 95 VS₽ к содержанию после релиза.</p><p class="desc">Деньги и аудитория от объектов начисляются только после премьеры. Проект не запускает эти начисления. Прямые доходы указаны до погашения аванса. При долге выручка сначала идёт на его погашение.</p><p class="desc">Мастеринг и медиапродакшен могут смягчать слабый результат релиза, но не уменьшают вероятность провала. Эффект ограничен формулой и может проявиться только после нескольких улучшений. Окупаемость рассчитана при текущих показателях, без будущего роста, бонусов релизов и разовых проектов.</p><p class="desc">После выпуска всех десяти песен сезон завершён. Просмотр архива не меняет результаты.</p></details>
+ <div class="infra-actions">${season2Draft&&!finished?`<button class="btn alt" onclick="s2CancelDraftScreen()">Отменить подготовку релиза</button>`:''}${finished?`<button class="btn" onclick="season2Finale()">Итоги второго сезона →</button>`:``}<button class="btn alt" onclick="developmentScreen()">Студия первого сезона</button><button class="btn alt" onclick="seasonFinale()">Итоги первого сезона</button></div></section>`);
  resumeRoute={name:'season2Infrastructure',args:[showArchive]};saveCareer();
 };
 
@@ -4975,7 +4984,7 @@ function s2Shell(...args){shell(...args);document.getElementById('screen').datas
 // Season two uses the same release journey and visual components as season one.
 // Existing drafts retain their old step indices; new intervening scenes live in flowStage.
 function s2DraftReady(){
- if(!season2Ready()||season2Week()>12||!season2Draft)return false;
+ if(!season2Ready()||s2SeasonComplete()||!season2Draft)return false;
  const d=season2Draft;
  if(!season2SongById(d.id)||season2Released(d.id))return false;
  for(const [key,limit] of [['team',team.length],['promo',promos.length]])d[key]=[...new Set((Array.isArray(d[key])?d[key]:[]).filter(i=>Number.isInteger(i)&&i>=0&&i<limit))];
@@ -4984,27 +4993,27 @@ function s2DraftReady(){
 }
 function s2SaveScene(stage){if(season2Draft)season2Draft.flowStage=stage;saveCareer();}
 function s2MarketTrend(){
- if(career.season2MarketWeek!==season2Week()||!career.trend){
+ if(career.season2MarketRelease!==s2ReleaseCount()||!career.trend){
   const pool=trendPool.filter(t=>['v','vis','pl','radio','talk'].includes(t.key));
-  career.trend={...pool[(season2Week()-1)%pool.length]};career.trendWeeks=1;career.season2MarketWeek=season2Week();
+  career.trend={...pool[s2ReleaseCount()%pool.length]};career.trendWeeks=1;career.season2MarketRelease=s2ReleaseCount();
  }
  return career.trend;
 }
 function s2Nav(back,next,label='Продолжить',enabled=true){return `<nav class="nav s2-flow-nav"><button class="btn alt" onclick="${back}">← Назад</button><button class="btn" ${enabled?'':'disabled'} onclick="${next}">${label} →</button></nav>`}
-function s2SongHeading(){const song=season2SongById(season2Draft?.id);return `<div class="s2-song-strip">${songCover(song,'s2-small-cover')}<div><span class="kicker">СЕЗОН 2 · НЕДЕЛЯ ${season2Week()} / 12</span><strong>${song?.name||''}</strong></div><button class="btn alt" onclick="season2Office()">Мой лейбл</button></div>`}
-function s2Budget(){const p=season2DraftPlan(),song=season2SongById(season2Draft.id),f=season2ReleaseForecast(song,p),operating=season2OperatingCost();return `<div class="production-budget s2-budget"><div><span>На счету</span><b>${fmt(career.cash)} VS₽</b></div><div><span>Смета со скидками</span><b>${fmt(f.cost)} VS₽</b></div><div><span>Содержание недели</span><b>${fmt(operating)} VS₽</b></div></div><details class="s2-help"><summary>Как оплачивается релиз</summary><p>Выбор пока не списывает деньги. При выпуске оплачиваются релиз и содержание. Ещё 150 VS₽ нужно иметь в резерве: это не отдельный платёж. Минимальная стоимость выпуска — 500 VS₽.</p></details>`}
+function s2SongHeading(){const song=season2SongById(season2Draft?.id);return `<div class="s2-song-strip">${songCover(song,'s2-small-cover')}<div><span class="kicker">СЕЗОН 2 · РЕЛИЗ ${s2NextReleaseNumber()} / ${season2Songs.length}</span><strong>${song?.name||''}</strong></div><button class="btn alt" onclick="season2Office()">Мой лейбл</button></div>`}
+function s2Budget(){const p=season2DraftPlan(),song=season2SongById(season2Draft.id),f=season2ReleaseForecast(song,p),operating=season2OperatingCost();return `<div class="production-budget s2-budget"><div><span>На счету</span><b>${fmt(career.cash)} VS₽</b></div><div><span>Смета со скидками</span><b>${fmt(f.cost)} VS₽</b></div><div><span>Содержание после релиза</span><b>${fmt(operating)} VS₽</b></div></div><details class="s2-help"><summary>Как оплачивается релиз</summary><p>Выбор пока не списывает деньги. При выпуске оплачиваются релиз и содержание. Ещё 150 VS₽ нужно иметь в резерве: это не отдельный платёж. Минимальная стоимость выпуска — 500 VS₽.</p></details>`}
 function season2Office(){
- if(!season2Ready())return careerScreen();if(season2Week()>12)return season2Finale();
+ if(!season2Ready())return careerScreen();if(s2SeasonComplete())return season2Finale();
  const list=career.season2Releases||[],last=list[list.length-1];
- s2Shell('Кабинет продюсера','Мой лейбл · Сезон 2',`<section class="office-compact s2-office"><div class="office-main"><article class="office-release"><span class="kicker">НЕДЕЛЯ ${season2Week()} ИЗ 12</span><h2>${season2Draft?'Твой релиз ждёт продолжения':'Следующая песня. Новая история.'}</h2><p>Знакомый путь от выбора песни до премьеры. Твоя инфраструктура помогает на каждом релизе.</p><div class="s2-office-metrics"><span><b>${list.length}/10</b> релизов</span><span><b>${fmt(career.cash)}</b> VS₽</span><span><b>${fmt(career.listeners)}</b> слушателей</span></div><button class="btn" onclick="${season2Draft?'season2ResumeProduction()':'season2Market()'}">${season2Draft?'Продолжить релиз':'Создать релиз'} →</button></article><aside class="office-path"><div class="kicker">ОТ ИДЕИ К ПРЕМЬЕРЕ</div><ol>${['Песня и команда','Звук и обложка','Продвижение','Решения и премьера'].map((x,i)=>`<li><span>0${i+1}</span>${x}</li>`).join('')}</ol></aside></div><nav class="office-shortcuts"><button class="office-link" onclick="season2Infrastructure()">Инфраструктура</button><button class="office-link" onclick="rewardsScreen()">Мои стикеры</button><button class="office-link" onclick="season2SongCatalog()">Все песни</button></nav>${last?`<div class="s2-last"><span class="kicker">ПОСЛЕДНЯЯ ПРЕМЬЕРА</span><strong>${last.song}</strong><span>${fmt(last.streams)} прослушиваний</span><button class="btn alt" onclick="s2ShowSavedResult(${list.length-1})">Итоги релиза</button></div>`:''}${season2Draft?'<button class="btn alt" onclick="s2CancelDraftScreen()">Отменить подготовку релиза</button>':''}<details class="s2-help"><summary>Как устроен сезон</summary><p>У тебя 12 недель и 10 новых песен. Релиз занимает неделю. Строительство не расходует неделю. Один инфраструктурный проект в каждом трёхнедельном блоке можно выполнить параллельно; остальные проекты занимают неделю. Все 10 песен выпускать не обязательно.</p><button class="btn alt" onclick="season2WaitWeek()">Пропустить неделю</button></details></section>`);saveCareer();
+ s2Shell('Кабинет продюсера','Мой лейбл · Сезон 2',`<section class="office-compact s2-office"><div class="office-main"><article class="office-release"><span class="kicker">ВЫПУЩЕНО ${s2ReleaseCount()} ИЗ ${season2Songs.length}</span><h2>${season2Draft?'Твой релиз ждёт продолжения':'Следующая песня. Новая история.'}</h2><p>Знакомый путь от выбора песни до премьеры. Твоя инфраструктура помогает на каждом релизе.</p><div class="s2-office-metrics"><span><b>${list.length}/10</b> релизов</span><span><b>${fmt(career.cash)}</b> VS₽</span><span><b>${fmt(career.listeners)}</b> слушателей</span></div><button class="btn" onclick="${season2Draft?'season2ResumeProduction()':'season2Market()'}">${season2Draft?'Продолжить релиз':'Создать релиз'} →</button></article><aside class="office-path"><div class="kicker">ОТ ИДЕИ К ПРЕМЬЕРЕ</div><ol>${['Песня и команда','Звук и обложка','Продвижение','Решения и премьера'].map((x,i)=>`<li><span>0${i+1}</span>${x}</li>`).join('')}</ol></aside></div><nav class="office-shortcuts"><button class="office-link" onclick="season2Infrastructure()">Инфраструктура</button><button class="office-link" onclick="rewardsScreen()">Мои стикеры</button><button class="office-link" onclick="season2SongCatalog()">Все песни</button></nav>${last?`<div class="s2-last"><span class="kicker">ПОСЛЕДНЯЯ ПРЕМЬЕРА</span><strong>${last.song}</strong><span>${fmt(last.streams)} прослушиваний</span><button class="btn alt" onclick="s2ShowSavedResult(${list.length-1})">Итоги релиза</button></div>`:''}${season2Draft?'<button class="btn alt" onclick="s2CancelDraftScreen()">Отменить подготовку релиза</button>':''}<details class="s2-help"><summary>Как устроен сезон</summary><p>Сезон завершается, когда выпущены все десять песен. Спешить не нужно. Каталог, объекты и содержание рассчитываются после каждой премьеры. Один проект доступен сразу; ещё по одному открывается после третьего, шестого и девятого релизов. Проект не заменяет песню.</p></details></section>`);saveCareer();
 }
 function season2Market(){
- if(!season2Ready())return careerScreen();if(season2Week()>12)return season2Finale();
- const t=s2MarketTrend();s2Shell('Музыкальный рынок','Что происходит на рынке',`<section class="s2-market"><div class="decision-context">${s2SceneArt('market')}<div><span class="kicker">НЕДЕЛЯ ${season2Week()}</span><h2>${t.name}</h2><p>${t.detail}</p><p><b>${t.advice}</b></p></div></div><p class="s2-inline-note">Рынок помогает подходящему каналу продвижения, но не гарантирует успех песни.</p>${s2Nav('season2Office()','season2SongCatalog()','Выбрать песню')}</section>`);saveCareer();
+ if(!season2Ready())return careerScreen();if(s2SeasonComplete())return season2Finale();
+ const t=s2MarketTrend();s2Shell('Музыкальный рынок','Что происходит на рынке',`<section class="s2-market"><div class="decision-context">${s2SceneArt('market')}<div><span class="kicker">РЕЛИЗ ${s2NextReleaseNumber()}</span><h2>${t.name}</h2><p>${t.detail}</p><p><b>${t.advice}</b></p></div></div><p class="s2-inline-note">Рынок помогает подходящему каналу продвижения, но не гарантирует успех песни.</p>${s2Nav('season2Office()','season2SongCatalog()','Выбрать песню')}</section>`);saveCareer();
 }
 season2SongCatalog=function(){
  if(!season2Ready())return careerScreen();
- const list=season2CatalogSongs(),available=list.filter(s=>!season2Released(s.id)),released=list.filter(s=>season2Released(s.id)),ended=season2Week()>12;
+ const list=season2CatalogSongs(),available=list.filter(s=>!season2Released(s.id)),released=list.filter(s=>season2Released(s.id)),ended=s2SeasonComplete();
  const cards=items=>items.map(song=>{const done=season2Released(song.id),active=song.id===season2SelectedSong&&!done&&!ended;return `<article class="card song-choice-card ${active?'sel':''}" ${done||ended?'':`onclick="season2SelectSong('${song.id}')"`}><div class="song-head"><span class="kicker">${song.genre}</span>${done?'<span class="tag">Релиз состоялся</span>':''}</div>${songCover(song,'song-cover')}<h3>${song.name}</h3><button class="demo-btn" onclick="playSongDemo(event,'${song.id}',this)"><span class="listen-icon">▶</span> Послушать песню</button><p class="desc">${s2SongCharacter(song)}</p>${active?`<button class="btn" onclick="event.stopPropagation();season2StartProduction('${song.id}')">К плану релиза →</button>`:''}</article>`}).join('');
  s2Shell('Шаг 1 из 6','Выбери песню',`<p class="choice-intro">Послушай песню и выбери, какую историю расскажет твой следующий релиз.</p><div class="song-selection-summary"><div><span class="kicker">СЕЗОН 2 · ${released.length}/10 ПЕСЕН ВЫПУЩЕНО</span><b>${season2SelectedSong?season2SongById(season2SelectedSong)?.name||'Выбери песню':'Какая песня станет твоим релизом?'}</b></div><button class="btn" ${season2SelectedSong&&!season2Released(season2SelectedSong)&&!ended?'':'disabled'} onclick="season2StartProduction(season2SelectedSong)">Далее →</button></div>${available.length?`<h3 class="catalog-group-title">${ended?'Остались в каталоге':'Доступны для релиза'} · ${available.length}</h3><div class="grid">${cards(available)}</div>`:''}${released.length?`<details class="catalog-group" ${available.length?'':'open'}><summary>Уже выпущены · ${released.length}</summary><div class="grid">${cards(released)}</div></details>`:''}<nav class="nav"><button class="btn alt" onclick="${ended?'season2Finale()':'season2Market()'}">← ${ended?'Итоги сезона':'Рынок'}</button><button class="btn alt" onclick="season2Office()">Мой лейбл</button></nav>`);saveCareer();
 };
@@ -5068,15 +5077,15 @@ season2ReviewProduction=function(){
  if(!s2DraftReady())return season2Office();if(!['goal','studio','arr','cover'].every(k=>season2Draft[k]!==null))return season2ProductionStep(0);if(!['yes','no'].includes(season2Draft.dilemma))return season2Dilemma();if(!['yes','no'].includes(season2Draft.industry))return season2IndustryEvent();
  season2DraftStep=6;const d=season2Draft,song=season2SongById(d.id),plan=season2DraftPlan(),f=season2ReleaseForecast(song,plan),op=season2OperatingCost(),ready=career.cash>=f.cost+op+150;
  const summary=[['Цель',goals[d.goal][1].replace(/^\S+\s/,'')],['Команда',d.team.length?d.team.map(i=>s2PriceTable('team')[i][1].replace(/^\S+\s/,'')).join(', '):'Без специалистов'],['Запись',s2PriceTable('studios')[d.studio][0]],['Аранжировка',s2PriceTable('arrs')[d.arr][0]],['Обложка',s2PriceTable('covers')[d.cover][0]],['Продвижение',d.promo.length?d.promo.map(i=>s2PriceTable('promos')[i][0]).join(', '):'Без рекламы'],['Решение',d.dilemma==='yes'?s2DilemmaData().yes:s2DilemmaData().no],['Событие',d.industry==='yes'?s2EventData().yes:s2EventData().no]];
- s2Shell('Шаг 6 из 6','Подтвердить выпуск',`<section class="s2-unified s2-review">${s2SongHeading()}<div class="s2-review-hero"><span class="finance-art">${financeDecisionIcon('hit')}</span><div><span class="kicker">ВСЁ ГОТОВО К ПРЕМЬЕРЕ</span><h3>Выпускаем «${song.name}»?</h3><p>Один релиз · одна игровая неделя</p></div></div><div class="production-budget s2-budget"><div><span>Релиз</span><b>${fmt(f.cost)} VS₽</b></div><div><span>Содержание</span><b>${fmt(op)} VS₽</b></div><div><span>Останется до доходов</span><b>${fmt(career.cash-f.cost-op)} VS₽</b></div></div><p class="s2-inline-note">Для выпуска нужно оставить 150 VS₽ резерва. Он не списывается.</p>${s2ContributionHTML(song,plan)}<details class="s2-help"><summary>Решения и прогноз</summary><dl class="s2-summary">${summary.map(([k,v])=>`<div><dt>${k}</dt><dd>${v}</dd></div>`).join('')}</dl><div class="s2-estimates"><div><span>Базовый прогноз прослушиваний</span><b>${fmt(f.streams)}</b></div><div><span>Базовый прогноз выручки</span><b>${fmt(f.income)} VS₽</b></div></div><p>Фактический результат зависит от случайного отклика аудитории. Дорогой релиз повышает шанс прорыва, но не гарантирует окупаемость. Мастеринг и медиа могут смягчить провал, не уменьшая вероятность этой ветки.</p></details>${!ready?`<p class="s2-risk" role="status">Не хватает ${fmt(f.cost+op+150-career.cash)} VS₽ с учётом резерва. Можно вернуться и сократить смету.</p>`:''}${!ready?'<button class="btn alt" onclick="s2CancelDraftScreen()">Отменить подготовку и вернуться в кабинет</button>':''}${s2Nav('season2IndustryEvent()',`season2PublishSong('${song.id}',-1)`,'Выпустить песню',ready)}</section>`);s2SaveScene('review');
+ s2Shell('Шаг 6 из 6','Подтвердить выпуск',`<section class="s2-unified s2-review">${s2SongHeading()}<div class="s2-review-hero"><span class="finance-art">${financeDecisionIcon('hit')}</span><div><span class="kicker">ВСЁ ГОТОВО К ПРЕМЬЕРЕ</span><h3>Выпускаем «${song.name}»?</h3><p>Премьера приближает завершение сезона</p></div></div><div class="production-budget s2-budget"><div><span>Релиз</span><b>${fmt(f.cost)} VS₽</b></div><div><span>Содержание</span><b>${fmt(op)} VS₽</b></div><div><span>Останется до доходов</span><b>${fmt(career.cash-f.cost-op)} VS₽</b></div></div><p class="s2-inline-note">Для выпуска нужно оставить 150 VS₽ резерва. Он не списывается.</p>${s2ContributionHTML(song,plan)}<details class="s2-help"><summary>Решения и прогноз</summary><dl class="s2-summary">${summary.map(([k,v])=>`<div><dt>${k}</dt><dd>${v}</dd></div>`).join('')}</dl><div class="s2-estimates"><div><span>Базовый прогноз прослушиваний</span><b>${fmt(f.streams)}</b></div><div><span>Базовый прогноз выручки</span><b>${fmt(f.income)} VS₽</b></div></div><p>Фактический результат зависит от случайного отклика аудитории. Дорогой релиз повышает шанс прорыва, но не гарантирует окупаемость. Мастеринг и медиа могут смягчить провал, не уменьшая вероятность этой ветки.</p></details>${!ready?`<p class="s2-risk" role="status">Не хватает ${fmt(f.cost+op+150-career.cash)} VS₽ с учётом резерва. Можно вернуться и сократить смету.</p>`:''}${!ready?'<button class="btn alt" onclick="s2CancelDraftScreen()">Отменить подготовку и вернуться в кабинет</button>':''}${s2Nav('season2IndustryEvent()',`season2PublishSong('${song.id}',-1)`,'Выпустить песню',ready)}</section>`);s2SaveScene('review');
 };
 function s2ResultHTML(h,song){
  const r=h.weekReport,profit=h.income-h.cost,impact=h.infrastructureImpact;
- return `<div class="release premiere-result"><div class="premiere-summary"><div class="release-identity">${songCover(song,'release-result-cover')}<div class="release-mini-disc" aria-hidden="true"></div></div><div class="premiere-numbers"><div class="big-number">${fmt(h.streams)}</div><div class="desc">прослушиваний</div><div class="stats release-audience"><div class="stat"><b>+${fmt(h.listeners)}</b>слушателей</div><div class="stat"><b>${h.rep>=0?'+':''}${h.rep}</b>репутация</div></div></div></div><section class="card premiere-finance"><span class="kicker">${h.outcome||'ПРЕМЬЕРА'} · НЕДЕЛЯ ${h.week}</span><div class="stats"><div class="stat"><b>${fmt(h.cost)}</b>VS₽ вложено</div><div class="stat"><b>${fmt(h.income)}</b>VS₽ доход релиза</div><div class="stat"><b>${profit>=0?'+':''}${fmt(profit)}</b>VS₽ результат релиза</div></div></section>${r?`<section class="s2-infra-impact"><span class="kicker">ЧТО ДАЛ ЛЕЙБЛ ЗА ЭТУ НЕДЕЛЮ</span><div class="s2-effect-grid"><div><b>+${fmt(r.passiveIncome+r.digital)} VS₽</b><span>доход объектов и дистрибуции</span></div><div><b>+${fmt(r.passiveListeners)}</b><span>слушателей от объектов</span></div><div><b>${fmt(r.operating)} VS₽</b><span>содержание всего лейбла</span></div></div><details class="s2-help"><summary>Все поступления и расходы</summary><p>Старый каталог: +${fmt(r.oldCatalogIncome)} VS₽. Новый каталог: +${fmt(r.newCatalogIncome)} VS₽. Объекты: +${fmt(r.passiveIncome)} VS₽. Дистрибуция: +${fmt(r.digital)} VS₽. Погашение долга из доходов: ${fmt(r.debtPaid)} VS₽.</p><p>Изменение капитала за неделю: ${r.cashDelta>=0?'+':''}${fmt(r.cashDelta)} VS₽. Это все поступления минус релиз, содержание и погашение долга.</p>${impact?`<p>Экономия на производстве благодаря объектам: ${fmt(impact.savings||0)} VS₽. Она уже учтена в затратах. Расчётный вклад в прогноз: +${fmt(impact.streams||0)} прослушиваний и +${fmt(impact.listeners||0)} слушателей; фактический случайный результат отдельно по источникам не разделяется.</p>`:''}</details></section>`:'<p class="production-footnote">Для этого старого релиза подробный отчёт инфраструктуры не сохранялся.</p>'}<div class="release-next-tip"><span class="kicker">ЧТО ПОПРОБОВАТЬ ДАЛЬШЕ</span><p>${profit<0?'Релиз пока не окупился. Сравни стоимость каналов и оставь резерв: самая дорогая стратегия не всегда лучшая.':'Релиз вернул вложения на премьере. Сохрани удачные решения и попробуй подходящий другой песне канал.'}</p></div><div class="nav premiere-actions">${officialSongLink(song.id)}<button class="btn" onclick="${season2Week()>12?'season2Finale()':'season2Office()'}">${season2Week()>12?'Итоги сезона':'Мой лейбл'} →</button></div></div>`;
+ return `<div class="release premiere-result"><div class="premiere-summary"><div class="release-identity">${songCover(song,'release-result-cover')}<div class="release-mini-disc" aria-hidden="true"></div></div><div class="premiere-numbers"><div class="big-number">${fmt(h.streams)}</div><div class="desc">прослушиваний</div><div class="stats release-audience"><div class="stat"><b>+${fmt(h.listeners)}</b>слушателей</div><div class="stat"><b>${h.rep>=0?'+':''}${h.rep}</b>репутация</div></div></div></div><section class="card premiere-finance"><span class="kicker">${h.outcome||'ПРЕМЬЕРА'} · РЕЛИЗ ${h.releaseNumber||((career.season2Releases||[]).indexOf(h)+1)}</span><div class="stats"><div class="stat"><b>${fmt(h.cost)}</b>VS₽ вложено</div><div class="stat"><b>${fmt(h.income)}</b>VS₽ доход релиза</div><div class="stat"><b>${profit>=0?'+':''}${fmt(profit)}</b>VS₽ результат релиза</div></div></section>${r?`<section class="s2-infra-impact"><span class="kicker">ЧТО ДАЛ ЛЕЙБЛ ПОСЛЕ РЕЛИЗА</span><div class="s2-effect-grid"><div><b>+${fmt(r.passiveIncome+r.digital)} VS₽</b><span>доход объектов и дистрибуции</span></div><div><b>+${fmt(r.passiveListeners)}</b><span>слушателей от объектов</span></div><div><b>${fmt(r.operating)} VS₽</b><span>содержание всего лейбла</span></div></div><details class="s2-help"><summary>Все поступления и расходы</summary><p>Старый каталог: +${fmt(r.oldCatalogIncome)} VS₽. Новый каталог: +${fmt(r.newCatalogIncome)} VS₽. Объекты: +${fmt(r.passiveIncome)} VS₽. Дистрибуция: +${fmt(r.digital)} VS₽. Погашение долга из доходов: ${fmt(r.debtPaid)} VS₽.</p><p>Изменение капитала после релиза: ${r.cashDelta>=0?'+':''}${fmt(r.cashDelta)} VS₽. Это все поступления минус релиз, содержание и погашение долга.</p>${impact?`<p>Экономия на производстве благодаря объектам: ${fmt(impact.savings||0)} VS₽. Она уже учтена в затратах. Расчётный вклад в прогноз: +${fmt(impact.streams||0)} прослушиваний и +${fmt(impact.listeners||0)} слушателей; фактический случайный результат отдельно по источникам не разделяется.</p>`:''}</details></section>`:'<p class="production-footnote">Для этого старого релиза подробный отчёт инфраструктуры не сохранялся.</p>'}<div class="release-next-tip"><span class="kicker">ЧТО ПОПРОБОВАТЬ ДАЛЬШЕ</span><p>${profit<0?'Релиз пока не окупился. Сравни стоимость каналов и оставь резерв: самая дорогая стратегия не всегда лучшая.':'Релиз вернул вложения на премьере. Сохрани удачные решения и попробуй подходящий другой песне канал.'}</p></div><div class="nav premiere-actions">${officialSongLink(song.id)}<button class="btn" onclick="${s2SeasonComplete()?'season2Finale()':'season2Office()'}">${s2SeasonComplete()?'Итоги сезона':'Мой лейбл'} →</button></div></div>`;
 }
 function s2ShowSavedResult(index){const h=(career.season2Releases||[])[index],song=h&&season2SongById(h.songId);if(!h||!song)return season2Office();s2Shell('Премьера состоялась',song.name,s2ResultHTML(h,song));}
 season2PublishSong=function(id,planIndex){
- if(!season2Ready()||season2Week()>12||season2Released(id)||!s2CompleteDraft()||season2Draft.id!==id||planIndex!==-1)return;
+ if(!season2Ready()||s2SeasonComplete()||season2Released(id)||!s2CompleteDraft()||season2Draft.id!==id||planIndex!==-1)return;
  const song=season2SongById(id),plan=season2DraftPlan(),forecast=season2ReleaseForecast(song,plan);
  if(career.cash<forecast.cost+season2RequiredReserve())return season2ReviewProduction();
  const f=season2ResolveRelease(forecast),week=season2Week(),quotedOperating=season2OperatingCost(),beforeCash=career.cash,impact=typeof season2InfraContribution==='function'?season2InfraContribution(song,plan):null;
@@ -5099,12 +5108,12 @@ resumeScreens.season2ProductionStep=season2ProductionStep;resumeScreens.season2R
 function s2SceneArt(kind){const icon=kind==='market'?'marketing':kind==='dilemma'?'arr-bold':'pr';return `<div class="s2-scene-art" aria-hidden="true">${productionIcon(icon)}<i></i><i></i><i></i></div>`}
 const s2FinalBase=season2Finale;
 season2Finale=function(){
- if(!season2Ready())return careerScreen();if(season2Week()<=12)return season2Office();
+ if(!season2Ready())return careerScreen();if(!s2SeasonComplete())return season2Office();
  const releases=career.season2Releases||[],best=releases.reduce((a,r)=>!a||r.streams>a.streams?r:a,null),levels=season2Assets.reduce((n,a)=>n+season2Level(a.key),0),r=rewardsSync(),items=VINYL_REWARDS.filter(x=>x.season===2||x.id==='dance');
- s2Shell('Финал второго сезона','Твой лейбл звучит!',`<section class="season-one-summary s2-finale"><div class="card finale-hero">${s2SceneArt('market')}<span class="kicker">12 НЕДЕЛЬ · ОДНА ИСТОРИЯ</span><h2>От продюсера к своему лейблу</h2><p>Ты выбирал песни, принимал решения и развивал инфраструктуру. Вот чем запомнится второй сезон.</p></div><div class="stats"><div class="stat"><b>${releases.length}/10</b>новых релизов</div><div class="stat"><b>${levels}/18</b>уровней объектов</div><div class="stat"><b>${items.filter(x=>r.unlocked[x.id]).length}/${items.length}</b>стикеров сезона</div></div>${best?`<div class="s2-last"><span class="kicker">САМАЯ ГРОМКАЯ ПРЕМЬЕРА</span><strong>${best.song}</strong><span>${fmt(best.streams)} игровых прослушиваний</span>${officialSongLink(best.songId)}</div>`:''}<details class="s2-help"><summary>Финансы, аудитория и релизы</summary><div class="stats"><div class="stat"><b>${fmt(career.cash)}</b>VS₽ капитал</div><div class="stat"><b>${fmt(career.listeners)}</b>слушателей за карьеру</div><div class="stat"><b>${career.rep}</b>репутация</div><div class="stat"><b>${fmt(career.advanceDebt||0)}</b>VS₽ остаток долга</div></div>${releases.map((h,i)=>`<div class="s2-history-line"><span>${h.song}</span><button class="btn alt" onclick="s2ShowSavedResult(${i})">Итоги</button></div>`).join('')}</details><p class="production-footnote">Прогресс и награды сохранены. Выпуск всех десяти песен не был обязательным условием завершения сезона.</p><nav class="nav"><button class="btn" onclick="rewardsScreen()">Мои стикеры →</button><button class="btn alt" onclick="season2SongCatalog()">Послушать песни</button><button class="btn alt" onclick="season2Infrastructure(true)">Моя инфраструктура</button><button class="btn alt" onclick="newCareerConfirmed()">Новая карьера</button></nav></section>`);saveCareer();
+ s2Shell('Финал второго сезона','Твой лейбл звучит!',`<section class="season-one-summary s2-finale"><div class="card finale-hero">${s2SceneArt('market')}<span class="kicker">10 РЕЛИЗОВ · ОДИН ЛЕЙБЛ</span><h2>От продюсера к своему лейблу</h2><p>Ты выбирал песни, принимал решения и развивал инфраструктуру. Вот чем запомнится второй сезон.</p></div><div class="stats"><div class="stat"><b>${releases.length}/10</b>новых релизов</div><div class="stat"><b>${levels}/18</b>уровней объектов</div><div class="stat"><b>${items.filter(x=>r.unlocked[x.id]).length}/${items.length}</b>стикеров сезона</div></div>${best?`<div class="s2-last"><span class="kicker">САМАЯ ГРОМКАЯ ПРЕМЬЕРА</span><strong>${best.song}</strong><span>${fmt(best.streams)} игровых прослушиваний</span>${officialSongLink(best.songId)}</div>`:''}<details class="s2-help"><summary>Финансы, аудитория и релизы</summary><div class="stats"><div class="stat"><b>${fmt(career.cash)}</b>VS₽ капитал</div><div class="stat"><b>${fmt(career.listeners)}</b>слушателей за карьеру</div><div class="stat"><b>${career.rep}</b>репутация</div><div class="stat"><b>${fmt(career.advanceDebt||0)}</b>VS₽ остаток долга</div></div>${releases.map((h,i)=>`<div class="s2-history-line"><span>${h.song}</span><button class="btn alt" onclick="s2ShowSavedResult(${i})">Итоги</button></div>`).join('')}</details><p class="production-footnote">Все десять песен выпущены. Прогресс и награды сохранены.</p><nav class="nav"><button class="btn" onclick="rewardsScreen()">Мои стикеры →</button><button class="btn alt" onclick="season2SongCatalog()">Послушать песни</button><button class="btn alt" onclick="season2Infrastructure(true)">Моя инфраструктура</button><button class="btn alt" onclick="newCareerConfirmed()">Новая карьера</button></nav></section>`);saveCareer();
 };
 const s2ResumeBase=resumeCareer;
-resumeCareer=function(){if(!loadCareer())return saveMenu();if(season2Ready()){if(season2Week()>12)return season2Finale();if(season2Draft)return season2ResumeProduction();return season2Office()}if(hasReleaseDraft())return resumePaidDraft();return careerScreen()};
+resumeCareer=function(){if(!loadCareer())return saveMenu();if(season2Ready()){if(s2SeasonComplete())return season2Finale();if(season2Draft)return season2ResumeProduction();return season2Office()}if(hasReleaseDraft())return resumePaidDraft();return careerScreen()};
 
 const s2PromoDescriptions=[
  'Музыкальное видео даёт +19 к охвату релиза. Бонусы команды и видеостудии учитываются отдельно.',
@@ -5129,7 +5138,7 @@ rewardsEntry=function(){
  const r=rewardsSync(),n=VINYL_REWARDS.filter(x=>r.unlocked[x.id]===true).length,screen=document.getElementById('screen');if(!screen||screen.querySelector('.rewards-entry'))return;
  const block=document.createElement('div');block.className='rewards-entry';const b=document.createElement('button');b.type='button';b.className='btn alt';b.textContent=`Мои стикеры · ${n}/${VINYL_REWARDS.length}`;b.onclick=rewardsScreen;block.appendChild(b);screen.appendChild(block);
 };
-rewardsReturn=function(){if(career.releases>=10&&Number(career.season2Week)>12)return season2Finale();if(career.releases>=10)return season2Office();return careerScreen()};
+rewardsReturn=function(){if(career.releases>=10&&s2SeasonComplete())return season2Finale();if(career.releases>=10)return season2Office();return careerScreen()};
 rewardsScreen=function(){
  const r=rewardsSync();saveCareer();const legacy=career.season2Week&&!r.s1Final;
  const card=x=>{const open=r.unlocked[x.id]===true;return `<article class="vinyl-reward ${open?'is-open':'is-locked'}"><div class="reward-art">${open?`<img src="${rewardAsset(x)}" alt="${rewardEsc(x.title)}" loading="lazy" onerror="this.hidden=true;this.parentNode.querySelector('.reward-img-error').hidden=false"><span class="reward-img-error" hidden>Изображение не загрузилось</span>`:`<span class="s2-lock" aria-label="Награда закрыта"><svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><rect x="9" y="20" width="30" height="23" rx="6"/><path d="M16 20V13a8 8 0 0 1 16 0v7M24 29v6"/></svg></span>`}</div><h3>${rewardEsc(x.title)}</h3><p>${rewardEsc(x.rule)}</p><b>${open?'Открыто':'Пока закрыто'}</b>${open?`<div class="reward-actions"><button class="btn" onclick="rewardExport('${x.id}',false,this)">Сохранить PNG</button><button class="btn alt" onclick="rewardExport('${x.id}',true,this)">Поделиться</button></div>`:''}</article>`};
@@ -5145,7 +5154,7 @@ const S2_STRATEGY_SCENES={
   ['Кому расскажем о песне?','Выбери ширину знакомства или глубину связи с аудиторией.',
    ['На широкую аудиторию',450,0,12,-.08,0,0,'Охват +12 · новые слушатели −8%'],
    ['Для своих слушателей',450,0,0,.18,0,0,'Новые слушатели +18% · без бонуса охвата']],
-  ['Премьера или долгая жизнь?','Один бюджет, два горизонта: эффект сегодня или каталог следующих недель.',
+  ['Премьера или долгая жизнь?','Один бюджет, два горизонта: эффект сегодня или каталог будущих релизов.',
    ['Громкий старт',500,0,13,0,0,-.15,'Охват +13 · будущие прослушивания каталога −15%'],
    ['Долгая история',500,0,-3,0,0,.35,'Охват −3 · будущие прослушивания каталога +35%']],
   ['Запись для кого?','Можно отточить студийное звучание или сохранить живую близость.',
@@ -5169,7 +5178,7 @@ const S2_STRATEGY_SCENES={
    ['Большая сцена',600,0,14,-.06,0,0,'Охват +14 · новые слушатели −6%'],
    ['Камерная встреча',350,0,3,.18,0,0,'Охват +3 · новые слушатели +18%']],
   ['Плейлист на выбор','Яркая ротация сегодня или небольшая подборка надолго.',
-   ['Премьера недели',350,0,11,0,0,-.10,'Охват +11 · будущие прослушивания каталога −10%'],
+   ['Яркая премьера',350,0,11,0,0,-.10,'Охват +11 · будущие прослушивания каталога −10%'],
    ['Подборка вне времени',350,0,2,0,0,.25,'Охват +2 · будущие прослушивания каталога +25%']],
   ['Партнёр предлагает поддержку','Продвижение можно разделить с партнёром или полностью оставить за собой.',
    ['Партнёрская премьера',0,0,11,0,-.12,0,'Охват +11 · доход премьеры −12%'],
@@ -5186,18 +5195,18 @@ function s2StrategyIndex(key,d=season2Draft){if(!d)return 0;const stored=d.strat
 function s2StrategyData(key,d=season2Draft){const raw=S2_STRATEGY_SCENES[key][s2StrategyIndex(key,d)];return {title:raw[0],text:raw[1],options:raw.slice(2).map((x,i)=>({value:i?'no':'yes',title:x[0],cost:x[1],quality:x[2],reach:x[3],listeners:x[4],income:x[5],catalog:x[6],effect:x[7]}))}}
 function s2StrategyChosen(key,d=season2Draft){if(!d||d.strategyVersion!==2)return null;return s2StrategyData(key,d).options.find(x=>x.value===d[key])||null}
 const strategyStartBase=season2StartProduction;
-season2StartProduction=function(id){const old=season2Draft;const result=strategyStartBase(id);if(season2Draft&&season2Draft!==old){season2Draft.strategyVersion=2;season2Draft.week=season2Week();season2Draft.strategyScene={dilemma:(season2Week()-1)%6,industry:(season2Week()+Math.floor((season2Week()-1)/6))%6};saveCareer()}return result};
+season2StartProduction=function(id){const old=season2Draft;const result=strategyStartBase(id);if(season2Draft&&season2Draft!==old){season2Draft.strategyVersion=2;season2Draft.week=season2Week();season2Draft.strategyScene={dilemma:s2ReleaseCount()%6,industry:(s2ReleaseCount()+1+Math.floor(s2ReleaseCount()/6))%6};saveCareer()}return result};
 const strategyBonusBase=s2DecisionBonus;
 s2DecisionBonus=function(){if(season2Draft?.strategyVersion!==2)return strategyBonusBase();return ['dilemma','industry'].reduce((sum,k)=>{const x=s2StrategyChosen(k);if(x){sum.cost+=x.cost;sum.quality+=x.quality;sum.reach+=x.reach}return sum},{cost:0,quality:0,reach:0})};
 const strategySceneBase=s2DecisionScreen;
-s2DecisionScreen=function(key){if(season2Draft?.strategyVersion!==2)return strategySceneBase(key);if(!s2DraftReady())return season2Office();const data=s2StrategyData(key),isD=key==='dilemma',selected=season2Draft[key];s2Shell(isD?'Продюсерское решение':'Событие индустрии',data.title,`<section class="s2-unified s2-strategy-scene">${s2SongHeading()}<div class="decision-context">${s2SceneArt(isD?'dilemma':'industry')}<div><span class="kicker">ДВА ПУТИ ДЛЯ ТВОЕГО РЕЛИЗА</span><p>${data.text}</p></div></div><div class="finance-grid s2-decisions">${data.options.map(x=>`<button class="finance-option ${selected===x.value?'is-selected':''}" aria-pressed="${selected===x.value}" onclick="s2ChooseDecision('${key}','${x.value}')"><span class="finance-art">${financeDecisionIcon(x.value==='yes'?'hit':'profit')}</span><span class="finance-copy"><b>${x.title}</b><strong>${fmt(x.cost)} VS₽</strong><span>${x.effect}</span><span class="finance-selection">${selected===x.value?'Выбрано':'Выбрать'}</span></span></button>`).join('')}</div><p class="production-footnote">Бонусы относятся к игровому прогнозу и не гарантируют успех. Проценты двух решений складываются. Эффект каталога действует со следующей недели. До выпуска выбор можно изменить бесплатно.</p>${s2Nav(isD?'season2ProductionStep(5)':'season2Dilemma()',isD?'season2IndustryEvent()':'season2ReviewProduction()',isD?'Продолжить':'К премьере',['yes','no'].includes(selected))}</section>`);s2SaveScene(isD?'dilemma':'event')};
+s2DecisionScreen=function(key){if(season2Draft?.strategyVersion!==2)return strategySceneBase(key);if(!s2DraftReady())return season2Office();const data=s2StrategyData(key),isD=key==='dilemma',selected=season2Draft[key];s2Shell(isD?'Продюсерское решение':'Событие индустрии',data.title,`<section class="s2-unified s2-strategy-scene">${s2SongHeading()}<div class="decision-context">${s2SceneArt(isD?'dilemma':'industry')}<div><span class="kicker">ДВА ПУТИ ДЛЯ ТВОЕГО РЕЛИЗА</span><p>${data.text}</p></div></div><div class="finance-grid s2-decisions">${data.options.map(x=>`<button class="finance-option ${selected===x.value?'is-selected':''}" aria-pressed="${selected===x.value}" onclick="s2ChooseDecision('${key}','${x.value}')"><span class="finance-art">${financeDecisionIcon(x.value==='yes'?'hit':'profit')}</span><span class="finance-copy"><b>${x.title}</b><strong>${fmt(x.cost)} VS₽</strong><span>${x.effect}</span><span class="finance-selection">${selected===x.value?'Выбрано':'Выбрать'}</span></span></button>`).join('')}</div><p class="production-footnote">Бонусы относятся к игровому прогнозу и не гарантируют успех. Проценты двух решений складываются. Эффект каталога действует со следующего релиза. До выпуска выбор можно изменить бесплатно.</p>${s2Nav(isD?'season2ProductionStep(5)':'season2Dilemma()',isD?'season2IndustryEvent()':'season2ReviewProduction()',isD?'Продолжить':'К премьере',['yes','no'].includes(selected))}</section>`);s2SaveScene(isD?'dilemma':'event')};
 const strategyForecastBase=season2ReleaseForecast;
 season2ReleaseForecast=function(song,plan){const f=strategyForecastBase(song,plan),d=plan.draft;if(d?.strategyVersion!==2)return f;const chosen=['dilemma','industry'].map(k=>s2StrategyChosen(k,d)).filter(Boolean);const sum=key=>chosen.reduce((n,x)=>n+x[key],0);f.listeners=Math.round(f.listeners*Math.max(.2,1+sum('listeners')));f.income=Math.round(f.income*Math.max(.2,1+sum('income')));f.catalogMultiplier=Math.max(.4,1+sum('catalog'));f.strategyEvidence={version:2,choices:chosen.map(x=>({title:x.title,cost:x.cost,effect:x.effect})),forecast:{streams:f.streams,income:f.income,listeners:f.listeners},catalogMultiplier:f.catalogMultiplier};return f};
 // Existing release records without this field retain exactly the old catalogue formula.
 season2NewCatalogWeek=function(){let streams=0,income=0,listeners=0;(career.season2Releases||[]).forEach(h=>{const age=Math.max(1,season2Week()-h.week),decay=Math.max(.12,Math.pow(.84,age));const mult=h.strategyEvidence?.version===2&&Number.isFinite(h.catalogMultiplier)?Math.max(.4,Math.min(2,h.catalogMultiplier)):1;const st=Math.round(h.streams*.055*decay*(.8+Math.random()*.4)*mult),inc=Math.round(st*(.12+season2Level('digital')*.015)),lis=Math.round(st*.004);h.catalogStreams=(h.catalogStreams||0)+st;h.catalogIncome=(h.catalogIncome||0)+inc;streams+=st;income+=inc;listeners+=lis});career.catalogStreams=(career.catalogStreams||0)+streams;career.catalogIncome=(career.catalogIncome||0)+income;const debtPaid=season2CreditIncome(income);career.listeners+=listeners;return {streams,income,listeners,debtPaid}};
 const strategyReviewBase=season2ReviewProduction;
-season2ReviewProduction=function(){strategyReviewBase();if(season2Draft?.strategyVersion!==2||season2Draft.flowStage!=='review')return;const rows=document.querySelectorAll('.s2-summary>div');for(const row of rows){const label=row.querySelector('dt')?.textContent,key=label==='Решение'?'dilemma':label==='Событие'?'industry':null;const chosen=key&&s2StrategyChosen(key);if(chosen)row.querySelector('dd').textContent=chosen.title+' · '+chosen.effect}const review=document.querySelector('.s2-review');if(review&&!review.querySelector('.s2-strategy-recap')){const box=document.createElement('details');box.className='s2-help s2-strategy-recap';const f=season2ReleaseForecast(season2SongById(season2Draft.id),season2DraftPlan());box.innerHTML=`<summary>Выбранная стратегия</summary>${f.strategyEvidence.choices.map(x=>`<p><b>${x.title}</b> · ${fmt(x.cost)} VS₽<br>${x.effect}</p>`).join('')}<p>Будущие прослушивания этой песни в каталоге: ${Math.round(f.catalogMultiplier*100)}% от обычного расчёта. Доход каталога зависит от числа оставшихся недель.</p>`;review.insertBefore(box,review.querySelector('.s2-flow-nav'))}};
-function s2PersonalReview(h,song){const ev=h.strategyEvidence;if(!ev||ev.version!==2)return '<details class="s2-help s2-personal-review"><summary>Разбор решений</summary><p>Этот релиз выпущен до обновления. Точный прогноз и выбранные стратегии не сохранялись, поэтому ретроспективный разбор не придумываем.</p></details>';const d=h.choices||{},help=[],costs=[],next=[];for(const x of ev.choices)help.push(`${x.title}: ${x.effect}.`);if(d.cover===2&&(d.promo||[]).some(i=>[0,1,6].includes(i)))help.push('Яркая обложка и видео дали связке +5 к охвату в расчёте.');if((d.team||[]).includes(2)&&(d.promo||[]).includes(0))help.push('Режиссёр усилил клип: +12 к охвату в расчёте.');if((d.team||[]).includes(3)&&(d.promo||[]).some(i=>[1,6].includes(i)))help.push('SMM-специалист усилил короткие видео: +10 к охвату в расчёте.');const spent=ev.choices.reduce((n,x)=>n+x.cost,0);costs.push(`На два дополнительных решения заложено ${fmt(spent)} VS₽ до общей скидки инфраструктуры.`);if(h.income<h.cost)costs.push(`Премьера ещё не вернула ${fmt(h.cost-h.income)} VS₽ затрат на релиз. Будущие поступления каталога считаются отдельно.`);else costs.push(`Доход премьеры превысил затраты на релиз на ${fmt(h.income-h.cost)} VS₽. Содержание лейбла показано отдельно.`);const energetic=/рок|рэп|танц|поп/i.test(song.genre),fits=(d.promo||[]).some(i=>(energetic?[1,6]:[2,7,4,8]).includes(i));if((d.promo||[]).length&&!fits)next.push('В этом плане не было жанрового бонуса канала. Для следующей песни сравни подсказки продвижения, а не только цены.');if(h.catalogMultiplier>1)next.push('Ты выбрал долгую жизнь песни. Смотри её доход каталога в следующие недели, а не только прибыль премьеры.');if(!next.length)next.push(h.income<h.cost?'В следующем релизе сравни более экономный план: дорогая кампания не гарантирует окупаемость.':'Сохрани удачную команду, но подбери продвижение под следующую песню.');const forecast=ev.forecast.streams,ratio=forecast>0?h.streams/forecast:0;const random=`Базовый прогноз: ${fmt(forecast)} прослушиваний. Фактический отклик: ${fmt(h.streams)} (${Math.round(ratio*100)}% от прогноза). Случайный отклик применился ко всему плану; это не доказательство успеха или ошибки отдельного решения.`;return `<section class="s2-personal-review"><h3>Твой продюсерский разбор</h3><p class="s2-review-random">${random}</p><details class="s2-help"><summary>Что усилило план</summary>${help.map(x=>`<p>${x}</p>`).join('')}<p>Здесь указаны изменения формулы, а не измеренный вклад каждого решения в случайный итог.</p></details><details class="s2-help"><summary>Цена решений</summary>${costs.map(x=>`<p>${x}</p>`).join('')}</details><div class="s2-review-next"><span class="kicker">ЧТО ПОПРОБОВАТЬ ДАЛЬШЕ</span>${next.map(x=>`<p>${x}</p>`).join('')}</div></section>`}
+season2ReviewProduction=function(){strategyReviewBase();if(season2Draft?.strategyVersion!==2||season2Draft.flowStage!=='review')return;const rows=document.querySelectorAll('.s2-summary>div');for(const row of rows){const label=row.querySelector('dt')?.textContent,key=label==='Решение'?'dilemma':label==='Событие'?'industry':null;const chosen=key&&s2StrategyChosen(key);if(chosen)row.querySelector('dd').textContent=chosen.title+' · '+chosen.effect}const review=document.querySelector('.s2-review');if(review&&!review.querySelector('.s2-strategy-recap')){const box=document.createElement('details');box.className='s2-help s2-strategy-recap';const f=season2ReleaseForecast(season2SongById(season2Draft.id),season2DraftPlan());box.innerHTML=`<summary>Выбранная стратегия</summary>${f.strategyEvidence.choices.map(x=>`<p><b>${x.title}</b> · ${fmt(x.cost)} VS₽<br>${x.effect}</p>`).join('')}<p>Будущие прослушивания этой песни в каталоге: ${Math.round(f.catalogMultiplier*100)}% от обычного расчёта. Доход каталога зависит от числа оставшихся релизов.</p>`;review.insertBefore(box,review.querySelector('.s2-flow-nav'))}};
+function s2PersonalReview(h,song){const ev=h.strategyEvidence;if(!ev||ev.version!==2)return '<details class="s2-help s2-personal-review"><summary>Разбор решений</summary><p>Этот релиз выпущен до обновления. Точный прогноз и выбранные стратегии не сохранялись, поэтому ретроспективный разбор не придумываем.</p></details>';const d=h.choices||{},help=[],costs=[],next=[];for(const x of ev.choices)help.push(`${x.title}: ${x.effect}.`);if(d.cover===2&&(d.promo||[]).some(i=>[0,1,6].includes(i)))help.push('Яркая обложка и видео дали связке +5 к охвату в расчёте.');if((d.team||[]).includes(2)&&(d.promo||[]).includes(0))help.push('Режиссёр усилил клип: +12 к охвату в расчёте.');if((d.team||[]).includes(3)&&(d.promo||[]).some(i=>[1,6].includes(i)))help.push('SMM-специалист усилил короткие видео: +10 к охвату в расчёте.');const spent=ev.choices.reduce((n,x)=>n+x.cost,0);costs.push(`На два дополнительных решения заложено ${fmt(spent)} VS₽ до общей скидки инфраструктуры.`);if(h.income<h.cost)costs.push(`Премьера ещё не вернула ${fmt(h.cost-h.income)} VS₽ затрат на релиз. Будущие поступления каталога считаются отдельно.`);else costs.push(`Доход премьеры превысил затраты на релиз на ${fmt(h.income-h.cost)} VS₽. Содержание лейбла показано отдельно.`);const energetic=/рок|рэп|танц|поп/i.test(song.genre),fits=(d.promo||[]).some(i=>(energetic?[1,6]:[2,7,4,8]).includes(i));if((d.promo||[]).length&&!fits)next.push('В этом плане не было жанрового бонуса канала. Для следующей песни сравни подсказки продвижения, а не только цены.');if(h.catalogMultiplier>1)next.push('Ты выбрал долгую жизнь песни. Смотри её доход каталога в следующие релизы, а не только прибыль премьеры.');if(!next.length)next.push(h.income<h.cost?'В следующем релизе сравни более экономный план: дорогая кампания не гарантирует окупаемость.':'Сохрани удачную команду, но подбери продвижение под следующую песню.');const forecast=ev.forecast.streams,ratio=forecast>0?h.streams/forecast:0;const random=`Базовый прогноз: ${fmt(forecast)} прослушиваний. Фактический отклик: ${fmt(h.streams)} (${Math.round(ratio*100)}% от прогноза). Случайный отклик применился ко всему плану; это не доказательство успеха или ошибки отдельного решения.`;return `<section class="s2-personal-review"><h3>Твой продюсерский разбор</h3><p class="s2-review-random">${random}</p><details class="s2-help"><summary>Что усилило план</summary>${help.map(x=>`<p>${x}</p>`).join('')}<p>Здесь указаны изменения формулы, а не измеренный вклад каждого решения в случайный итог.</p></details><details class="s2-help"><summary>Цена решений</summary>${costs.map(x=>`<p>${x}</p>`).join('')}</details><div class="s2-review-next"><span class="kicker">ЧТО ПОПРОБОВАТЬ ДАЛЬШЕ</span>${next.map(x=>`<p>${x}</p>`).join('')}</div></section>`}
 const strategyResultBase=s2ResultHTML;
 s2ResultHTML=function(h,song){let html=strategyResultBase(h,song);const marker='<div class="release-next-tip">';const start=html.indexOf(marker),end=html.indexOf('<div class="nav premiere-actions">',start);if(start>=0&&end>start)html=html.slice(0,start)+s2PersonalReview(h,song)+html.slice(end);return html};
 
@@ -5226,10 +5235,10 @@ function s2ChooseObjective(id){
  career.season2Objective={id,version:1,chosenAtWeek:season2Week()};saveCareer();s2MountObjective();
 }
 function s2ObjectiveHTML(){
- const goal=s2ObjectiveSummary(),ended=season2Week()>12;
+ const goal=s2ObjectiveSummary(),ended=s2SeasonComplete();
  if(!goal)return `<section class="s2-objective-panel" aria-label="Цель второго сезона"><span class="kicker">ТВОЙ КУРС НА СЕЗОН</span><h3>${ended?'Какой путь стал твоим?':'Чего добьётся твой лейбл?'}</h3><p>Выбери личную цель. Она не меняет расчёты и не мешает выпускать песни.</p><details class="s2-objective-picker"><summary>Выбрать цель</summary><div class="s2-objective-options">${s2ObjectiveOptions()}</div><p class="s2-objective-note">Учитываются уже сохранённые результаты второго сезона. Цель можно сменить. Стикеры выдаются по своим условиям.</p></details></section>`;
  const legacy=goal.id==='label'&&(career.season2Releases||[]).some(h=>!h.weekReport||!['passiveIncome','digital','operating'].every(k=>typeof h.weekReport[k]==='number'&&Number.isFinite(h.weekReport[k])&&h.weekReport[k]>=0));
- return `<section class="s2-objective-panel ${goal.achieved?'is-achieved':''}" aria-label="Цель второго сезона"><div class="s2-objective-heading"><span class="kicker">${goal.achieved?'ЦЕЛЬ ДОСТИГНУТА':ended?'ИТОГ ТВОЕЙ ЦЕЛИ':'ТВОЯ ЦЕЛЬ СЕЗОНА'}</span><strong>${goal.title}</strong></div><div class="s2-objective-progress"><progress max="${goal.target}" value="${Math.min(goal.value,goal.target)}" aria-label="${goal.title}"></progress><span>${goal.progressText}</span></div><details class="s2-objective-picker"><summary>Как считается${ended?'':' · сменить цель'}</summary><p>${goal.detail}</p>${legacy?'<p class="s2-objective-note">У части старых релизов нет подробного недельного отчёта. Они не учитываются в этой цели: прошлые доходы не восстанавливаются предположительно.</p>':''}<p class="s2-objective-note">Это личный ориентир, не условие завершения сезона и не новая награда.</p>${ended?'':`<div class="s2-objective-options">${s2ObjectiveOptions()}</div>`}</details></section>`;
+ return `<section class="s2-objective-panel ${goal.achieved?'is-achieved':''}" aria-label="Цель второго сезона"><div class="s2-objective-heading"><span class="kicker">${goal.achieved?'ЦЕЛЬ ДОСТИГНУТА':ended?'ИТОГ ТВОЕЙ ЦЕЛИ':'ТВОЯ ЦЕЛЬ СЕЗОНА'}</span><strong>${goal.title}</strong></div><div class="s2-objective-progress"><progress max="${goal.target}" value="${Math.min(goal.value,goal.target)}" aria-label="${goal.title}"></progress><span>${goal.progressText}</span></div><details class="s2-objective-picker"><summary>Как считается${ended?'':' · сменить цель'}</summary><p>${goal.detail}</p>${legacy?'<p class="s2-objective-note">У части старых релизов нет подробного финансового отчёта. Они не учитываются в этой цели: прошлые доходы не восстанавливаются предположительно.</p>':''}<p class="s2-objective-note">Это личный ориентир, не условие завершения сезона и не новая награда.</p>${ended?'':`<div class="s2-objective-options">${s2ObjectiveOptions()}</div>`}</details></section>`;
 }
 function s2MountObjective(){
  if(!season2Ready())return;const screen=document.getElementById('screen');if(!screen)return;
@@ -5329,7 +5338,7 @@ season2Finale=function(){const out=s2ObjectiveFinale.apply(this,arguments);s2Mou
   const bar=document.createElement('nav');bar.className='s2-infra-dock';bar.setAttribute('aria-label','Навигация лейбла');
   const meta=document.createElement('span');meta.textContent='На счету: '+fmt(career.cash)+' VS₽';bar.appendChild(meta);
   const b=document.createElement('button');b.type='button';b.className='btn';
-  const ended=season2Week()>12;b.textContent=ended?'К итогам сезона':season2Draft?'Продолжить релиз':'Мой лейбл';
+  const ended=s2SeasonComplete();b.textContent=ended?'К итогам сезона':season2Draft?'Продолжить релиз':'Мой лейбл';
   b.addEventListener('click',()=>ended?season2Finale():season2Draft?season2ResumeProduction():season2Office());bar.appendChild(b);host.appendChild(bar);host.classList.add('s2-has-dock');quickActions(host,bar,b);
  }
  const prevPromo=season2Promotion;season2Promotion=function(...a){remember();const r=prevPromo.apply(this,a);promo();return r};
@@ -5356,7 +5365,7 @@ season2Finale=function(){const out=s2ObjectiveFinale.apply(this,arguments);s2Mou
 const prepared=new WeakMap();
 const number=v=>Number.isFinite(Number(v))?Math.max(0,Math.round(Number(v))):0;
 const text=v=>String(v??'').replace(/[\u0000-\u001f]/g,' ').trim();
-function available(){return typeof career==='object'&&career&&Number(career.releases)>=10&&Number(career.season2Week)>12;}
+function available(){return typeof career==='object'&&career&&Number(career.releases)>=10&&s2SeasonComplete();}
 function snapshot(){
  const rows=(Array.isArray(career.season2Releases)?career.season2Releases:[]).filter(x=>x&&typeof x==='object');
  const best=rows.reduce((a,x)=>!a||number(x.streams)>number(a.streams)?x:a,null);
@@ -5462,7 +5471,7 @@ rewardSummaryBlob=async function(){if(!available())throw Error('locked');return 
 (function(){
  const REFUND_RATE=.70;
  let salePending=null,saleSerial=0;
- function careerActive(){return season2Ready()&&season2Week()<=12;}
+ function careerActive(){return season2Ready()&&!s2SeasonComplete();}
  function lowestReleaseCost(){
   const available=season2CatalogSongs().filter(s=>!season2Released(s.id));
   if(!available.length)return 0;
@@ -5472,7 +5481,7 @@ rewardSummaryBlob=async function(){if(!available())throw Error('locked');return 
    const selected=available.find(s=>s.id===old?.id)||available[0];
    // No team or promotion are valid choices. Enumerate paid recording/art choices and both decisions.
    for(let st=0;st<studios.length;st++)for(let ar=0;ar<arrs.length;ar++)for(let co=0;co<covers.length;co++)for(const a of ['yes','no'])for(const b of ['yes','no']){
-    season2Draft={id:selected.id,week,balanceVersion:2,goal:2,team:[],studio:st,arr:ar,cover:co,promo:[],dilemma:a,industry:b,strategyVersion:2,strategyScene:{dilemma:(week-1)%6,industry:(week+Math.floor((week-1)/6))%6}};
+    season2Draft={id:selected.id,week,balanceVersion:2,goal:2,team:[],studio:st,arr:ar,cover:co,promo:[],dilemma:a,industry:b,strategyVersion:2,strategyScene:{dilemma:s2ReleaseCount()%6,industry:(s2ReleaseCount()+1+Math.floor(s2ReleaseCount()/6))%6}};
     const f=season2ReleaseForecast(selected,season2DraftPlan());
     if(Number.isFinite(f.cost)&&f.cost>=0)result=Math.min(result,f.cost);
    }
@@ -5499,7 +5508,7 @@ rewardSummaryBlob=async function(){if(!available())throw Error('locked');return 
   const a=season2Assets.find(x=>x.key===key),level=a?season2Level(key):0;if(!a||!level||!careerActive())return;
   const refund=Math.floor(a.costs[level-1]*REFUND_RATE),token=++saleSerial;
   salePending={token,key,level,refund,week:season2Week(),cash:career.cash,career};
-  s2Shell('Восстановить бюджет','Продать уровень объекта?',`<section class="s2-recovery-confirm" data-sale-token="${token}"><span class="finance-art">${infraBrandIcon(key)}</span><h3>${a.name}: уровень ${level} → ${level-1}</h3><p>Вернёшь <b>${fmt(refund)} VS₽</b>, 70% цены этого уровня. На счету будет <b>${fmt(career.cash+refund)} VS₽</b>.</p><p>Бонусы и содержание этого уровня перестанут действовать. Уже полученные награды и результаты релизов сохранятся. Продажа не тратит игровую неделю.</p><p>Это частичный возврат вложений, не доход от работы лейбла.</p><nav class="nav"><button class="btn alt" onclick="s2CancelAssetSale()">Оставить объект</button><button class="btn" onclick="s2ConfirmAssetSale(${token})">Продать за ${fmt(refund)} VS₽</button></nav></section>`);
+  s2Shell('Восстановить бюджет','Продать уровень объекта?',`<section class="s2-recovery-confirm" data-sale-token="${token}"><span class="finance-art">${infraBrandIcon(key)}</span><h3>${a.name}: уровень ${level} → ${level-1}</h3><p>Вернёшь <b>${fmt(refund)} VS₽</b>, 70% цены этого уровня. На счету будет <b>${fmt(career.cash+refund)} VS₽</b>.</p><p>Бонусы и содержание этого уровня перестанут действовать. Уже полученные награды и результаты релизов сохранятся. Продажа не меняет число релизов.</p><p>Это частичный возврат вложений, не доход от работы лейбла.</p><nav class="nav"><button class="btn alt" onclick="s2CancelAssetSale()">Оставить объект</button><button class="btn" onclick="s2ConfirmAssetSale(${token})">Продать за ${fmt(refund)} VS₽</button></nav></section>`);
  };
  window.s2CancelAssetSale=function(){salePending=null;season2Infrastructure();};
  window.s2ConfirmAssetSale=function(token){
@@ -5531,7 +5540,7 @@ rewardSummaryBlob=async function(){if(!available())throw Error('locked');return 
   if(!ended&&career.cash<floor.total){
    const panel=document.createElement('section');panel.className='s2-recovery-notice';panel.setAttribute('role','status');
    const hasAssets=season2Assets.some(a=>season2Level(a.key)>0);
-   panel.innerHTML=`<strong>Сначала восстанови бюджет</strong><p>Для экономного релиза, содержания и резерва нужно ${fmt(floor.total)} VS₽. Сейчас не хватает ${fmt(Math.max(0,floor.total-career.cash))} VS₽.</p><p>${hasAssets?'Можно продать последний уровень любого объекта за 70% его цены. Раскрой карточку объекта ниже.':'Сократи смету релиза. Пропуск недели не гарантирует накопление: сначала сравни доход каталога и объектов с содержанием.'}</p>`;
+   panel.innerHTML=`<strong>Сначала восстанови бюджет</strong><p>Для экономного релиза, содержания и резерва нужно ${fmt(floor.total)} VS₽. Сейчас не хватает ${fmt(Math.max(0,floor.total-career.cash))} VS₽.</p><p>${hasAssets?'Можно продать последний уровень любого объекта за 70% его цены. Раскрой карточку объекта ниже.':'Сократи смету или используй экономный релиз с отсрочкой оплаты.'}</p>`;
    const overview=host.querySelector('.infra-overview');overview?overview.after(panel):host.prepend(panel);
   }
  }
@@ -5572,13 +5581,13 @@ function s2WeeklyFromRelease(h){
 }
 function s2WeeklyRows(){
  const byWeek=new Map();
- for(const h of career.season2Releases||[]){const r=s2WeeklyFromRelease(h);if(r&&Number.isInteger(r.week)&&r.week>=1&&r.week<=12)byWeek.set(r.week,r)}
- for(const r of career.season2WeekReports||[])if(r?.version===1&&Number.isInteger(r.week)&&r.week>=1&&r.week<=12)byWeek.set(r.week,r);
+ for(const h of career.season2Releases||[]){const r=s2WeeklyFromRelease(h);if(r&&Number.isInteger(r.week)&&r.week>=1&&Number.isFinite(r.week))byWeek.set(r.week,r)}
+ for(const r of career.season2WeekReports||[])if(r?.version===1&&Number.isInteger(r.week)&&r.week>=1&&Number.isFinite(r.week))byWeek.set(r.week,r);
  return [...byWeek.values()].sort((a,b)=>a.week-b.week);
 }
 function s2WeeklyHTML(r,open=false){
  if(!r)return '';const income=(r.releaseIncome||0)+(r.projectIncome||0)+r.recurringIncome,cost=(r.releaseCost||0)+(r.projectCost||0)+r.operating;
- return `<details class="s2-weekly-report" ${open?'open':''}><summary><span>Итог недели ${r.week}</span><strong>${r.cashDelta>=0?'+':''}${fmt(r.cashDelta)} VS₽</strong></summary><div class="s2-weekly-net"><span>Поступления за ход<b>+${fmt(income)} VS₽</b></span><span>Расходы за ход<b>−${fmt(cost)} VS₽</b></span>${r.debtPaid?`<span>Погашение аванса<b>−${fmt(r.debtPaid)} VS₽</b></span>`:''}</div><dl><div><dt>Премьера / разовый проект</dt><dd>+${fmt((r.releaseIncome||0)+(r.projectIncome||0))} VS₽</dd></div><div><dt>Старый и новый каталог</dt><dd>+${fmt(r.oldCatalogIncome+r.newCatalogIncome)} VS₽</dd></div><div><dt>Объекты и дистрибуция</dt><dd>+${fmt(r.passiveIncome+r.digital)} VS₽</dd></div><div><dt>Подготовка релиза / проекта</dt><dd>−${fmt((r.releaseCost||0)+(r.projectCost||0))} VS₽</dd></div><div><dt>Содержание лейбла</dt><dd>−${fmt(r.operating)} VS₽</dd></div></dl><p>Регулярный доход: ${fmt(r.recurringIncome)} VS₽. ${r.recurringIncome>=r.operating?'Он покрыл содержание этой недели.':'До покрытия содержания не хватило '+fmt(r.operating-r.recurringIncome)+' VS₽.'} Доход премьеры и разового проекта в эту проверку не входит.</p><p class="s2-weekly-note">Показаны фактические операции при завершении недели. Покупки, продажа объектов и параллельные проекты до этого хода сюда не включены. Резерв 150 VS₽ не является расходом.</p></details>`;
+ return `<details class="s2-weekly-report" ${open?'open':''}><summary><span>Итог расчёта ${r.releaseNumber?"после релиза "+r.releaseNumber:"№"+r.week}</span><strong>${r.cashDelta>=0?'+':''}${fmt(r.cashDelta)} VS₽</strong></summary><div class="s2-weekly-net"><span>Поступления за ход<b>+${fmt(income)} VS₽</b></span><span>Расходы за ход<b>−${fmt(cost)} VS₽</b></span>${r.debtPaid?`<span>Погашение аванса<b>−${fmt(r.debtPaid)} VS₽</b></span>`:''}</div><dl><div><dt>Премьера / разовый проект</dt><dd>+${fmt((r.releaseIncome||0)+(r.projectIncome||0))} VS₽</dd></div><div><dt>Старый и новый каталог</dt><dd>+${fmt(r.oldCatalogIncome+r.newCatalogIncome)} VS₽</dd></div><div><dt>Объекты и дистрибуция</dt><dd>+${fmt(r.passiveIncome+r.digital)} VS₽</dd></div><div><dt>Подготовка релиза / проекта</dt><dd>−${fmt((r.releaseCost||0)+(r.projectCost||0))} VS₽</dd></div><div><dt>Содержание лейбла</dt><dd>−${fmt(r.operating)} VS₽</dd></div></dl><p>Регулярный доход: ${fmt(r.recurringIncome)} VS₽. ${r.recurringIncome>=r.operating?'Он покрыл содержание этого расчёта.':'До покрытия содержания не хватило '+fmt(r.operating-r.recurringIncome)+' VS₽.'} Доход премьеры и разового проекта в эту проверку не входит.</p><p class="s2-weekly-note">Показаны фактические операции после премьеры. Покупки, продажа объектов и параллельные проекты до этого хода сюда не включены. Резерв 150 VS₽ не является расходом.</p></details>`;
 }
 function s2WeeklyMount(){
  const root=document.getElementById('screen');if(!root)return;
@@ -5614,7 +5623,7 @@ labelObjective.detail='В трёх завершённых неделях рег�
 labelObjective.short='Регулярный доход покрывает содержание';
 s2ObjectiveMetric=function(id){if(id!=='label')return s2WeeklyObjectiveBase(id);const legacy=s2WeeklyObjectiveBase(id),count=s2WeeklyRows().filter(r=>s2WeeklyFinite(r.recurringIncome)&&s2WeeklyFinite(r.operating)&&r.operating>0&&r.recurringIncome>=r.operating).length;return Math.max(legacy,count)};
 const s2WeeklyObjectiveHTMLBase=s2ObjectiveHTML;
-s2ObjectiveHTML=function(){return s2WeeklyObjectiveHTMLBase().replace('У части старых релизов нет подробного недельного отчёта. Они не учитываются в этой цели: прошлые доходы не восстанавливаются предположительно.','У части прежних недель нет полного отчёта. Их доходы не восстанавливаются предположительно; уже достигнутый результат по прежним правилам сохраняется.')};
+s2ObjectiveHTML=function(){return s2WeeklyObjectiveHTMLBase().replace('У части старых релизов нет подробного финансового отчёта. Они не учитываются в этой цели: прошлые доходы не восстанавливаются предположительно.','У части прежних недель нет полного отчёта. Их доходы не восстанавливаются предположительно; уже достигнутый результат по прежним правилам сохраняется.')};
 
 </script>
 
@@ -5754,4 +5763,332 @@ html.producer-embedded .reward-notice[open]{position:fixed;top:calc(var(--produc
   const previousResult=showReleaseResult;
   showReleaseResult=function(result){const value=previousResult.apply(this,arguments);changed('release-result');return value};
 })();
+</script>
+
+<script>
+/* Release-driven season. No calendar advancement without a premiere. */
+function s2MigrateCompletion(){
+ if(!season2Ready()||career.season2CompletionVersion===2)return;
+ const oldEnded=Number(career.season2Week)>12;
+ if(oldEnded){const rewards=rewardsSync();rewards.unlocked.dance=true;career.season2LegacyCalendarCompleted=true;}
+ career.season2CompletionVersion=2;
+}
+const s2CompletionLoadBase=loadCareer;
+loadCareer=function(){const ok=s2CompletionLoadBase.apply(this,arguments);if(ok){s2MigrateCompletion();saveCareer()}return ok};
+// An old wait route may still be present in saved browser history: it cannot create income.
+season2WaitWeek=function(){if(season2Ready())toast('Доход каталога и содержание рассчитываются после премьеры. Продолжай выпуск песен в своём темпе.');};
+season2ParallelAvailable=function(){return s2ProjectsAvailable()>0};
+function s2ProjectQuote(key){
+ const p=season2Projects.find(x=>x.key===key);if(!p||!season2Ready()||s2SeasonComplete()||season2Level(key)<1)return null;
+ const f=season2Forecast(p),paid=Math.min(f.income,Math.max(0,career.advanceDebt||0)),after=career.cash-f.cost+f.income-paid;
+ const listeners=career.listeners,rep=career.rep;let floor;
+ try{career.listeners+=f.listeners;career.rep=Math.max(0,career.rep+f.rep);floor=s2RecoveryFloor();}finally{career.listeners=listeners;career.rep=rep}
+ return {...f,key,paid,after,floor,allowed:s2ProjectsAvailable()>0&&career.cash>=f.cost&&after>=floor.total};
+}
+function s2RunProject(key,expectedUsed,expectedReleases){
+ if(expectedUsed!==s2ProjectCount()||expectedReleases!==s2ReleaseCount())return;
+ const f=s2ProjectQuote(key);if(!f||!f.allowed)return;
+ const p=season2Projects.find(x=>x.key===key),before=career.cash,used=s2ProjectCount();
+ career.cash-=f.cost;const paid=season2CreditIncome(f.income);career.listeners+=f.listeners;career.rep=Math.max(0,career.rep+f.rep);
+ career.season2ProjectsDone=used+1;
+ if(!Array.isArray(career.season2History))career.season2History=[];
+ const row={key,parallel:true,projectVersion:2,releaseNumber:s2ReleaseCount(),week:season2Week(),cost:f.cost,income:f.income,listeners:f.listeners,rep:f.rep,debtPaid:paid,cashDelta:career.cash-before};
+ career.season2History.push(row);career.season2LastProject=row;
+ career.season2Last=`Проект «${p.name}» выполнен между релизами. Изменение капитала: ${season2Signed(row.cashDelta)} VS₽. Доход каталога и содержание повторно не начислялись.`;
+ saveCareer();season2Infrastructure();
+}
+runSeason2ParallelProject=function(key){return s2RunProject(key,s2ProjectCount(),s2ReleaseCount())};
+runSeason2Project=function(key){return s2RunProject(key,s2ProjectCount(),s2ReleaseCount())};
+function s2CompletionDecorate(){
+ const host=document.querySelector('#screen[data-season="2"] .infra-compact');if(!host)return;
+ for(const card of host.querySelectorAll('.infra-project')){
+  const controls=[...card.querySelectorAll('button[onclick]')].filter(b=>/runSeason2(?:Parallel)?Project|s2RunProject/.test(b.getAttribute('onclick')||''));
+  if(!controls.length)continue;const key=(controls[0].getAttribute('onclick')||'').match(/\(["']([^"']+)/)?.[1];if(!key)continue;
+  const f=s2ProjectQuote(key),button=controls[0];controls.slice(1).forEach(b=>b.remove());
+  button.setAttribute('onclick',`s2RunProject('${key}',${s2ProjectCount()},${s2ReleaseCount()})`);
+  button.disabled=!f?.allowed;
+  button.textContent=s2SeasonComplete()?'Сезон завершён':!season2Level(key)?'Сначала построй объект':!s2ProjectsAvailable()?'Следующий проект после новых релизов':!f?.allowed?'Сохрани бюджет следующей песни':'Провести проект';
+ }
+ const info=host.querySelector('.s2-project-count');if(info)info.remove();
+ const section=host.querySelector('.infra-project')?.closest('.infra-section');
+ if(section){const p=document.createElement('p');p.className='s2-project-count';p.textContent=`Выполнено проектов: ${s2ProjectCount()}. Доступно сейчас: ${s2ProjectsAvailable()||0}. За сезон открывается до четырёх проектов: в начале и после 3, 6, 9 релизов.`;section.querySelector('summary')?.after(p)}
+ // Old hidden alternate controls are removed as well.
+ host.querySelectorAll('button[onclick*="season2WaitWeek"]').forEach(b=>b.remove());
+}
+const s2CompletionInfraBase=season2Infrastructure;
+season2Infrastructure=function(){s2MigrateCompletion();const out=s2CompletionInfraBase.apply(this,arguments);s2CompletionDecorate();return out};
+const s2CompletionOfficeBase=season2Office;
+season2Office=function(){s2MigrateCompletion();return s2CompletionOfficeBase.apply(this,arguments)};
+const s2CompletionStartBase=season2StartProduction;
+season2StartProduction=function(){s2MigrateCompletion();if(s2SeasonComplete())return season2SongCatalog();return s2CompletionStartBase.apply(this,arguments)};
+const s2CompletionPublishBase=season2PublishSong;
+season2PublishSong=function(){
+ s2MigrateCompletion();const before=s2ReleaseCount(),count=(career.season2Releases||[]).length;
+ const result=s2CompletionPublishBase.apply(this,arguments);
+ if((career.season2Releases||[]).length===count+1){
+  const h=career.season2Releases[count];h.releaseNumber=before+1;
+  const r=(career.season2WeekReports||[]).find(x=>x.week===h.week);if(r)r.releaseNumber=before+1;
+  if(h.weekReport)h.weekReport.releaseNumber=before+1;
+  if(activeReleaseShow?.result?.song?.id===h.songId)activeReleaseShow.result.b=s2ResultHTML(h,season2SongById(h.songId));
+  saveCareer();
+ }
+ return result;
+};
+// Completion goal refers to recurring receipts after premieres, with historical credit retained.
+const s2CompletionGoal=S2_OBJECTIVES.find(g=>g.id==='label');
+s2CompletionGoal.unit='релиза';s2CompletionGoal.detail='После трёх премьер регулярный доход каталога, объектов и дистрибуции покрыл содержание лейбла. Доход самой премьеры и разовых проектов не входит в расчёт. Ранее засчитанные этапы старых сохранений сохраняются.';
+const s2CompletionObjectiveHTML=s2ObjectiveHTML;
+s2ObjectiveHTML=function(){return s2CompletionObjectiveHTML().replace(/прежних недель/g,'прежних этапов')};
+// Financial reports show release sequence for new records, neutral archive sequence for old ones.
+const s2CompletionReportBase=s2WeeklyHTML;
+s2WeeklyHTML=function(r,open){return s2CompletionReportBase(r,open).replace('Показаны фактические операции после премьеры.','Показаны фактические операции этого расчёта.').replace('Покупки, продажа объектов и параллельные проекты','Покупки, продажа объектов и проекты')};
+if(typeof resumeScreens==='object'){
+ for(const [name,fn] of Object.entries({season2Infrastructure,season2Office,season2StartProduction}))if(resumeScreens[name])resumeScreens[name]=fn;
+}
+
+</script>
+
+<style>
+#screen .s2-deferred-offer{margin:16px 0;padding:14px;border:1px solid #67889c;border-radius:14px;background:#173b50;color:#f8fafb}#screen .s2-deferred-offer p{margin:8px 0 12px;line-height:1.5}#screen .s2-deferred-confirm{max-width:720px;margin:auto;min-width:0}#screen .s2-deferred-confirm h3,#screen .s2-deferred-confirm p{overflow-wrap:break-word;word-break:normal}#screen .s2-deferred-confirm p{line-height:1.55}#screen .s2-deferred-confirm dl{padding:14px;background:#eaf1f5;color:#142e40;border-radius:14px}#screen .s2-deferred-confirm dl>div{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:12px;padding:8px 0}#screen .s2-deferred-confirm dd{margin:0;font-weight:700}#screen .s2-deferred-confirm .nav{display:flex;gap:12px;flex-wrap:wrap}#screen .s2-deferred-result{padding:12px;border:1px solid #65869c;border-radius:12px;line-height:1.5}@media(max-width:420px){#screen .s2-deferred-confirm dl>div{grid-template-columns:1fr;gap:3px}#screen .s2-deferred-confirm .nav>*{width:100%;white-space:normal}#screen .s2-deferred-offer .btn{width:100%;white-space:normal}}
+
+</style>
+
+<script>
+/* Atomic, disclosed game financing for a minimum S2 release. Append after completion/ledger. */
+(function(){
+ let pending=null,serial=0;
+ const copy=x=>JSON.parse(JSON.stringify(x));
+ const active=()=>season2Ready()&&!s2SeasonComplete();
+ const safe=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+ function signature(){return JSON.stringify({career,draft:season2Draft,step:season2DraftStep,selected:season2SelectedSong})}
+ function availableSong(id){const songs=season2CatalogSongs().filter(s=>!season2Released(s.id));return songs.find(s=>s.id===id)||songs.find(s=>s.id===season2Draft?.id)||songs.find(s=>s.id===season2SelectedSong)||songs[0]}
+ window.s2DeferredQuote=function(id){
+  if(!active())return null;const song=availableSong(id);if(!song)return null;
+  const old=season2Draft,week=season2Week(),number=typeof s2NextReleaseNumber==='function'?s2NextReleaseNumber():s2ReleaseCount()+1;
+  let best=null;
+  try{
+   for(let studio=0;studio<studios.length;studio++)for(let arr=0;arr<arrs.length;arr++)for(let cover=0;cover<covers.length;cover++)for(const dilemma of ['yes','no'])for(const industry of ['yes','no']){
+    const draft={id:song.id,week,balanceVersion:2,strategyVersion:2,strategyScene:{dilemma:(number-1)%6,industry:(number+Math.floor((number-1)/6))%6},goal:2,team:[],studio,arr,cover,promo:[],dilemma,industry,flowStage:'review'};
+    season2Draft=draft;const f=season2ReleaseForecast(song,season2DraftPlan());
+    if(!best||f.cost<best.forecast.cost)best={draft:copy(draft),forecast:copy(f)};
+   }
+  }finally{season2Draft=old;}
+  if(!best||!Number.isFinite(best.forecast.cost))return null;
+  const operating=season2OperatingCost(),required=best.forecast.cost+operating+150,principal=Math.max(0,Math.ceil(required-career.cash)),debt=Math.max(0,Number(career.advanceDebt)||0);
+  return {songId:song.id,songName:song.name,...best,operating,required,reserve:150,principal,debt,totalDebt:debt+principal};
+ };
+ window.s2RequestDeferredRelease=function(id){
+  const q=s2DeferredQuote(id);if(!q||q.principal<=0){s2DeferredMount();return;}
+  const token=++serial;pending={token,quote:q};
+  s2Shell('Восстановить выпуск','Экономный релиз с отсрочкой',`<section class="s2-deferred-confirm" data-deferred-token="${token}"><span class="finance-art">${financeDecisionIcon('profit')}</span><h3>Выпустить «${safe(q.songName)}»?</h3><p>Будет выбран самый недорогой допустимый план: без специалистов и рекламы, с экономными записью, аранжировкой, обложкой и решениями.</p>${season2Draft?'<p><b>Текущий черновик будет заменён этим планом только после подтверждения.</b> При отмене он сохранится.</p>':''}<dl><div><dt>Стоимость релиза</dt><dd>${fmt(q.forecast.cost)} VS₽</dd></div><div><dt>Содержание при выпуске</dt><dd>${fmt(q.operating)} VS₽</dd></div><div><dt>Резерв, не расход</dt><dd>150 VS₽</dd></div><div><dt>На счету сейчас</dt><dd>${fmt(career.cash)} VS₽</dd></div><div><dt>Недостающее финансирование</dt><dd>+${fmt(q.principal)} VS₽</dd></div><div><dt>Долг до погашения из доходов</dt><dd>${fmt(q.totalDebt)} VS₽</dd></div></dl><p>Это <b>игровая отсрочка без процентов</b>, не подарок: бюджет увеличится на ${fmt(q.principal)} VS₽, и долг вырастет на ту же сумму. Доход этой премьеры и следующие поступления сначала пойдут на погашение долга.</p><p>Финансирование выдаётся только вместе с выпуском этой песни. Получить деньги отдельно нельзя. Доход не гарантирован; непогашенный долг останется в итогах сезона.</p><nav class="nav"><button type="button" class="btn alt" onclick="s2CancelDeferredRelease()">Вернуться без изменений</button><button type="button" class="btn" onclick="s2ConfirmDeferredRelease(${token})">Выпустить с отсрочкой ${fmt(q.principal)} VS₽</button></nav></section>`);
+  pending.signature=signature();
+ };
+ window.s2CancelDeferredRelease=function(){pending=null;season2Office();};
+ window.s2ConfirmDeferredRelease=function(token){
+  const p=pending;if(!p||p.token!==token)return false;
+  if(!active()||!document.querySelector('.s2-deferred-confirm[data-deferred-token="'+token+'"]')||p.signature!==signature()){pending=null;return false;}
+  const q=s2DeferredQuote(p.quote.songId);
+  if(!q||q.principal<=0||q.principal!==p.quote.principal||JSON.stringify(q.draft)!==JSON.stringify(p.quote.draft)||q.forecast.cost!==p.quote.forecast.cost){pending=null;return false;}
+  pending=null;
+  const oldCareer=copy(career),oldDraft=season2Draft?copy(season2Draft):null,oldStep=season2DraftStep,oldSelected=season2SelectedSong,oldCount=(career.season2Releases||[]).length,beforeCash=career.cash;
+  try{
+   season2Draft=copy(q.draft);season2DraftStep=6;season2SelectedSong=q.songId;
+   career.cash+=q.principal;career.advanceDebt=q.totalDebt;
+   season2PublishSong(q.songId,-1);
+   const releases=career.season2Releases||[],h=releases[releases.length-1];
+   if(releases.length!==oldCount+1||!h||season2SongSlot(h.songId)!==season2SongSlot(q.songId))throw new Error('Release did not settle');
+   h.financing={kind:'deferred',principal:q.principal,interest:0,debtBefore:oldCareer.advanceDebt||0};
+   if(h.weekReport){h.weekReport.financing=q.principal;h.weekReport.cashDelta=career.cash-beforeCash;}
+   const row=(career.season2WeekReports||[]).find(r=>r.week===h.week&&r.kind==='release');
+   if(row){row.financing=q.principal;row.cashBefore=beforeCash;row.cashAfter=career.cash;row.cashDelta=career.cash-beforeCash;}
+   if(activeReleaseShow?.result?.song&&season2SongSlot(activeReleaseShow.result.song.id)===season2SongSlot(q.songId))activeReleaseShow.result.b=s2ResultHTML(h,season2SongById(h.songId));
+   saveCareer();return true;
+  }catch(error){
+   cancelReleaseShow();career=oldCareer;season2Draft=oldDraft;season2DraftStep=oldStep;season2SelectedSong=oldSelected;
+   try{saveCareer()}catch(_e){};
+   gameFeel('ВЫПУСК НЕ СОСТОЯЛСЯ','Бюджет, долг и черновик восстановлены. Попробуй ещё раз.');season2Office();return false;
+  }
+ };
+ const weeklyHTML=s2WeeklyHTML;
+ s2WeeklyHTML=function(r,open){let html=weeklyHTML.apply(this,arguments);const amount=Number(r?.financing)||0;if(!html||amount<=0)return html;
+  const total=(r.releaseIncome||0)+(r.projectIncome||0)+(r.recurringIncome||0)+amount;
+  html=html.replace(/<span>Поступления за ход<b>[^<]*<\/b><\/span>/,`<span>Поступления и финансирование<b>+${fmt(total)} VS₽</b></span>`);
+  html=html.replace('<dl>',`<dl><div><dt>Отсрочка оплаты, не прибыль</dt><dd>+${fmt(amount)} VS₽</dd></div>`);
+  return html.replace('</details>',`<p class="s2-weekly-note">В изменение капитала включено ${fmt(amount)} VS₽ финансирования. На ту же сумму увеличен игровой долг без процентов; это не доход лейбла.</p></details>`);
+ };
+ const resultHTML=s2ResultHTML;
+ s2ResultHTML=function(h,song){let html=resultHTML.apply(this,arguments);if(h.financing?.principal>0){const note=`<p class="s2-deferred-result">Экономный релиз выпущен с отсрочкой ${fmt(h.financing.principal)} VS₽ без процентов. Финансирование не считается выручкой или прибылью; долг погашается из поступлений.</p>`;html=html.replace('<div class="nav premiere-actions">',note+'<div class="nav premiere-actions">')}return html};
+ window.s2DeferredMount=function(){
+  const screen=document.getElementById('screen');if(!screen||!active())return;
+  screen.querySelectorAll('.s2-deferred-offer').forEach(x=>x.remove());
+  const host=screen.querySelector('.s2-office')||screen.querySelector('.infra-compact')||screen.querySelector('.s2-review')||(screen.querySelector('.song-selection-summary')?screen:null);
+  if(!host)return;const q=s2DeferredQuote();if(!q||q.principal<=0)return;
+  const box=document.createElement('aside');box.className='s2-deferred-offer';
+  box.innerHTML=`<strong>Бюджета не хватает даже на экономный выпуск</strong><p>Можно выпустить «${safe(q.songName)}» с игровой отсрочкой ${fmt(q.principal)} VS₽. Сумма станет долгом, не доходом.</p><button type="button" class="btn alt" onclick="s2RequestDeferredRelease('${safe(q.songId)}')">Посмотреть условия отсрочки</button>`;
+  const nav=host.querySelector(':scope > .s2-flow-nav');if(nav)nav.before(box);else host.appendChild(box);
+ };
+ for(const name of ['season2Office','season2Infrastructure','season2SongCatalog','season2ReviewProduction']){const base=window[name];window[name]=function(){const out=base.apply(this,arguments);s2DeferredMount();return out};}
+ if(typeof resumeScreens==='object')for(const name of ['season2Infrastructure','season2SongCatalog','season2ReviewProduction'])if(resumeScreens[name])resumeScreens[name]=window[name];
+})();
+
+</script>
+
+<style>
+#screen .s1-deferred{padding:16px;margin:12px 0;border:1px solid #527f94;border-radius:16px;background:#12364d;color:#f4fbff}
+#screen .s1-deferred p{font-size:14px;line-height:1.5;margin:10px 0}
+#screen .s1-deferred>.btn{margin:6px 8px 6px 0;white-space:normal}
+#screen .s1-deferred .nav{gap:10px;flex-wrap:wrap}
+#screen .s1-deferred .btn{white-space:normal}
+@media(max-width:420px){#screen .s1-deferred .nav{display:grid;grid-template-columns:1fr}}
+
+</style>
+
+<script>
+// S1 recovery funding: finance and pay the package in one saved transaction.
+(function(){
+ let pending=null,serial=0;
+ const clone=x=>JSON.parse(JSON.stringify(x));
+ const signature=()=>JSON.stringify([career,state]);
+ const eligible=()=>career.releases<10&&career.cash<recoveryPackages[0].cost&&!state.recoveryCommitted;
+ window.s1DeferredChoose=function(){
+  pending=null;if(!eligible())return recoveryScreen();
+  const available=songs.filter(s=>s.unlock()&&!isReleased(s.id));
+  shell('Отсрочка оплаты','Выбери песню',`<section class="s1-deferred"><p>Минимальный пакет стоит 1 150 VS₽. Недостающая сумма станет долгом без процентов и сразу пойдёт на оплату пакета. Это не свободные деньги. Действующий долг сохраняется.</p>${available.map(s=>`<button class="btn alt" onclick="s1DeferredRequest('${s.id}')">${s.name}</button>`).join('')}<nav class="nav"><button class="btn alt" onclick="recoveryScreen()">Отмена</button></nav></section>`);
+ };
+ window.s1DeferredRequest=function(id){
+  const song=songs.find(s=>s.id===id);if(!eligible()||!song||!song.unlock()||isReleased(id))return;
+  const amount=recoveryPackages[0].cost-career.cash,token=++serial;
+  pending={id,amount,token,signature:signature()};
+  shell('Антикризисный пакет','Подтвердить отсрочку?',`<section class="s1-deferred" data-s1-deferred="${token}"><h3>${song.name}</h3><p>Пакет: <b>1 150 VS₽</b>. На счету: <b>${fmt(career.cash)} VS₽</b>. Отсрочка: <b>${fmt(amount)} VS₽</b>.</p><p>Сумма сразу оплачивает пакет, после оплаты на счету будет <b>0 VS₽</b>. ${career.cash<0?'Отсрочка также закрывает текущий отрицательный остаток. ':''}Общий долг составит <b>${fmt((career.advanceDebt||0)+amount)} VS₽</b>, без новых процентов. Он удерживается из будущих доходов. Доход не гарантирован.</p><p>Текущий план будет заменён. Уже оплаченные услуги прежнего плана не возвращаются. Новый оплаченный пакет сохранится, его можно продолжить после перезагрузки. Отказ от релиза не отменяет долг и не возвращает оплату.</p><nav class="nav"><button class="btn alt" onclick="s1DeferredCancel()">Отмена</button><button class="btn" onclick="s1DeferredConfirm(${token})">Оплатить пакет с отсрочкой</button></nav></section>`);
+ };
+ window.s1DeferredCancel=function(){pending=null;recoveryScreen()};
+ window.s1DeferredConfirm=function(token){
+  const q=pending;if(!q||q.token!==token||!document.querySelector('[data-s1-deferred="'+token+'"]'))return false;
+  pending=null;if(!eligible()||q.signature!==signature()||isReleased(q.id)){toast('План изменился. Проверь условия ещё раз.');return false}
+  const oldCareer=clone(career),oldState=clone(state),oldRoute=resumeRoute;
+  try{
+   resetRelease();state.song=songs.find(s=>s.id===q.id);state.recoveryPackage=0;
+   career.cash+=q.amount;career.advanceDebt=(career.advanceDebt||0)+q.amount;
+   applyRecoveryPackage();
+   if(!state.recoveryCommitted||state.spent!==1150||career.cash!==0)throw Error('Пакет не оплачен');
+   state.deferredPayment={principal:q.amount,cost:1150,debtBefore:oldCareer.advanceDebt||0};
+   if(!saveCareer())throw Error('Не удалось сохранить оплату');
+   return true;
+  }catch(err){career=oldCareer;state=oldState;state.song=songs.find(s=>s.id===oldState.song?.id)||null;resumeRoute=oldRoute;saveCareer();recoveryScreen();toast('Оплата отменена. Попробуй ещё раз.');return false}
+ };
+ const base=recoveryScreen;recoveryScreen=function(){base.apply(this,arguments);if(!eligible())return;const target=document.querySelector('#screen .recovery-decisions');if(!target)return;const el=document.createElement('section');el.className='s1-deferred';el.innerHTML='<h3>Не хватает на следующий релиз?</h3><p>Оплати минимальный пакет с отсрочкой без процентов, даже при действующем долге. Деньги нельзя потратить отдельно.</p><button class="btn" onclick="s1DeferredChoose()">Выбрать песню для отсрочки</button>';target.prepend(el)};
+ // Persist a permanent disclosure in release history without changing payout formulas.
+ const calculate=calculateRelease;calculateRelease=function(){const funding=state.deferredPayment&&clone(state.deferredPayment),count=career.releases;const result=calculate.apply(this,arguments);if(funding&&career.releases===count+1){career.history[0].financing={kind:'deferred',...funding};saveCareer()}return result};
+ if(typeof resumeScreens!=='undefined')resumeScreens.recoveryScreen=recoveryScreen;
+})();
+
+</script>
+
+<style>
+/* Scoped finale presentation; never changes gameplay or generic cards. */
+#screen .fc-finale{display:flex;flex-direction:column;gap:14px;min-width:0}
+#screen .fc-ceremony{position:relative;overflow:hidden;border:1px solid #42677b;border-radius:20px;background:radial-gradient(ellipse at 50% 10%,#28566b 0,#102f43 54%,#0a2133 100%);padding:18px 20px;text-align:center;min-width:0}
+#screen .fc-art{position:relative;height:190px;max-width:440px;margin:0 auto 10px;isolation:isolate}
+#screen .fc-album{position:absolute;left:50%;top:16px;width:150px;height:150px;transform:translateX(-50%);border-radius:8px;background:#173f54;box-shadow:0 16px 30px #0006}
+#screen .fc-cover{position:absolute;inset:0;transform:translate(var(--x),var(--y)) rotate(var(--r));animation:fc-assemble 1.5s cubic-bezier(.2,.7,.2,1) both;animation-delay:calc(var(--i)*.07s);border:1px solid #a2bdc988;border-radius:8px;overflow:hidden;background:#17445c}
+#screen .fc-cover-image{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:1}
+#screen .fc-cover-fallback,#screen .fc-empty-cover{position:absolute;inset:0;display:grid;place-items:center;font-size:34px;color:#d5b678}
+#screen .fc-album-title{position:absolute;inset:0;z-index:15;display:flex;flex-direction:column;justify-content:flex-end;gap:5px;text-align:left;padding:12px;background:linear-gradient(transparent 20%,#061826e8 75%);border:1px solid #bdab7888;border-radius:8px;color:white;animation:fc-reveal .7s 1.8s both}
+#screen .fc-album-title span{font-size:8px;letter-spacing:1px}#screen .fc-album-title b{font-size:17px;line-height:1.1}#screen .fc-album-title small{font-size:9px;color:#e6c888}
+#screen .fc-vinyl{position:absolute;left:50%;top:20px;width:145px;height:145px;border-radius:50%;background:repeating-radial-gradient(circle,#101b24 0 3px,#233541 4px 5px);border:1px solid #537381;transform:translateX(-4%);box-shadow:0 12px 20px #0005;animation:fc-disc 2.3s ease-out both}
+#screen .fc-vinyl:after{content:'VS';position:absolute;inset:47px;display:grid;place-items:center;border-radius:50%;background:#d9bc7c;color:#102a3b;font-weight:800;font-size:15px}
+#screen .fc-rays{position:absolute;inset:0;border-radius:50%;background:radial-gradient(ellipse,#d8bd7733,transparent 65%);animation:fc-glow 2.4s ease-out both}
+#screen .fc-copy .kicker{color:#e2c485}#screen .fc-copy h2{font:700 clamp(23px,4vw,31px)/1.15 Arial,sans-serif;color:#fff;margin:8px 0}#screen .fc-copy p{font-size:14px;line-height:1.5;color:#c9dee8;max-width:520px;margin:0 auto 14px}
+#screen .fc-metrics{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;animation:fc-reveal .6s 2.1s both}
+#screen .fc-metrics>div{background:#ffffff08;border:1px solid #91b4c433;border-radius:12px;padding:11px 7px;min-width:0;display:flex;flex-direction:column;gap:5px}
+#screen .fc-metrics strong{font:700 clamp(20px,3vw,28px)/1.2 Arial,sans-serif;color:#e7c983;white-space:nowrap}#screen .fc-metrics span{font-size:12px;line-height:1.3;color:#d3e3eb;overflow-wrap:normal;word-break:normal}
+#screen .fc-best{font-size:13px;margin:12px 0 0;display:flex;flex-direction:column;gap:3px;color:#e6edf1}#screen .fc-best span{color:#b7d0de;font-size:11px}
+#screen .fc-skip{margin:10px 0 0;border:0;background:none;color:#c7dce7;text-decoration:underline;font-size:12px;cursor:pointer;padding:8px;min-height:36px}
+#screen .fc-prize{display:grid;grid-template-columns:104px minmax(0,1fr);align-items:center;gap:14px;padding:14px;border:1px solid #45667a;border-radius:16px;background:#173a50}
+#screen .fc-prize>img{width:104px;height:104px;object-fit:contain}#screen .fc-prize h3{font:700 18px/1.25 Arial,sans-serif;margin:5px 0 10px;color:#fff}#screen .fc-prize .kicker{font-size:10px;color:#dfc080}#screen .fc-prize .reward-actions{gap:7px;display:flex;flex-wrap:wrap}#screen .fc-prize .btn{font-size:11px;padding:10px;min-height:40px}
+#screen .fc-details{border:1px solid #3c6176;border-radius:14px;padding:12px;background:#ffffff04}#screen .fc-details>summary{font-size:14px;font-weight:700;cursor:pointer;padding:3px}#screen .fc-details-body{display:flex;flex-direction:column;gap:12px;padding-top:14px}#screen .fc-details-body>.stats{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}#screen .fc-details-body .stat{min-width:0;word-break:normal;overflow-wrap:normal}#screen .fc-details-body .finale-highlights{margin-top:0!important}
+#screen .fc-finale>.nav{margin:0;gap:8px}#screen .fc-finale .s2-label-card{margin:0}#screen .fc-page-title{font-size:18px!important;line-height:1.3!important;margin-bottom:12px!important}
+#screen .fc-settled .fc-cover{animation:none;transform:translate(0,0) rotate(0deg)}#screen .fc-settled .fc-vinyl,#screen .fc-settled .fc-rays,#screen .fc-settled .fc-metrics,#screen .fc-settled .fc-album-title{animation:none;opacity:1}
+@keyframes fc-assemble{0%{opacity:0;transform:translate(var(--x),var(--y)) rotate(var(--r)) scale(.7)}25%{opacity:1}100%{opacity:1;transform:translate(0,0) rotate(0deg)}}
+@keyframes fc-reveal{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+@keyframes fc-disc{from{transform:translateX(-50%) rotate(-70deg)}to{transform:translateX(-4%) rotate(0)}}
+@keyframes fc-glow{from{opacity:.2;transform:scale(.7)}to{opacity:1;transform:scale(1)}}
+@media(max-width:480px){#screen .fc-ceremony{padding:14px 12px}#screen .fc-art{height:166px}#screen .fc-album{width:132px;height:132px;top:12px}#screen .fc-vinyl{width:128px;height:128px;top:14px}#screen .fc-vinyl:after{inset:41px}#screen .fc-album-title b{font-size:15px}#screen .fc-copy h2{font-size:23px}#screen .fc-copy p{font-size:13px}#screen .fc-metrics{gap:6px}#screen .fc-metrics strong{font-size:20px}#screen .fc-metrics span{font-size:11px}#screen .fc-prize{grid-template-columns:82px minmax(0,1fr);padding:10px;gap:10px}#screen .fc-prize>img{width:82px;height:82px}#screen .fc-prize h3{font-size:16px}#screen .fc-prize .reward-actions{display:grid;grid-template-columns:1fr}#screen .fc-finale>.nav .btn{flex:1 1 140px;min-width:0;font-size:12px}}
+@media(max-width:360px){#screen .fc-metrics{grid-template-columns:1fr}#screen .fc-metrics>div{flex-direction:row;align-items:center;text-align:left;padding:8px 10px;gap:10px}#screen .fc-metrics strong{min-width:78px;font-size:20px}#screen .fc-copy h2{font-size:21px}}
+@media(prefers-reduced-motion:reduce){#screen .fc-ceremony *{animation:none!important;transition:none!important;opacity:1!important}#screen .fc-cover{transform:none}#screen .fc-skip{display:none}}
+#screen .fc-prize.fc-no-art{grid-template-columns:1fr}
+
+</style>
+
+<script>
+/* Presentation only. Append after season completion, reward and card modules. */
+(function(){
+'use strict';
+const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const num=v=>Number.isFinite(Number(v))?Math.max(0,Math.round(Number(v))):0;
+const shown=new Set();
+function data(season){
+ const rows=(season===1?career.history:career.season2Releases)||[];
+ const tracks=season===1?songs:season2Songs;
+ const covers=rows.map(r=>(season===2?season2SongById(r.songId):null)||tracks.find(s=>s.id===(r.songId||r.id)||s.name===r.song)).filter(Boolean);
+ const unique=[...new Map(covers.map(s=>[s.id,s])).values()];
+ const unlocked=career.rewards?.unlocked||{};
+ const prizes=VINYL_REWARDS.filter(x=>(season===2?(x.season===2||x.id==='dance'):(!x.season&&x.id!=='dance'))&&unlocked[x.id]===true);
+ const reward=prizes.find(x=>x.id===(season===1?'pride':'dance'))||prizes.find(x=>x.id==='s2_ten')||null;
+ const best=rows.reduce((a,r)=>!a||num(r.streams)>num(a.streams)?r:a,null);
+ return {season,covers:unique.slice(0,10),releases:season===1?Math.min(num(career.releases),10):(typeof s2ReleaseCount==='function'?s2ReleaseCount():unique.length),streams:rows.reduce((n,r)=>n+num(r.streams),0),prizes:prizes.length,reward,best:best?.song||null};
+}
+function hero(d){
+ const album=d.covers.length?d.covers.map((s,i)=>`<span class="fc-cover" style="--i:${i};--x:${((i%5)-2)*48}px;--y:${i<5?-38:38}px;--r:${(i-4.5)*5}deg">${songCover(s,'fc-cover-image')}<span class="fc-cover-fallback">VS</span></span>`).join(''):'<span class="fc-empty-cover">VS</span>';
+ return `<section class="fc-ceremony" aria-label="Завершение ${d.season===1?'первого':'второго'} сезона"><div class="fc-art" aria-hidden="true"><div class="fc-rays"></div><div class="fc-vinyl"></div><div class="fc-album">${album}<div class="fc-album-title"><span>VUSTIN RECORDS</span><b>${d.season===1?'МОЙ ПЕРВЫЙ АЛЬБОМ':'МОЙ ЛЕЙБЛ'}</b><small>СЕЗОН 0${d.season}</small></div></div></div><div class="fc-copy"><span class="kicker">СЕЗОН ${d.season} ЗАВЕРШЁН</span><h2>${d.season===1?'Твой первый альбом готов!':'Твой лейбл звучит!'}</h2><p>${d.season===1?'Десять песен. Десять премьер. Твой первый большой шаг в музыке.':'Все песни выпущены. За каждой премьерой стоят твои решения.'}</p></div><div class="fc-metrics" aria-label="Достижения сезона"><div><strong>${d.releases}/10</strong><span>релизов</span></div><div><strong>${fmt(d.streams)}</strong><span>прослушиваний премьер</span></div><div><strong>${d.prizes}</strong><span>стикеров сезона</span></div></div>${d.best?`<p class="fc-best"><span>Самая громкая премьера</span><b>${esc(d.best)}</b></p>`:''}<button type="button" class="fc-skip">Показать сразу</button></section>`;
+}
+function mount(season){
+ const screen=document.getElementById('screen'),host=screen?.querySelector(season===1?'.season-one-summary':'.s2-finale');
+ if(!host||host.classList.contains('fc-finale'))return;
+ const d=data(season);if(d.releases<10)return;
+ // Keep original controls and their closures. Only rearrange presentation.
+ const original=[...host.children],nav=original.find(x=>x.classList.contains('nav'));
+ const label=original.find(x=>x.classList.contains('s2-label-card'));
+ const details=document.createElement('details');details.className='fc-details';details.innerHTML='<summary>Подробные итоги сезона</summary><div class="fc-details-body"></div>';
+ const body=details.lastElementChild;
+ for(const child of original){
+  if(child===nav||child===label)continue;
+  if(child.classList.contains('finale-hero')){child.remove();continue;}
+  // Do not ask legacy players to select a goal after completing the season.
+  if(child.classList.contains('s2-objective-panel')&&!child.querySelector('progress')){child.remove();continue;}
+  if(child.matches('details'))child.open=false;
+  body.append(child);
+ }
+ if(season===1){
+  const note=document.createElement('p');note.className='small fc-current-note';note.textContent='Релизы и их финансовые результаты относятся к первому сезону. Аудитория, репутация, капитал, инфраструктура и выполнение целей показаны на текущий момент и могут включать развитие во втором сезоне.';body.prepend(note);
+  const stats=body.querySelector(':scope > .stats');
+  if(stats){const labels=['прослушиваний премьер сезона','слушателей сейчас','репутация сейчас','VS₽ капитал сейчас'];[...stats.children].forEach((stat,i)=>{if(!labels[i])return;[...stat.childNodes].filter(n=>n.nodeType===3).forEach(n=>n.remove());stat.append(document.createTextNode(labels[i]));});}
+  const profile=body.querySelector('.finale-profile');
+  if(profile){const summary=profile.parentElement.querySelector('summary');if(summary)summary.textContent='Цели и развитие лейбла сейчас';
+   const headings=profile.querySelectorAll('.kicker');if(headings[0])headings[0].textContent=headings[0].textContent.replace('ЦЕЛИ СЕЗОНА','ЦЕЛИ · ТЕКУЩИЙ ПРОГРЕСС');if(headings[1])headings[1].textContent='ИНФРАСТРУКТУРА СЕЙЧАС';if(headings[2])headings[2].textContent='КАРЬЕРА НА ТЕКУЩИЙ МОМЕНТ';
+  }
+ }
+ host.replaceChildren();host.classList.add('fc-finale');host.insertAdjacentHTML('beforeend',hero(d));
+ const ceremony=host.querySelector('.fc-ceremony'),skip=host.querySelector('.fc-skip');
+ const finish=()=>{ceremony.classList.add('fc-settled');skip.hidden=true;};
+ const key=season+':'+(career.history?.[0]?.song||'')+':'+d.streams;
+ if(shown.has(key)||window.matchMedia?.('(prefers-reduced-motion: reduce)').matches)finish();else{shown.add(key);ceremony.addEventListener('animationend',e=>{if(e.animationName==='fc-reveal')finish()});}
+ skip.addEventListener('click',finish);
+ if(d.reward){
+  const prize=document.createElement('section');prize.className='fc-prize';prize.setAttribute('aria-label','Заслуженная награда');
+  prize.innerHTML=`<img src="${esc(rewardAsset(d.reward))}" alt="${esc(d.reward.title)}"><div><span class="kicker">ТВОЯ НАГРАДА</span><h3>${esc(d.reward.title)}</h3><div class="reward-actions"><button class="btn" type="button">Сохранить стикер</button><button class="btn alt" type="button">Поделиться</button></div></div>`;
+  prize.querySelector('img').addEventListener('error',e=>{e.target.hidden=true;prize.classList.add('fc-no-art')});
+  const buttons=prize.querySelectorAll('button');buttons[0].addEventListener('click',()=>rewardExport(d.reward.id,false,buttons[0]));buttons[1].addEventListener('click',()=>rewardExport(d.reward.id,true,buttons[1]));host.append(prize);
+ }
+ if(nav){const primary=nav.querySelector('.btn:not(.alt)');if(primary)nav.prepend(primary);}
+ if(label)host.append(label);
+ if(nav)host.append(nav);
+ host.append(details);
+ // Shared header says enough; avoid two large congratulation titles.
+ const h=screen.querySelector(':scope > h2');if(h){h.textContent=season===1?'Твоя первая коллекция':'История твоего лейбла';h.classList.add('fc-page-title')}
+}
+window.finaleCeremonyData=data;
+for(const [name,season] of [['seasonFinale',1],['season2Finale',2]]){const prev=window[name];window[name]=function(){const result=prev.apply(this,arguments);mount(season);return result;};if(typeof resumeScreens==='object'&&resumeScreens[name])resumeScreens[name]=window[name]}
+})();
+
 </script>
