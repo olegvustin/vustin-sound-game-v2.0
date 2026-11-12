@@ -6257,3 +6257,88 @@ if(typeof resumeScreens==='object'){resumeScreens.stageCover=stageCover;resumeSc
 window.coverArtworkAPI={artwork,original,historyIndex,displayIndex,decorate,keys};
 })();
 </script>
+
+<style id="producer-challenge-tiers">
+/* Scoped dark-blue challenge cards match the producer office. */
+#screen[data-season="2"] .s2-objective-panel.challenge-panel{background:linear-gradient(120deg,#173e53,#113247);border:1px solid #507d92;color:#eaf7fc;padding:18px;border-radius:18px;margin:0 0 16px;box-shadow:none}
+#screen[data-season="2"] .challenge-panel :is(h3,p,strong,summary,.s2-objective-choice){color:#eaf7fc}
+#screen[data-season="2"] .challenge-panel .kicker{color:#adcedf;font-size:10px;letter-spacing:.17em;line-height:1.5}
+#screen[data-season="2"] .challenge-panel h3{font-size:22px;line-height:1.2;margin:5px 0 0;overflow-wrap:normal;word-break:normal}
+#screen[data-season="2"] .challenge-panel .challenge-lead{color:#bdd6e3;font-size:14px;margin:10px 0 14px;line-height:1.5}
+.challenge-intro{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.challenge-tier-caption{color:#b9d7e6;font-size:12px}
+#screen[data-season="2"] .challenge-panel .challenge-options{gap:12px;margin:12px 0 0;grid-template-columns:repeat(3,minmax(0,1fr))}
+#screen[data-season="2"] .challenge-panel .challenge-choice{display:flex;flex-direction:column;align-items:stretch;gap:12px;background:#20485f;border:1px solid #648da1;border-radius:14px;padding:14px;min-width:0;box-shadow:none;transition:background .15s,border-color .15s;position:relative}
+#screen[data-season="2"] .challenge-panel .challenge-choice:hover{background:#285970;border-color:#b6dbea}
+#screen[data-season="2"] .challenge-panel .challenge-choice.is-picked{border-color:#d9b468;box-shadow:inset 0 0 0 1px #d9b468}
+#screen[data-season="2"] .challenge-panel .challenge-choice::before,#screen[data-season="2"] .challenge-panel .challenge-choice::after{content:none!important}
+#screen[data-season="2"] .challenge-panel .challenge-choice:focus-visible{outline:3px solid #d9b468;outline-offset:3px}
+.challenge-card-head{display:flex;align-items:center;gap:10px;min-width:0}
+#screen[data-season="2"] .challenge-panel .challenge-card-head strong{font-size:16px;line-height:1.25;word-break:normal;overflow-wrap:normal}
+.challenge-icon{display:block;flex:0 0 44px;width:44px;height:44px;padding:6px;box-sizing:border-box;background:#113448;border:1px solid #6192a9;border-radius:12px;color:#bfe5f4}
+.challenge-icon svg{display:block;width:100%;height:100%}
+#screen[data-season="2"] .challenge-panel .challenge-card-description{font-size:13px;line-height:1.45;color:#c6dfeb;display:block;min-height:38px;margin:0}
+.challenge-levels{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));list-style:none;gap:6px;padding:0;margin:14px 0 0}
+.challenge-levels li{background:#14364a;border:1px solid #456f84;border-radius:9px;padding:9px 6px;min-width:0;text-align:center;color:#bed8e6}
+.challenge-levels li.is-earned{border-color:#b89957;background:#314446;color:#f1d397}
+.challenge-level-name{display:flex;gap:4px;align-items:center;justify-content:center;font-size:12px;line-height:1.3}
+.challenge-level-name i{font-style:normal;font-size:10px;opacity:.75}
+.challenge-level-name svg,.challenge-card-action svg,.challenge-rank svg{width:15px;height:15px;flex:0 0 15px}
+.challenge-levels b{display:block;font-size:16px;margin-top:5px;white-space:nowrap;color:inherit}
+#screen[data-season="2"] .challenge-panel .challenge-choice .challenge-levels{margin:0}
+#screen[data-season="2"] .challenge-panel .challenge-card-current{color:#bed8e6;font-size:12px;line-height:1.4;display:block;margin-top:auto}
+.challenge-card-current b{color:#effaff}
+#screen[data-season="2"] .challenge-panel .challenge-card-action{display:flex;align-items:center;justify-content:space-between;color:#d3ecf7;font-size:13px;font-weight:700;padding-top:9px;border-top:1px solid #628399;min-height:24px}
+#screen[data-season="2"] .challenge-panel .is-picked .challenge-card-action{color:#f1d397}
+.challenge-selected{display:flex;gap:12px;align-items:center;flex-wrap:wrap}
+.challenge-selected>div{flex:1;min-width:180px}
+.challenge-rank{display:flex;align-items:center;gap:5px;border:1px solid #5a8195;border-radius:20px;padding:7px 10px;color:#bdd7e4;font-size:12px}
+.challenge-rank.is-earned{color:#f1d397;border-color:#ad9055;background:#314446}
+.challenge-progress-copy{display:flex;justify-content:space-between;gap:8px;align-items:center;flex-wrap:wrap;margin-top:15px;font-size:13px;color:#bed8e6}
+.challenge-progress-copy b{color:#f2fbff;font-size:19px}.challenge-progress-copy small{font-size:13px;color:#bed8e6;font-weight:400}
+#screen[data-season="2"] .challenge-panel .s2-objective-progress{margin:10px 0 0;display:block}
+#screen[data-season="2"] .challenge-panel .s2-objective-progress progress{display:block;width:100%;height:8px;background:#0e2a3d;accent-color:#d9b468}
+#screen[data-season="2"] .challenge-panel progress::-webkit-progress-bar{background:#0e2a3d}
+#screen[data-season="2"] .challenge-panel progress::-webkit-progress-value{background:#d9b468}
+#screen[data-season="2"] .challenge-panel progress::-moz-progress-bar{background:#d9b468}
+#screen[data-season="2"] .challenge-panel .challenge-status{color:#cfdfeb;font-size:12px;line-height:1.4;margin:10px 0 0}
+#screen[data-season="2"] .challenge-panel .challenge-help{border-top:1px solid #466f83;margin:14px 0 0;padding-top:4px}
+#screen[data-season="2"] .challenge-panel .challenge-help summary{color:#c5e1ee;min-height:40px;line-height:1.4;padding:10px 0;box-sizing:border-box}
+#screen[data-season="2"] .challenge-panel .challenge-help p{color:#bdd5e2;font-size:13px}
+#screen[data-season="2"] .challenge-panel .s2-objective-note{color:#93b5c8;font-size:12px}
+@media(max-width:740px){#screen[data-season="2"] .challenge-panel .challenge-options{grid-template-columns:1fr}.challenge-card-head{gap:10px}#screen[data-season="2"] .challenge-panel .challenge-card-description{min-height:0}.challenge-card-current{margin-top:0}.challenge-choice .challenge-levels b{font-size:16px}}
+@media(max-width:420px){#screen[data-season="2"] .s2-objective-panel.challenge-panel{padding:13px;border-radius:15px}#screen[data-season="2"] .challenge-panel h3{font-size:20px}#screen[data-season="2"] .challenge-panel .challenge-choice{padding:12px;gap:10px}.challenge-selected{gap:9px}.challenge-selected>div{min-width:140px}.challenge-icon{width:40px;height:40px;flex-basis:40px}.challenge-rank{margin-left:49px}.challenge-levels{gap:5px}.challenge-levels li{padding:8px 3px}.challenge-levels b{font-size:15px}.challenge-level-name{font-size:11px}.challenge-tier-caption{font-size:11px}.challenge-progress-copy b{font-size:18px}}
+@media(prefers-reduced-motion:reduce){#screen[data-season="2"] .challenge-panel .challenge-choice{transition:none}}
+#screen[data-season="2"] .challenge-panel .challenge-choice .challenge-icon{color:#bfe5f4;margin:0;display:block}
+@media(min-width:741px) and (max-width:900px){#screen[data-season="2"] .challenge-panel .challenge-choice{padding:12px}.challenge-choice .challenge-levels li{padding:9px 2px}.challenge-choice .challenge-levels b{font-size:13px}.challenge-choice .challenge-level-name{font-size:10px;gap:2px}.challenge-card-head .challenge-icon{width:36px;height:36px;flex-basis:36px}#screen[data-season="2"] .challenge-panel .challenge-card-head strong{font-size:15px}}
+
+</style>
+<script>
+/* Personal season-two challenges: presentation tiers only; no economy or prize changes. */
+(function(){
+ const levels=['Старт','Успех','Легенда'];
+ const specs={
+  hit:{title:'Громкая премьера',short:'Прослушивания одной премьеры',unit:'прослушиваний',thresholds:[40000,100000,200000],description:'Собери слушателей на премьере одной песни.',detail:'Считается лучший результат одной премьеры второго сезона. Последующие прослушивания в каталоге не добавляются.'},
+  label:{title:'Лейбл окупает себя',short:'Содержание покрыто доходом',unit:'раз',thresholds:[3,6,9],description:'Покрывай содержание лейбла регулярным доходом.',detail:'Засчитывается каждый расчёт, в котором регулярный доход каталога, объектов и дистрибуции покрыл содержание лейбла. Доход премьеры и разовых проектов не учитывается. Результаты не обязательно должны идти подряд; прежние зачтённые этапы сохранены.'},
+  audience:{title:'Растущая аудитория',short:'Новые слушатели сезона',unit:'слушателей',thresholds:[10000,30000,50000],description:'Привлекай новых слушателей релизами второго сезона.',detail:'Суммируются новые слушатели, полученные при выпуске песен второго сезона. Аудитория первого сезона и последующий прирост от каталога сюда не входят.'}
+ };
+ function get(id){const spec=specs[id];if(!spec)return null;const value=s2ObjectiveMetric(id),rank=spec.thresholds.filter(n=>value>=n).length,next=Math.min(rank,2),target=spec.thresholds[next];return {...spec,id,value,rank,target,next,achieved:rank===3};}
+ function check(){return '<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><path d="m4 10 4 4 8-9"/></svg>';}
+ function milestones(g){return `<ol class="challenge-levels" aria-label="Три уровня цели">${g.thresholds.map((n,i)=>`<li class="${g.value>=n?'is-earned':''}"${g.rank===i?' aria-current="step"':''}><span class="challenge-level-name">${g.value>=n?check():`<i>${i+1}</i>`}${levels[i]}</span><b>${fmt(n)}</b></li>`).join('')}</ol>`;}
+ function icon(id){return financeDecisionIcon({hit:'hit',label:'recovery',audience:'fans'}[id]);}
+ function cards(){const selected=career.season2Objective?.id;return `<div class="s2-objective-options challenge-options">${S2_OBJECTIVES.map(o=>{const g=get(o.id);return `<button type="button" class="s2-objective-choice challenge-choice ${selected===g.id?'is-picked':''}" aria-pressed="${selected===g.id}" onclick="s2ChooseObjective('${g.id}')"><span class="challenge-card-head"><span class="challenge-icon" aria-hidden="true">${icon(g.id)}</span><strong>${g.title}</strong></span><span class="challenge-card-description">${g.description}</span>${milestones(g)}<span class="challenge-card-current">Сейчас: <b>${fmt(g.value)}</b> ${g.unit}</span><span class="challenge-card-action">${selected===g.id?'Выбрано':'Выбрать цель'}${selected===g.id?check():'<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M3 10h13m-5-5 5 5-5 5"/></svg>'}</span></button>`}).join('')}</div>`;}
+ function help(g,ended){return `<details class="s2-objective-picker challenge-help"><summary>${ended?'Как считается':'Условия и смена цели'}</summary><p>${g.detail}</p><p>Это личный вызов, а не условие завершения сезона. Сезон заканчивается после всех 10 релизов. Уровни не меняют экономику; стикеры открываются по отдельным условиям.</p><p class="s2-objective-note">Показатели относятся к игре, а не к реальной статистике песен.</p>${ended?'':cards()}</details>`;}
+ s2ObjectiveSummary=function(){const g=get(career.season2Objective?.id);return g?{...g,title:g.title+(g.rank?' · '+levels[g.rank-1]:''),achieved:g.rank>0,progressText:`${fmt(g.value)} ${g.unit}`}:null;};
+ s2ObjectiveOptions=cards;
+ s2ObjectiveHTML=function(){const g=get(career.season2Objective?.id),ended=s2SeasonComplete();
+  if(!g){if(ended)return '';return `<section class="s2-objective-panel challenge-panel" aria-label="Личный вызов второго сезона"><div class="challenge-intro"><div><span class="kicker">ЛИЧНЫЙ ВЫЗОВ · СЕЗОН 2</span><h3>Твой вызов на сезон</h3></div><span class="challenge-tier-caption">Старт → Успех → Легенда</span></div><p class="challenge-lead">Выбери достижение, за которым хочешь следить. Выпусти все 10 песен, чтобы завершить сезон.</p>${cards()}<details class="s2-objective-picker challenge-help"><summary>Что даёт выбор цели?</summary><p>Ты видишь прогресс своего лейбла от первого успеха до легендарного результата. Цель можно менять: результаты сезона сохраняются. Уровни не меняют экономику; стикеры открываются по отдельным условиям.</p><p class="s2-objective-note">Показатели относятся к игре, а не к реальной статистике песен.</p></details></section>`;}
+  const rankLabel=g.rank?levels[g.rank-1]:'Впереди — Старт',status=g.achieved?'Все уровни пройдены':ended?`Итог сезона: ${rankLabel}`:g.rank?`Достигнут уровень «${rankLabel}»`:'Первый уровень впереди';
+  return `<section class="s2-objective-panel challenge-panel ${g.achieved?'is-achieved':''}" aria-label="Личный вызов второго сезона"><div class="challenge-selected"><span class="challenge-icon" aria-hidden="true">${icon(g.id)}</span><div><span class="kicker">${ended?'ИТОГ ЛИЧНОГО ВЫЗОВА':'ТВОЙ ВЫЗОВ НА СЕЗОН'}</span><h3 tabindex="-1">${g.title}</h3></div><span class="challenge-rank ${g.rank?'is-earned':''}">${g.rank?check():''}${rankLabel}</span></div><div class="challenge-progress-copy"><span>${g.short}</span><b>${fmt(g.value)} <small>/ ${fmt(g.target)} ${g.unit}</small></b></div><div class="s2-objective-progress"><progress max="${g.target}" value="${Math.min(g.value,g.target)}" aria-label="${g.title}: ${fmt(g.value)} из ${fmt(g.target)} ${g.unit}"></progress></div>${milestones(g)}<p class="challenge-status" role="status">${status}${!ended&&!g.achieved?` · дальше «${levels[g.next]}»`:''}</p>${help(g,ended)}</section>`;
+ };
+ s2ChooseObjective=function(id){if(!season2Ready()||s2SeasonComplete()||!specs[id])return;career.season2Objective={id,version:2,chosenAtWeek:season2Week()};saveCareer();s2MountObjective();document.querySelector('.challenge-selected h3')?.focus({preventScroll:true});};
+ // Exposed read-only description for deterministic tests and future maintenance.
+ window.producerChallengeTiers={levels,specs,summary:get};
+ if(document.querySelector('.s2-office,.s2-finale')&&season2Ready())s2MountObjective();
+})();
+
+</script>
