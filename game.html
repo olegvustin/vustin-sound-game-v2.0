@@ -4265,7 +4265,7 @@ const VINYL_REWARDS=[
  {id:'tired',file:'02_tired.png',title:'Ещё один релиз — и спать',rule:'Выпусти 5 песен в сезоне 1.'},
  {id:'pride',file:'05_pride.png',title:'Мой первый альбом готов!',rule:'Заверши 10 релизов первого сезона.'},
  {id:'success',file:'01_success.png',title:'Мама, я продюсер!',rule:'Заверши первый сезон с 50 000 слушателей и 40 баллами репутации.'},
- {id:'surprise',file:'06_surprise.png',title:'Вот это поворот!',rule:'Подтверди первое событие индустрии перед релизом.'},
+ {id:'surprise',file:'06_surprise.png',title:'Вот это поворот!',rule:'Выпусти вторую песню первого сезона, пройдя событие индустрии.'},
  {id:'dance',file:'04_dance.png',title:'Мой лейбл звучит!',rule:'Выпусти все десять песен второго сезона.'},
  {id:'s2_first',season:2,file:'07_second_wind.png',title:'Второе дыхание',rule:'Выпусти первую песню второго сезона.'},
  {id:'s2_build',season:2,file:'08_empire.png',title:'Теперь у меня империя',rule:'Построй первый объект инфраструктуры второго сезона.'},
@@ -4282,7 +4282,8 @@ function rewardsSync(){
  // Capture only the known S1 final. Never use S2 growth to infer an old win.
  if(career.releases>=10&&!career.season2Week&&!r.s1Final)r.s1Final={listeners:Number(career.listeners)||0,rep:Number(career.rep)||0};
  if(r.s1Final&&r.s1Final.listeners>=50000&&r.s1Final.rep>=40)grant('success');
- if(r.industryConfirmed===true)grant('surprise');
+ // Keep the first premiere to one reward; preserve already unlocked stickers.
+ if(career.releases>=2&&r.industryConfirmed===true)grant('surprise');
  if(career.releases>=10&&s2SeasonComplete())grant('dance');
  if(career.releases>=10){
   const releases=Array.isArray(career.season2Releases)?career.season2Releases:[];
