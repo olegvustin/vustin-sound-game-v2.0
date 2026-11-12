@@ -902,11 +902,11 @@ function chooseSong(){
  const nextAction='stopSongDemo();state.recoveryPackage!==undefined?applyRecoveryPackage():goalScreen()';
  shell('Шаг 1 из 6','Выбери песню',
  `<div class='choice-intro'><b>Послушай песню перед выбором. Полные записи доступны через плеер сайта.</b> У каждой песни свой характер — стратегия релиза должна ему соответствовать.</div>
- <div class="song-selection-summary" aria-label="Выбранная песня"><div>${validSelected?`<span class="kicker">ТВОЙ СЛЕДУЮЩИЙ РЕЛИЗ</span><b>${state.song.name}</b>`:`<b>Какая песня станет твоим релизом?</b><span class="small">Выбери одну из доступных песен ниже.</span>`}</div><button class="btn" ${validSelected?'':'disabled'} onclick='${nextAction}'>К ПЛАНУ РЕЛИЗА →</button></div>
+ <div class="song-selection-summary" aria-label="Выбранная песня"><div>${validSelected?`<span class="kicker">ТВОЙ СЛЕДУЮЩИЙ РЕЛИЗ</span><b>${state.song.name}</b>`:`<b>Какая песня станет твоим релизом?</b><span class="small">Выбери одну из доступных песен ниже.</span>`}</div></div>
  <h3 class="catalog-group-title">Доступны для релиза · ${available.length}</h3><div class='grid'>${cards(available)}</div>
  ${released.length?`<details class="catalog-group"><summary>Уже выпущены · ${released.length}</summary><div class="grid">${cards(released)}</div></details>`:''}
  ${locked.length?`<details class="catalog-group"><summary>Откроются позже · ${locked.length}</summary><div class="grid">${cards(locked)}</div></details>`:''}
- <div class='nav'><button class='btn alt' onclick='stopSongDemo();market()'>← Рынок</button><button class='btn' ${validSelected?'':'disabled'} onclick='${nextAction}'>ДАЛЕЕ →</button></div>`)
+ <div class='nav'><button class='btn alt' onclick='stopSongDemo();market()'>← Рынок</button></div>`)
 }
 
 function financeDecisionIcon(kind){
@@ -5067,7 +5067,7 @@ season2SongCatalog=function(){
  if(!season2Ready())return careerScreen();
  const list=season2CatalogSongs(),available=list.filter(s=>!season2Released(s.id)),released=list.filter(s=>season2Released(s.id)),ended=s2SeasonComplete();
  const cards=items=>items.map(song=>{const done=season2Released(song.id),active=song.id===season2SelectedSong&&!done&&!ended;return `<article class="card song-choice-card ${active?'sel':''}" ${done||ended?'':`onclick="season2SelectSong('${song.id}')"`}><div class="song-head"><span class="kicker">${song.genre}</span>${done?'<span class="tag">Релиз состоялся</span>':''}</div>${songCover(song,'song-cover')}<h3>${song.name}</h3><button class="demo-btn" onclick="playSongDemo(event,'${song.id}',this)"><span class="listen-icon">▶</span> Послушать песню</button><p class="desc">${s2SongCharacter(song)}</p>${active?`<button class="btn" onclick="event.stopPropagation();season2StartProduction('${song.id}')">К плану релиза →</button>`:''}</article>`}).join('');
- s2Shell('Шаг 1 из 6','Выбери песню',`<p class="choice-intro">Послушай песню и выбери, какую историю расскажет твой следующий релиз.</p><div class="song-selection-summary"><div><span class="kicker">СЕЗОН 2 · ${released.length}/10 ПЕСЕН ВЫПУЩЕНО</span><b>${season2SelectedSong?season2SongById(season2SelectedSong)?.name||'Выбери песню':'Какая песня станет твоим релизом?'}</b></div><button class="btn" ${season2SelectedSong&&!season2Released(season2SelectedSong)&&!ended?'':'disabled'} onclick="season2StartProduction(season2SelectedSong)">Далее →</button></div>${available.length?`<h3 class="catalog-group-title">${ended?'Остались в каталоге':'Доступны для релиза'} · ${available.length}</h3><div class="grid">${cards(available)}</div>`:''}${released.length?`<details class="catalog-group" ${available.length?'':'open'}><summary>Уже выпущены · ${released.length}</summary><div class="grid">${cards(released)}</div></details>`:''}<nav class="nav"><button class="btn alt" onclick="${ended?'season2Finale()':'season2Market()'}">← ${ended?'Итоги сезона':'Рынок'}</button><button class="btn alt" onclick="season2Office()">Мой лейбл</button></nav>`);saveCareer();
+ s2Shell('Шаг 1 из 6','Выбери песню',`<p class="choice-intro">Послушай песню и выбери, какую историю расскажет твой следующий релиз.</p><div class="song-selection-summary"><div><span class="kicker">СЕЗОН 2 · ${released.length}/10 ПЕСЕН ВЫПУЩЕНО</span><b>${season2SelectedSong?season2SongById(season2SelectedSong)?.name||'Выбери песню':'Какая песня станет твоим релизом?'}</b></div></div>${available.length?`<h3 class="catalog-group-title">${ended?'Остались в каталоге':'Доступны для релиза'} · ${available.length}</h3><div class="grid">${cards(available)}</div>`:''}${released.length?`<details class="catalog-group" ${available.length?'':'open'}><summary>Уже выпущены · ${released.length}</summary><div class="grid">${cards(released)}</div></details>`:''}<nav class="nav"><button class="btn alt" onclick="${ended?'season2Finale()':'season2Market()'}">← ${ended?'Итоги сезона':'Рынок'}</button><button class="btn alt" onclick="season2Office()">Мой лейбл</button></nav>`);saveCareer();
 };
 function s2SongCharacter(song){return /рок|рэп|танц|поп/i.test(song.genre)?'Энергичный характер: попробуй короткие видео.':'Для вдумчивого слушателя: присмотрись к плейлистам и истории песни.'}
 const s2StartPrevious=season2StartProduction;
@@ -5390,8 +5390,8 @@ season2Finale=function(){const out=s2ObjectiveFinale.apply(this,arguments);s2Mou
   const bar=document.createElement('nav');bar.className='s2-infra-dock';bar.setAttribute('aria-label','Навигация лейбла');
   const meta=document.createElement('span');meta.textContent='На счету: '+fmt(career.cash)+' VS₽';bar.appendChild(meta);
   const b=document.createElement('button');b.type='button';b.className='btn';
-  const ended=s2SeasonComplete();b.textContent=ended?'К итогам сезона':season2Draft?'Продолжить релиз':'Мой лейбл';
-  b.addEventListener('click',()=>ended?season2Finale():season2Draft?season2ResumeProduction():season2Office());bar.appendChild(b);host.appendChild(bar);host.classList.add('s2-has-dock');quickActions(host,bar,b);
+  const ended=s2SeasonComplete();b.textContent=ended?'К итогам сезона':'Мой лейбл';
+  b.addEventListener('click',()=>ended?season2Finale():season2Office());bar.appendChild(b);host.appendChild(bar);host.classList.add('s2-has-dock');quickActions(host,bar,b);
  }
  const prevPromo=season2Promotion;season2Promotion=function(...a){remember();const r=prevPromo.apply(this,a);promo();return r};
  const prevStep=season2ProductionStep;season2ProductionStep=function(...a){remember();const r=prevStep.apply(this,a);teamView();return r};
