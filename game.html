@@ -4119,7 +4119,7 @@ document.addEventListener('play', function(event) {
  const render=shell;
  shell=function(k,t,body){
   const result=render.call(this,k,t,body),screen=document.getElementById('screen');
-  const production=!k.toLowerCase().includes('сезон 2')&&['Запись','Аранжировка','Обложка'].includes(t);
+  const production=!screen.querySelector('.s2-unified')&&!k.toLowerCase().includes('сезон 2')&&['Запись','Аранжировка','Обложка'].includes(t);
   if(production&&state.song){
    screen.classList.add('production-choice');
    const panel=document.createElement('div');panel.className='production-context';
